@@ -1,0 +1,63 @@
+name: StudyFlow BGM 自動投稿
+
+on:
+  schedule:
+    - cron: '0 13 * * *'   # 22:00 JST (13:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  post-bgm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: 日本語フォントと ffmpeg をインストール
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk ffmpeg
+          mkdir -p /home/runner/.local/share/fonts
+          cp /usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc \
+             /home/runner/.local/share/fonts/NotoSansCJKjp-Bold.otf 2>/dev/null || true
+          cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc \
+             /home/runner/.local/share/fonts/NotoSansCJKjp-Regular.otf 2>/dev/null || true
+          fc-cache -f
+
+      - name: 依存パッケージをインストール
+        run: pip install -r study_shorts/requirements.txt
+
+      - name: 認証情報を配置
+        working-directory: study_shorts
+        env:
+          STUDY_YOUTUBE_TOKEN_JSON: ${{ secrets.STUDY_YOUTUBE_TOKEN_JSON }}
+          YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON }}
+        run: |
+          echo "$STUDY_YOUTUBE_TOKEN_JSON" > token.json
+          echo "$YOUTUBE_CLIENT_SECRET_JSON" > client_secret.json
+
+      - name: BGM 動画を生成・投稿
+        working-directory: study_shorts
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          STUDY_YOUTUBE_CHANNEL_ID: UCXlATa9z8MkQUe3N0deRbhA
+          YOUTUBE_TOKEN_JSON: ${{ secrets.STUDY_YOUTUBE_TOKEN_JSON }}
+          YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON }}
+        run: python3 main.py --bgm
+
+      - name: 更新されたトークンを Secret に書き戻す
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          if [ -f study_shorts/token.json ]; then
+            gh secret set STUDY_YOUTUBE_TOKEN_JSON \
+              --body "$(cat study_shorts/token.json)" \
+              --repo ${{ github.repository }}
+          fi
