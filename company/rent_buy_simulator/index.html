@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>家賃vs購入 コスト比較シミュレーター | 無料・住み替え総額計算</title>
+  <meta name="description" content="賃貸と購入どちらが得か？月々のローン返済額、総支払額、損益分岐点を無料計算。住み替えコストシミュレーターも搭載。ログイン不要。">
+  <meta name="keywords" content="家賃 購入 比較,賃貸 持ち家 どっちが得,住宅ローン 計算,住み替え費用,不動産 コスト計算">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="wrap">
+    <div class="logo">🏠 家賃vs購入 シミュレーター</div>
+    <div class="tagline">無料・ログイン不要・データ保存なし</div>
+  </div>
+</header>
+
+<!-- ヒーローセクション -->
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="hero-text">
+      <h1 class="hero-h1">賃貸 vs 購入<br>どっちが<span class="hero-accent">お得</span>か<br>一発で分かる</h1>
+      <p class="hero-sub">物件価格・家賃・ローン金利を入力するだけ。損益分岐点・総コスト・住宅ローン控除まで一括計算。完全無料・ログイン不要。</p>
+      <div class="hero-badges">
+        <span class="badge">📊 損益分岐点を自動計算</span>
+        <span class="badge">💴 住宅ローン控除を考慮</span>
+        <span class="badge">🚚 住み替えコストも計算</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hs-val">35年</div><div class="hs-label">標準的な<br>ローン期間</div></div>
+      <div class="hero-stat"><div class="hs-val">約15〜20年</div><div class="hs-label">一般的な<br>損益分岐点</div></div>
+      <div class="hero-stat"><div class="hs-val">最大420万円</div><div class="hs-label">住宅ローン<br>控除の恩恵</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="tabs-bar">
+  <div class="wrap">
+    <button class="tab active" data-tab="compare">📊 家賃vs購入 比較</button>
+    <button class="tab" data-tab="move">🚚 住み替えコスト</button>
+    <button class="tab" data-tab="loan">💴 ローン返済計算</button>
+  </div>
+</div>
+
+<!-- ========== TAB 1: 家賃 vs 購入 ========== -->
+<main class="wrap main" id="tab-compare">
+  <div class="layout">
+    <div class="panel">
+
+      <section class="card">
+        <h2 class="card-title">🏠 購入の場合</h2>
+        <div class="form-grid">
+          <div class="fg"><label>物件価格（万円）<span class="req">*</span></label>
+            <input type="number" id="b-price" value="3500" min="100" step="100"></div>
+          <div class="fg"><label>頭金（万円）</label>
+            <input type="number" id="b-down" value="500" min="0" step="50"></div>
+          <div class="fg"><label>住宅ローン金利（年%）</label>
+            <input type="number" id="b-rate" value="1.5" min="0.1" step="0.1"></div>
+          <div class="fg"><label>返済期間（年）</label>
+            <input type="number" id="b-years" value="35" min="5" max="50"></div>
+          <div class="fg"><label>購入諸費用（物件価格の%）</label>
+            <input type="number" id="b-fees" value="6" min="0" max="15"></div>
+          <div class="fg"><label>固定資産税（年・万円）</label>
+            <input type="number" id="b-tax" value="12" min="0"></div>
+          <div class="fg"><label>管理費・修繕積立（月・万円）</label>
+            <input type="number" id="b-maint" value="2" min="0" step="0.5"></div>
+          <div class="fg"><label>売却想定価格（万円・空欄=計算）</label>
+            <input type="number" id="b-sell" placeholder="自動計算" min="0"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">🏢 賃貸の場合</h2>
+        <div class="form-grid">
+          <div class="fg"><label>月家賃（万円）<span class="req">*</span></label>
+            <input type="number" id="r-rent" value="12" min="1" step="0.5"></div>
+          <div class="fg"><label>敷金（月数）</label>
+            <input type="number" id="r-deposit" value="1" min="0" max="6" step="0.5"></div>
+          <div class="fg"><label>礼金（月数）</label>
+            <input type="number" id="r-key" value="1" min="0" max="3" step="0.5"></div>
+          <div class="fg"><label>仲介手数料（月数）</label>
+            <input type="number" id="r-agent" value="1" min="0" max="2" step="0.5"></div>
+          <div class="fg"><label>更新料（年数ごと・月数）</label>
+            <input type="number" id="r-renew" value="1" min="0" max="2" step="0.5"></div>
+          <div class="fg"><label>家賃値上がり率（年%）</label>
+            <input type="number" id="r-rise" value="1" min="0" step="0.5"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">⚙️ 共通設定</h2>
+        <div class="form-grid">
+          <div class="fg"><label>比較期間（年）</label>
+            <input type="number" id="c-period" value="35" min="5" max="50"></div>
+          <div class="fg"><label>運用利回り（年%・投資想定）</label>
+            <input type="number" id="c-invest" value="3" min="0" step="0.5"></div>
+        </div>
+      </section>
+
+      <section class="card tax-card">
+        <h2 class="card-title">💴 住宅ローン控除（減税）</h2>
+        <p class="card-note">住宅ローン控除は最大13年間、年末ローン残高の0.7%が所得税等から還付されます。</p>
+        <div class="form-grid">
+          <div class="fg"><label>控除適用（する/しない）</label>
+            <select id="tax-apply">
+              <option value="1">適用する（新築・認定住宅等）</option>
+              <option value="0">適用しない</option>
+            </select></div>
+          <div class="fg"><label>控除上限借入額（万円）</label>
+            <select id="tax-limit">
+              <option value="3000">3,000万円（既存住宅）</option>
+              <option value="3000">3,000万円（その他新築）</option>
+              <option value="4000">4,000万円（ZEH水準）</option>
+              <option value="4500" selected>4,500万円（長期優良住宅等）</option>
+            </select></div>
+        </div>
+      </section>
+
+      <button class="btn-calc" id="calc-compare">📊 計算する</button>
+    </div>
+
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3>📌 計算のポイント</h3>
+        <ul>
+          <li>購入は「資産になる」が固定費も大きい</li>
+          <li>賃貸は「柔軟に動ける」が資産が残らない</li>
+          <li>一般的に15〜20年で損益分岐する</li>
+          <li>金利・家賃値上がりで大きく変わる</li>
+        </ul>
+      </div>
+      <div class="ad-box tall"><div class="ad-lbl">広告</div><div class="ad-inner">160×600</div></div>
+    </aside>
+  </div>
+
+  <!-- 結果エリア -->
+  <div id="result-compare" style="display:none">
+    <div class="result-cards">
+      <div class="result-card buy">
+        <div class="rc-label">🏠 購入 実質コスト</div>
+        <div class="rc-value" id="res-buy-total">—</div>
+        <div class="rc-sub" id="res-buy-sub"></div>
+      </div>
+      <div class="result-card rent">
+        <div class="rc-label">🏢 賃貸 実質コスト</div>
+        <div class="rc-value" id="res-rent-total">—</div>
+        <div class="rc-sub" id="res-rent-sub"></div>
+      </div>
+      <div class="result-card winner" id="res-winner-card">
+        <div class="rc-label">🏆 有利な選択</div>
+        <div class="rc-value" id="res-winner">—</div>
+        <div class="rc-sub" id="res-diff"></div>
+      </div>
+    </div>
+    <div id="tax-deduction-box" class="tax-result-box" style="display:none"></div>
+    <div class="chart-wrap">
+      <canvas id="chart-compare" height="100"></canvas>
+    </div>
+    <div class="breakeven-box" id="breakeven-box"></div>
+    <div class="advice-card" id="advice-card"></div>
+  </div>
+</main>
+
+<!-- ========== TAB 2: 住み替えコスト ========== -->
+<main class="wrap main" id="tab-move" style="display:none">
+  <div class="layout">
+    <div class="panel">
+      <section class="card">
+        <h2 class="card-title">🚚 今の住居（退去側）</h2>
+        <div class="form-grid">
+          <div class="fg"><label>種別</label>
+            <select id="m-from-type">
+              <option value="rent">賃貸</option>
+              <option value="own">持ち家（売却）</option>
+            </select></div>
+          <div class="fg" id="m-from-rent-row"><label>月家賃（万円）</label>
+            <input type="number" id="m-from-rent" value="10" step="0.5"></div>
+          <div class="fg" id="m-from-sell-row" style="display:none"><label>売却価格（万円）</label>
+            <input type="number" id="m-from-sell" value="2500" step="100"></div>
+          <div class="fg" id="m-from-loan-row" style="display:none"><label>ローン残債（万円）</label>
+            <input type="number" id="m-from-loan" value="1500" step="100"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">🏡 新しい住居（入居側）</h2>
+        <div class="form-grid">
+          <div class="fg"><label>種別</label>
+            <select id="m-to-type">
+              <option value="rent">賃貸</option>
+              <option value="buy">購入</option>
+            </select></div>
+          <div class="fg" id="m-to-rent-row"><label>月家賃（万円）</label>
+            <input type="number" id="m-to-rent" value="12" step="0.5"></div>
+          <div class="fg" id="m-to-buy-row" style="display:none"><label>物件価格（万円）</label>
+            <input type="number" id="m-to-buy" value="3500" step="100"></div>
+          <div class="fg"><label>引越し費用（万円）</label>
+            <input type="number" id="m-move-cost" value="15" step="1"></div>
+          <div class="fg"><label>その他諸費用（万円）</label>
+            <input type="number" id="m-other" value="5" step="1"></div>
+        </div>
+      </section>
+
+      <button class="btn-calc" id="calc-move">🚚 コスト計算</button>
+    </div>
+
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3>📌 住み替えの主なコスト</h3>
+        <ul>
+          <li><strong>賃貸→賃貸</strong>: 敷金礼金+引越費で50〜80万</li>
+          <li><strong>賃貸→購入</strong>: 頭金+諸費用で数百万</li>
+          <li><strong>持ち家→売却</strong>: 仲介手数料3%+税</li>
+          <li>新生活の家電・家具費用も忘れずに</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <div id="result-move" style="display:none" class="result-move-wrap">
+    <h3 class="section-h3">💰 住み替え費用の内訳</h3>
+    <div id="move-items" class="move-items"></div>
+    <div class="move-total" id="move-total"></div>
+  </div>
+</main>
+
+<!-- ========== TAB 3: ローン返済 ========== -->
+<main class="wrap main" id="tab-loan" style="display:none">
+  <div class="layout">
+    <div class="panel">
+      <section class="card">
+        <h2 class="card-title">💴 住宅ローン返済シミュレーション</h2>
+        <div class="form-grid">
+          <div class="fg"><label>借入金額（万円）</label>
+            <input type="number" id="l-amount" value="3000" step="100"></div>
+          <div class="fg"><label>年利（%）</label>
+            <input type="number" id="l-rate" value="1.5" step="0.1"></div>
+          <div class="fg"><label>返済期間（年）</label>
+            <input type="number" id="l-years" value="35" min="5" max="50"></div>
+          <div class="fg"><label>返済方式</label>
+            <select id="l-type">
+              <option value="equal">元利均等（月々一定）</option>
+              <option value="principal">元金均等（初期が多い）</option>
+            </select></div>
+          <div class="fg"><label>ボーナス返済（年・万円）</label>
+            <input type="number" id="l-bonus" value="0" step="5"></div>
+        </div>
+        <button class="btn-calc" id="calc-loan">💴 計算する</button>
+      </section>
+    </div>
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3>💡 ローン豆知識</h3>
+        <ul>
+          <li>変動金利: 現在低いが将来上昇リスク</li>
+          <li>固定金利: 金額が確定で安心感あり</li>
+          <li>繰り上げ返済で総利息を大幅削減</li>
+          <li>返済比率25%以下が目安</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <div id="result-loan" style="display:none">
+    <div class="result-cards" style="grid-template-columns:repeat(4,1fr)">
+      <div class="result-card"><div class="rc-label">月返済額</div><div class="rc-value" id="l-monthly">—</div></div>
+      <div class="result-card"><div class="rc-label">総返済額</div><div class="rc-value" id="l-total">—</div></div>
+      <div class="result-card"><div class="rc-label">うち利息</div><div class="rc-value" id="l-interest">—</div></div>
+      <div class="result-card"><div class="rc-label">利息割合</div><div class="rc-value" id="l-ratio">—</div></div>
+    </div>
+    <div class="chart-wrap"><canvas id="chart-loan" height="100"></canvas></div>
+    <div class="amort-wrap">
+      <h3 class="section-h3">📋 返済スケジュール（5年ごと）</h3>
+      <div style="overflow-x:auto"><table class="amort-table" id="amort-table"></table></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>家賃vs購入シミュレーター — 不動産コスト計算ツール（無料・ログイン不要）</p>
+  <p class="footer-note">※ 計算結果はあくまで参考値です。実際の費用は物件・条件により異なります。</p>
+</footer>
+
+<link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+</body>
+</html>

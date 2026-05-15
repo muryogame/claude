@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アニメキャラ性格診断 ＋ ゲームプレイ時間記録 | 無料・日本語特化</title>
+  <meta name="description" content="20問の性格診断であなたにそっくりなアニメキャラを発見。ゲームプレイ時間を毎日記録してグラフで可視化。完全無料・ログイン不要。">
+  <meta name="keywords" content="アニメキャラ 性格診断,MBTI アニメ,ゲームプレイ時間 記録,ゲーム時間 グラフ,アニメ 性格テスト">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="wrap header-inner">
+    <div>
+      <div class="logo" data-i18n="logo">🎮 エンタメツール</div>
+      <div class="tagline" data-i18n="tagline">アニメ性格診断 ＋ ゲーム時間記録 — 完全無料</div>
+    </div>
+    <button class="lang-toggle" id="lang-toggle">EN</button>
+  </div>
+</header>
+
+<div class="tabs-bar">
+  <div class="wrap">
+    <button class="tab active" data-tab="anime" data-i18n="tab_anime">✨ アニメ性格診断</button>
+    <button class="tab" data-tab="game" data-i18n="tab_game">🎮 ゲーム時間記録</button>
+  </div>
+</div>
+
+<!-- ========== TAB 1: アニメキャラ性格診断 ========== -->
+<main class="wrap main" id="tab-anime">
+  <div class="layout">
+    <div class="panel">
+
+      <!-- イントロ -->
+      <div id="quiz-intro" class="card">
+        <h2 class="card-title" data-i18n="quiz_title">✨ あなたはどのアニメキャラ？</h2>
+        <p class="intro-text" data-i18n="quiz_desc">20問の質問に答えて、あなたにそっくりなアニメキャラクターを見つけよう。所要時間: 約3分</p>
+        <div class="type-grid-preview" id="type-chips"></div>
+        <button class="btn-start" id="start-quiz-btn" data-i18n="start_btn">✨ 診断スタート！</button>
+      </div>
+
+      <!-- 質問エリア -->
+      <div id="quiz-area" style="display:none">
+        <div class="progress-bar-wrap"><div class="progress-bar" id="quiz-progress"></div></div>
+        <div class="progress-label" id="quiz-label"></div>
+        <div class="question-card" id="question-card">
+          <div class="q-text" id="q-text"></div>
+          <div class="q-options" id="q-options"></div>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div id="quiz-result" style="display:none">
+        <div class="result-hero">
+          <div class="result-char-icon" id="res-icon"></div>
+          <div style="flex:1">
+            <div class="result-type-label" id="res-type-label"></div>
+            <div class="result-char-name" id="res-char-name"></div>
+            <div class="result-series" id="res-series"></div>
+            <div class="result-match-pct" id="res-match-pct"></div>
+          </div>
+        </div>
+
+        <!-- MBTI タイプ表示 -->
+        <div class="result-mbti-card" id="res-mbti-card"></div>
+
+        <div class="result-desc-card">
+          <div class="res-desc" id="res-desc"></div>
+          <div class="res-traits" id="res-traits"></div>
+        </div>
+
+        <!-- 性格分布バー -->
+        <div class="result-breakdown-card" id="res-breakdown-card"></div>
+
+        <div class="result-radar-wrap">
+          <canvas id="chart-radar" width="300" height="300"></canvas>
+        </div>
+        <div class="similar-chars">
+          <h3 class="sim-title" data-i18n="result_similar">🎭 似ているキャラクター</h3>
+          <div class="sim-list" id="sim-list"></div>
+        </div>
+        <div class="share-area">
+          <button class="btn-share twitter" id="share-twitter" data-i18n="share_x">𝕏 Xでシェア</button>
+          <button class="btn-retry" id="retry-btn" data-i18n="retry">🔄 もう一度診断する</button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3 data-i18n="popular_anime">🎌 U-NEXT 人気アニメ</h3>
+        <ul id="anime-list-sidebar"></ul>
+      </div>
+      <div class="affiliate-card">
+        <h3 data-i18n="anime_watch">📺 アニメを見るなら</h3>
+        <a href="https://video.unext.jp/genre/anime" target="_blank" rel="noopener" class="aff-link">U-NEXT アニメ</a>
+        <a href="https://d-animejp.dmkt-sp.jp/" target="_blank" rel="noopener" class="aff-link">dアニメストア</a>
+        <a href="https://abema.tv/" target="_blank" rel="noopener" class="aff-link">ABEMAプレミアム</a>
+        <a href="https://www.crunchyroll.com/ja" target="_blank" rel="noopener" class="aff-link">Crunchyroll</a>
+      </div>
+      <div class="ad-box tall"><div class="ad-lbl">広告</div><div class="ad-inner">160×600</div></div>
+    </aside>
+  </div>
+</main>
+
+<!-- ========== TAB 2: ゲームプレイ時間記録 ========== -->
+<main class="wrap main" id="tab-game" style="display:none">
+  <div class="layout">
+    <div class="panel">
+
+      <section class="card">
+        <h2 class="card-title" data-i18n="game_add_title">🎮 プレイ記録を追加</h2>
+        <div class="form-grid">
+          <div class="fg"><label data-i18n="g_date">日付</label>
+            <input type="date" id="g-date"></div>
+          <div class="fg"><label data-i18n="g_title_label">ゲームタイトル</label>
+            <input type="text" id="g-title" list="game-datalist">
+            <datalist id="game-datalist"></datalist></div>
+          <div class="fg"><label data-i18n="g_hours">プレイ時間（時間）</label>
+            <input type="number" id="g-hours" min="0" max="24" step="0.5" value="2"></div>
+          <div class="fg"><label data-i18n="g_genre_label">ジャンル</label>
+            <select id="g-genre"></select></div>
+          <div class="fg"><label data-i18n="g_mood">気分・評価</label>
+            <select id="g-mood"></select></div>
+          <div class="fg"><label data-i18n="g_note">メモ</label>
+            <input type="text" id="g-note" id="g-note-input"></div>
+        </div>
+        <button class="btn-calc" id="game-add-btn" data-i18n="g_save">🎮 記録を保存</button>
+      </section>
+
+      <div id="game-stats" style="display:none">
+        <div class="game-kpi-row">
+          <div class="kpi-card"><div class="kpi-label" data-i18n="k_total">総プレイ時間</div><div class="kpi-val" id="gk-total">—</div></div>
+          <div class="kpi-card"><div class="kpi-label" data-i18n="k_top">最多プレイゲーム</div><div class="kpi-val" id="gk-top">—</div></div>
+          <div class="kpi-card"><div class="kpi-label" data-i18n="k_days">記録日数</div><div class="kpi-val" id="gk-days">—</div></div>
+          <div class="kpi-card"><div class="kpi-label" data-i18n="k_avg">1日平均</div><div class="kpi-val" id="gk-avg">—</div></div>
+        </div>
+        <div class="chart-wrap"><canvas id="chart-game-line" height="100"></canvas></div>
+        <div class="chart-row">
+          <div class="chart-wrap half"><canvas id="chart-game-pie" height="200"></canvas></div>
+          <div class="chart-wrap half"><canvas id="chart-game-genre" height="200"></canvas></div>
+        </div>
+      </div>
+
+      <section class="card" id="game-log-section" style="display:none">
+        <h2 class="card-title" data-i18n="log_title">📋 プレイ履歴</h2>
+        <div class="game-filter-row">
+          <input type="text" id="game-search" class="game-search-input">
+          <select id="game-filter-genre" class="game-filter-sel"></select>
+        </div>
+        <div class="game-log" id="game-log"></div>
+        <button class="btn-danger" id="game-clear-btn" data-i18n="clear_btn">🗑️ 全記録を削除</button>
+      </section>
+    </div>
+
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3 data-i18n="game_tips">🎮 適正プレイ時間の目安</h3>
+        <ul id="game-tips-list"></ul>
+      </div>
+      <div class="affiliate-card">
+        <h3 data-i18n="game_find">🕹️ ゲームを探すなら</h3>
+        <a href="https://store.steampowered.com/" target="_blank" rel="noopener" class="aff-link">Steam（PCゲーム）</a>
+        <a href="https://store.nintendo.com/jp/" target="_blank" rel="noopener" class="aff-link">ニンテンドーeShop</a>
+        <a href="https://store.playstation.com/ja-jp/" target="_blank" rel="noopener" class="aff-link">PlayStation Store</a>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer">
+  <p data-i18n="footer">エンタメツール — アニメ性格診断・ゲーム時間記録（完全無料・ログイン不要）</p>
+  <p class="footer-note" data-i18n="footer_note">※ 診断結果はエンタメ目的のものです。</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+:root {
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --primary: #2563eb;
+  --primary-d: #1d4ed8;
+  --green: #16a34a;
+  --red: #dc2626;
+  --orange: #ea580c;
+  --text: #1e293b;
+  --text-sub: #64748b;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,.07);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6}
+
+/* ── ヘッダー ────────────────── */
+.header{background:var(--primary);color:#fff;padding:14px 0;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.header .wrap{display:flex;align-items:center;gap:16px;justify-content:space-between}
+.logo{font-size:20px;font-weight:700;letter-spacing:-.5px}
+.tagline{font-size:12px;opacity:.8}
+
+/* ── タブバー ────────────────── */
+.tabs-bar{background:#1e40af;border-bottom:3px solid var(--primary)}
+.tabs-bar .wrap{display:flex;gap:4px;padding:0 4px}
+.tab{background:transparent;border:none;color:rgba(255,255,255,.7);padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .2s;font-family:inherit}
+.tab:hover{color:#fff;background:rgba(255,255,255,.1)}
+.tab.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.12)}
+
+/* ── レイアウト ────────────────── */
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+.main{padding:24px 16px}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start}
+
+/* ── カード ────────────────── */
+.card{background:var(--card);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);margin-bottom:16px}
+.card-title{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--primary);display:flex;align-items:center;gap:6px}
+
+/* ── フォームグリッド ────────────────── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:12px;font-weight:600;color:var(--text-sub)}
+.fg input,.fg select{
+  padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:15px;font-family:inherit;background:#fafafa;transition:border .15s;
+  color:var(--text)
+}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--primary);background:#fff}
+.req{color:var(--red);margin-left:2px}
+
+/* ── ボタン ────────────────── */
+.btn-calc{
+  display:block;width:100%;padding:14px;margin-top:4px;
+  background:var(--primary);color:#fff;border:none;border-radius:10px;
+  font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:background .15s,transform .1s
+}
+.btn-calc:hover{background:var(--primary-d)}
+.btn-calc:active{transform:scale(.98)}
+
+/* ── サイドバー ────────────────── */
+.sidebar{display:flex;flex-direction:column;gap:16px;position:sticky;top:16px}
+.ad-box{background:#f8fafc;border:2px dashed var(--border);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;text-align:center}
+.ad-box.tall{min-height:400px}
+.ad-lbl{font-size:11px;color:#94a3b8;margin-bottom:4px}
+.ad-inner{color:#cbd5e1;font-size:13px}
+
+.tip-card{background:var(--card);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.tip-card h3{font-size:14px;color:var(--primary);margin-bottom:8px}
+.tip-card ul{padding-left:16px;font-size:13px;color:var(--text-sub);display:flex;flex-direction:column;gap:4px}
+
+/* ── 結果カード ────────────────── */
+.result-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:24px 0 16px}
+.result-card{background:var(--card);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow);border-top:4px solid var(--border)}
+.result-card.buy{border-top-color:var(--primary)}
+.result-card.rent{border-top-color:var(--green)}
+.result-card.winner{border-top-color:var(--orange)}
+.rc-label{font-size:12px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
+.rc-value{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px}
+.rc-sub{font-size:12px;color:var(--text-sub)}
+
+/* ── チャート ────────────────── */
+.chart-wrap{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+
+/* ── 損益分岐 ────────────────── */
+.breakeven-box{background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:var(--radius);padding:16px 20px;font-size:14px;color:var(--primary)}
+.breakeven-box strong{font-size:17px}
+
+/* ── 住み替え結果 ────────────────── */
+.result-move-wrap{margin-top:24px}
+.section-h3{font-size:16px;font-weight:700;color:var(--primary);margin-bottom:12px}
+.move-items{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
+.move-item{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid var(--border);font-size:14px}
+.move-item:last-child{border-bottom:none}
+.move-item-label{color:var(--text-sub)}
+.move-item-val{font-weight:700;color:var(--text)}
+.move-total{background:var(--primary);color:#fff;border-radius:var(--radius);padding:16px 20px;font-size:18px;font-weight:800;text-align:right}
+
+/* ── ローン結果 ────────────────── */
+.amort-wrap{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-top:16px}
+.amort-table{width:100%;border-collapse:collapse;font-size:13px}
+.amort-table th{background:#f1f5f9;padding:8px 12px;text-align:right;font-weight:700;color:var(--text-sub)}
+.amort-table th:first-child{text-align:left}
+.amort-table td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--border)}
+.amort-table td:first-child{text-align:left;font-weight:600}
+.amort-table tr:last-child td{border-bottom:none;font-weight:700;background:#f8fafc}
+
+/* ── ヒーロー ────────────────── */
+.hero{background:linear-gradient(135deg,#1e40af 0%,#2563eb 50%,#1d4ed8 100%);color:#fff;padding:40px 0}
+.hero-inner{display:flex;align-items:center;gap:40px;flex-wrap:wrap}
+.hero-text{flex:1;min-width:280px}
+.hero-h1{font-size:32px;font-weight:900;line-height:1.3;margin-bottom:12px}
+.hero-accent{color:#fbbf24}
+.hero-sub{font-size:15px;opacity:.9;line-height:1.7;margin-bottom:16px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px}
+.badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600}
+.hero-stats{display:flex;gap:20px;flex-wrap:wrap}
+.hero-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:16px 20px;text-align:center;min-width:110px}
+.hs-val{font-size:18px;font-weight:900;margin-bottom:4px;color:#fbbf24}
+.hs-label{font-size:12px;opacity:.85;line-height:1.4}
+
+/* ── 控除カード ────────────────── */
+.card-note{font-size:13px;color:var(--text-sub);margin-bottom:12px;line-height:1.6}
+.tax-card{border:1.5px solid #bfdbfe;background:#eff6ff}
+.tax-card .card-title{color:var(--primary)}
+.tax-result-box{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #93c5fd;border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;font-size:14px;color:#1e40af;font-weight:600}
+.tax-result-box strong{font-size:18px;color:#1d4ed8}
+
+/* ── アドバイスカード ────────────────── */
+.advice-card{background:var(--card);border-radius:var(--radius);padding:20px 24px;margin-top:16px;box-shadow:var(--shadow);border-left:4px solid var(--orange)}
+.advice-card:empty{display:none}
+
+/* ── フッター ────────────────── */
+.footer{background:#1e293b;color:#94a3b8;text-align:center;padding:24px 16px;font-size:13px;margin-top:40px}
+.footer-note{margin-top:6px;font-size:11px;opacity:.7}
+
+/* ── レスポンシブ ────────────────── */
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .result-cards{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .tab{padding:8px 12px;font-size:12px}
+  .hero-inner{flex-direction:column;gap:24px}
+  .hero-h1{font-size:24px}
+  .hero-stats{justify-content:center}
+  .hero-stat{min-width:90px;padding:12px}
+}

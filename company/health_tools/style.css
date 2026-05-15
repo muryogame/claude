@@ -1,0 +1,185 @@
+:root {
+  --bg: #f0fdf4;
+  --card: #ffffff;
+  --primary: #16a34a;
+  --primary-d: #15803d;
+  --red: #dc2626;
+  --orange: #ea580c;
+  --yellow: #ca8a04;
+  --blue: #2563eb;
+  --text: #1e293b;
+  --text-sub: #64748b;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,.07);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6}
+
+.header{background:var(--primary);color:#fff;padding:14px 0;box-shadow:0 2px 8px rgba(22,163,74,.3)}
+.header .wrap{display:flex;align-items:center;gap:16px;justify-content:space-between}
+.logo{font-size:20px;font-weight:700}
+.tagline{font-size:12px;opacity:.8}
+
+.tabs-bar{background:#14532d;border-bottom:3px solid var(--primary)}
+.tabs-bar .wrap{display:flex;gap:4px;padding:0 4px}
+.tab{background:transparent;border:none;color:rgba(255,255,255,.7);padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .2s;font-family:inherit}
+.tab:hover{color:#fff;background:rgba(255,255,255,.1)}
+.tab.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.12)}
+
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+.main{padding:24px 16px}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start}
+
+.card{background:var(--card);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);margin-bottom:16px}
+.card-title{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--primary)}
+.card-note{font-size:13px;color:var(--text-sub);margin-bottom:12px}
+
+/* 薬入力 */
+.drug-input-row{display:flex;gap:10px;margin-bottom:8px}
+.drug-text-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:inherit;background:#fafafa;transition:border .15s}
+.drug-text-input:focus{outline:none;border-color:var(--primary);background:#fff}
+.btn-add{padding:10px 18px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s}
+.btn-add:hover{background:var(--primary-d)}
+
+/* サジェスト */
+.drug-suggestions{background:var(--card);border:1.5px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:8px;display:none}
+.drug-sug-item{padding:8px 14px;cursor:pointer;font-size:14px;transition:background .1s}
+.drug-sug-item:hover{background:#f0fdf4}
+
+/* 薬リスト */
+.drug-list{display:flex;flex-direction:column;gap:8px;min-height:60px}
+.drug-empty{color:var(--text-sub);font-size:13px;padding:12px;text-align:center}
+.drug-tag{display:flex;align-items:center;justify-content:space-between;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:8px;padding:8px 14px;font-size:14px}
+.drug-tag-name{font-weight:600;color:#15803d}
+.drug-tag-del{background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;line-height:1;padding:0 2px;transition:color .1s}
+.drug-tag-del:hover{color:var(--red)}
+
+.btn-check-wrap{margin-bottom:16px}
+.btn-calc{display:block;width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s,transform .1s}
+.btn-calc:hover{background:var(--primary-d)}
+.btn-calc:active{transform:scale(.98)}
+
+/* アラート */
+.drug-alert{border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start}
+.drug-alert.danger{background:#fef2f2;border:1.5px solid #fca5a5}
+.drug-alert.warn  {background:#fffbeb;border:1.5px solid #fde68a}
+.drug-alert.info  {background:#eff6ff;border:1.5px solid #bfdbfe}
+.alert-icon{font-size:22px;line-height:1}
+.alert-body h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.alert-body p{font-size:13px;color:var(--text-sub);line-height:1.5}
+.drug-alert.danger h4{color:#b91c1c}
+.drug-alert.warn h4{color:#92400e}
+.drug-alert.info h4{color:#1d4ed8}
+
+.safe-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:16px;font-size:14px}
+.safe-icon{font-size:32px}
+
+/* クイックペア */
+.quick-pairs{display:flex;flex-wrap:wrap;gap:8px}
+.quick-btn{padding:7px 14px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:20px;font-size:13px;font-weight:600;color:#15803d;cursor:pointer;font-family:inherit;transition:background .15s}
+.quick-btn:hover{background:#dcfce7}
+
+/* フォームグリッド */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg-full{grid-column:1/-1}
+.fg label{font-size:12px;font-weight:600;color:var(--text-sub)}
+.fg input,.fg select{padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:inherit;background:#fafafa;color:var(--text)}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--primary);background:#fff}
+
+/* KPI */
+.sleep-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 16px}
+.kpi-card{background:var(--card);border-radius:var(--radius);padding:16px;text-align:center;box-shadow:var(--shadow);border-top:4px solid var(--primary)}
+.kpi-label{font-size:12px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
+.kpi-val{font-size:22px;font-weight:800;color:var(--text)}
+
+/* チャート */
+.chart-wrap{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+
+/* 睡眠ログ */
+.sleep-log{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.sleep-log-item{display:grid;grid-template-columns:100px 1fr auto auto auto;gap:12px;align-items:center;background:#f8fafc;border-radius:8px;padding:10px 14px;font-size:13px}
+.sleep-date{font-weight:700;color:var(--primary)}
+.sleep-score{font-weight:700}
+.sleep-score.high{color:var(--primary)}
+.sleep-score.mid{color:var(--yellow)}
+.sleep-score.low{color:var(--red)}
+.sleep-log-del{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px}
+.sleep-log-del:hover{color:var(--red)}
+
+.btn-danger{padding:10px 20px;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;color:var(--red);font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;transition:background .15s}
+.btn-danger:hover{background:#fee2e2}
+
+/* サイドバー */
+.sidebar{display:flex;flex-direction:column;gap:16px;position:sticky;top:16px}
+.ad-box{background:#f8fafc;border:2px dashed var(--border);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;text-align:center}
+.ad-box.tall{min-height:400px}
+.ad-lbl{font-size:11px;color:#94a3b8;margin-bottom:4px}
+.ad-inner{color:#cbd5e1;font-size:13px}
+.tip-card,.affiliate-card{background:var(--card);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.tip-card h3,.affiliate-card h3{font-size:14px;color:var(--primary);margin-bottom:8px}
+.tip-card ul{padding-left:16px;font-size:13px;color:var(--text-sub);display:flex;flex-direction:column;gap:4px}
+.aff-link{display:block;padding:8px 10px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;font-size:13px;color:#15803d;text-decoration:none;margin-top:6px;font-weight:600;transition:background .15s}
+.aff-link:hover{background:#dcfce7}
+
+/* ── BMI タブ ── */
+.bmi-result-hero{display:flex;align-items:center;gap:24px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;border:1.5px solid #86efac}
+.bmi-val-wrap{text-align:center;min-width:90px}
+.bmi-val-label{font-size:12px;color:var(--text-sub);font-weight:700}
+.bmi-val{font-size:48px;font-weight:900;color:var(--primary-d);line-height:1}
+.bmi-info-wrap{flex:1}
+.bmi-class{font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px}
+.bmi-ideal{font-size:14px;color:var(--text-sub)}
+.bmi-scale{margin-bottom:16px}
+.bmi-scale-bar{height:20px;border-radius:10px;background:linear-gradient(to right,#3b82f6 0%,#22c55e 25%,#f59e0b 50%,#ef4444 75%,#7f1d1d 100%);position:relative;margin-bottom:6px}
+.bmi-marker{width:4px;height:28px;background:#1e293b;border-radius:2px;position:absolute;top:-4px;transform:translateX(-50%);transition:left .5s ease}
+.bmi-scale-labels{display:flex;justify-content:space-around;font-size:11px;color:var(--text-sub);text-align:center;line-height:1.3}
+.bmi-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.weight-log{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.weight-log-item{display:grid;grid-template-columns:100px 70px 60px 1fr auto;gap:12px;align-items:center;background:#f8fafc;border-radius:8px;padding:10px 14px;font-size:13px}
+.wl-date{font-weight:700;color:var(--primary)}
+.wl-weight{font-weight:800;font-size:16px}
+.wl-bmi{color:var(--text-sub)}
+.wl-del{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px}
+.wl-del:hover{color:var(--red)}
+
+/* ── カロリー計算タブ ── */
+.fg-full{grid-column:1/-1}
+.goal-btns{display:flex;gap:8px;flex-wrap:wrap}
+.goal-btn{padding:8px 16px;border:2px solid var(--border);background:#fafafa;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--text-sub);transition:all .15s}
+.goal-btn.active{border-color:var(--primary);background:#f0fdf4;color:var(--primary-d)}
+.cal-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.kpi-target{border-top-color:var(--orange)!important}
+.macro-card{background:var(--card);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.macro-title{font-size:15px;font-weight:700;color:var(--primary);margin-bottom:14px}
+.macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.macro-item{background:#f8fafc;border-radius:10px;padding:14px;text-align:center;border:1.5px solid var(--border)}
+.macro-name{font-size:12px;color:var(--text-sub);font-weight:600;margin-bottom:4px}
+.macro-val{font-size:22px;font-weight:800;color:var(--text)}
+.macro-sub{font-size:11px;color:var(--text-sub);margin-top:2px}
+.food-ref-card{background:var(--card);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.food-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.food-item{background:#f8fafc;border-radius:8px;padding:8px 12px;font-size:13px;display:flex;justify-content:space-between;border:1px solid var(--border)}
+.food-kcal{font-weight:700;color:var(--orange)}
+
+/* 共通KPI */
+.kpi-card{background:var(--card);border-radius:var(--radius);padding:16px;text-align:center;box-shadow:var(--shadow);border:1.5px solid var(--border);border-top:4px solid var(--primary)}
+.kpi-label{font-size:11px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
+.kpi-val{font-size:22px;font-weight:800;color:var(--text)}
+.chart-wrap{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+
+.footer{background:#1e293b;color:#94a3b8;text-align:center;padding:24px 16px;font-size:13px;margin-top:40px}
+.footer-note{margin-top:6px;font-size:11px;opacity:.7}
+
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .form-grid{grid-template-columns:1fr}
+  .sleep-kpi-row,.bmi-kpi-row,.cal-kpi-row{grid-template-columns:1fr 1fr}
+  .sleep-log-item,.weight-log-item{grid-template-columns:1fr auto}
+  .macro-grid{grid-template-columns:1fr}
+  .food-list{grid-template-columns:1fr}
+  .tab{padding:8px 10px;font-size:12px}
+}
