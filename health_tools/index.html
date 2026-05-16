@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>処方薬 飲み合わせチェッカー ＋ 睡眠スコア記録 | 無料・ログイン不要</title>
+  <meta name="description" content="処方薬の飲み合わせを無料チェック。OTC市販薬との相互作用も確認。睡眠スコア・起床時間を毎日記録してグラフで可視化。">
+  <meta name="keywords" content="処方薬 飲み合わせ,薬 相互作用チェック,睡眠スコア 記録,睡眠グラフ,市販薬 飲み合わせ">
+  <!-- SNS OGP -->
+  <meta property="og:title" content="処方薬 飲み合わせチェッカー ＋ 睡眠・BMI・カロリー管理 | 無料">
+  <meta property="og:description" content="処方薬・市販薬の飲み合わせを無料チェック。睡眠スコア記録・BMI計算・カロリー管理も。完全無料・ログイン不要。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="処方薬 飲み合わせチェッカー ＋ 睡眠・BMI・カロリー管理">
+  <meta name="twitter:description" content="処方薬の飲み合わせチェック＋睡眠スコア記録＋BMI計算＋カロリー管理。完全無料・ログイン不要。">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="wrap">
+    <div class="logo">💊 健康ツール</div>
+    <div class="tagline">処方薬チェック ＋ 睡眠スコア記録 — 無料・ログイン不要</div>
+  </div>
+</header>
+
+<div class="tabs-bar">
+  <div class="wrap">
+    <button class="tab active" data-tab="drug">💊 飲み合わせチェック</button>
+    <button class="tab" data-tab="sleep">🌙 睡眠スコア記録</button>
+    <button class="tab" data-tab="bmi">⚖️ BMI・体重管理</button>
+    <button class="tab" data-tab="calorie">🍎 カロリー計算</button>
+  </div>
+</div>
+
+<!-- ========== TAB 1: 飲み合わせ ========== -->
+<main class="wrap main" id="tab-drug">
+  <div class="layout">
+    <div class="panel">
+
+      <section class="card">
+        <h2 class="card-title">💊 服用中の薬を追加</h2>
+        <p class="card-note">薬の名前を入力して「追加」してください。一般名・商品名どちらでも対応。</p>
+        <div class="drug-input-row">
+          <input type="text" id="drug-input" placeholder="例: アスピリン、バファリン、ワーファリン" class="drug-text-input" autocomplete="off">
+          <button class="btn-add" id="drug-add-btn">＋ 追加</button>
+        </div>
+        <div class="drug-suggestions" id="drug-suggestions"></div>
+        <div class="drug-list" id="drug-list">
+          <div class="drug-empty">薬を追加するとここに表示されます</div>
+        </div>
+      </section>
+
+      <div class="btn-check-wrap">
+        <button class="btn-calc" id="drug-check-btn">💊 飲み合わせをチェックする</button>
+      </div>
+
+      <div id="drug-result" style="display:none">
+        <div id="drug-alerts"></div>
+        <div class="safe-box" id="drug-safe-box" style="display:none">
+          <div class="safe-icon">✅</div>
+          <div>登録された薬の組み合わせに、主要な相互作用は見つかりませんでした。<br>
+          <small>※ 必ず医師・薬剤師にも確認してください。</small></div>
+        </div>
+      </div>
+
+      <section class="card" style="margin-top:16px">
+        <h2 class="card-title">📋 よくある組み合わせ注意薬</h2>
+        <div class="quick-pairs">
+          <button class="quick-btn" data-drugs="ワーファリン,アスピリン">ワーファリン＋アスピリン</button>
+          <button class="quick-btn" data-drugs="降圧薬,グレープフルーツ">降圧薬＋グレープフルーツ</button>
+          <button class="quick-btn" data-drugs="睡眠薬,アルコール">睡眠薬＋アルコール</button>
+          <button class="quick-btn" data-drugs="抗生物質,牛乳">抗生物質＋牛乳</button>
+          <button class="quick-btn" data-drugs="イブプロフェン,アスピリン">イブプロフェン＋アスピリン</button>
+        </div>
+      </section>
+    </div>
+
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3>⚠️ ご注意</h3>
+        <ul>
+          <li>本ツールは一般的な情報提供のみ</li>
+          <li>必ず医師・薬剤師に確認を</li>
+          <li>自己判断での服薬中止は危険</li>
+          <li>データは端末内のみ（送信なし）</li>
+        </ul>
+      </div>
+      <div class="affiliate-card">
+        <h3>💡 薬の情報を調べる</h3>
+        <a href="https://www.kegg.jp/kegg/drug/drug_ja.html" target="_blank" rel="noopener" class="aff-link">KEGG Drug（無料）</a>
+        <a href="https://www.info.pmda.go.jp/" target="_blank" rel="noopener" class="aff-link">PMDA 医薬品情報</a>
+      </div>
+      <div class="ad-box tall"><div class="ad-lbl">広告</div><div class="ad-inner">160×600</div></div>
+    </aside>
+  </div>
+</main>
+
+<!-- ========== TAB 2: 睡眠記録 ========== -->
+<main class="wrap main" id="tab-sleep" style="display:none">
+  <div class="layout">
+    <div class="panel">
+
+      <section class="card">
+        <h2 class="card-title">🌙 今日の睡眠を記録</h2>
+        <div class="form-grid">
+          <div class="fg"><label>日付</label>
+            <input type="date" id="s-date"></div>
+          <div class="fg"><label>就寝時刻</label>
+            <input type="time" id="s-bed" value="23:00"></div>
+          <div class="fg"><label>起床時刻</label>
+            <input type="time" id="s-wake" value="07:00"></div>
+          <div class="fg"><label>睡眠スコア（0〜100）</label>
+            <input type="number" id="s-score" min="0" max="100" value="75" placeholder="体感を入力"></div>
+          <div class="fg"><label>寝付きやすさ</label>
+            <select id="s-onset">
+              <option value="3">すぐ眠れた（◎）</option>
+              <option value="2" selected>普通（○）</option>
+              <option value="1">少し時間がかかった（△）</option>
+              <option value="0">なかなか眠れなかった（×）</option>
+            </select></div>
+          <div class="fg"><label>目覚め感</label>
+            <select id="s-refresh">
+              <option value="3">スッキリ（◎）</option>
+              <option value="2" selected>普通（○）</option>
+              <option value="1">少し眠い（△）</option>
+              <option value="0">ぐったり（×）</option>
+            </select></div>
+          <div class="fg fg-full"><label>メモ（夢・体調など）</label>
+            <input type="text" id="s-note" placeholder="例: 深夜に目が覚めた、いい夢を見た"></div>
+        </div>
+        <button class="btn-calc" id="sleep-add-btn">🌙 記録を保存</button>
+      </section>
+
+      <div id="sleep-stats" style="display:none">
+        <div class="sleep-kpi-row">
+          <div class="kpi-card"><div class="kpi-label">平均睡眠時間</div><div class="kpi-val" id="k-duration">—</div></div>
+          <div class="kpi-card"><div class="kpi-label">平均スコア</div><div class="kpi-val" id="k-score">—</div></div>
+          <div class="kpi-card"><div class="kpi-label">記録日数</div><div class="kpi-val" id="k-days">—</div></div>
+          <div class="kpi-card"><div class="kpi-label">最高スコア</div><div class="kpi-val" id="k-best">—</div></div>
+        </div>
+        <div class="chart-wrap"><canvas id="chart-sleep" height="100"></canvas></div>
+      </div>
+
+      <section class="card" id="sleep-log-section" style="display:none">
+        <h2 class="card-title">📅 記録一覧</h2>
+        <div class="sleep-log" id="sleep-log"></div>
+        <button class="btn-danger" id="sleep-clear-btn">🗑️ 全記録を削除</button>
+      </section>
+    </div>
+
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3>😴 良い睡眠のコツ</h3>
+        <ul>
+          <li>毎日同じ時刻に起きる</li>
+          <li>就寝1時間前はスマホ控えめに</li>
+          <li>寝室は18〜22℃が理想</li>
+          <li>7〜9時間が成人の適切な睡眠</li>
+          <li>カフェインは就寝6時間前まで</li>
+        </ul>
+      </div>
+      <div class="affiliate-card">
+        <h3>🛏️ 睡眠グッズ</h3>
+        <a href="https://amzn.to/sleep-tracker" target="_blank" rel="noopener" class="aff-link">睡眠トラッカー（Amazon）</a>
+        <a href="https://amzn.to/white-noise" target="_blank" rel="noopener" class="aff-link">ホワイトノイズ機器</a>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- ========== TAB 3: BMI・体重管理 ========== -->
+<main class="wrap main" id="tab-bmi" style="display:none">
+  <div class="layout">
+    <div class="panel">
+
+      <section class="card">
+        <h2 class="card-title">⚖️ BMI 計算・体重を記録</h2>
+        <div class="form-grid">
+          <div class="fg"><label>身長 (cm)</label>
+            <input type="number" id="bmi-height" min="100" max="250" step="0.1" value="170" placeholder="例: 170"></div>
+          <div class="fg"><label>体重 (kg)</label>
+            <input type="number" id="bmi-weight" min="20" max="300" step="0.1" value="65" placeholder="例: 65"></div>
+          <div class="fg"><label>日付</label>
+            <input type="date" id="bmi-date"></div>
+          <div class="fg"><label>メモ（任意）</label>
+            <input type="text" id="bmi-note" placeholder="例: 朝食前, 運動後"></div>
+        </div>
+        <button class="btn-calc" id="bmi-calc-btn">⚖️ BMI を計算・記録する</button>
+      </section>
+
+      <div id="bmi-result" style="display:none">
+        <div class="bmi-result-hero">
+          <div class="bmi-val-wrap">
+            <div class="bmi-val-label">BMI</div>
+            <div class="bmi-val" id="bmi-value">—</div>
+          </div>
+          <div class="bmi-info-wrap">
+            <div class="bmi-class" id="bmi-class">—</div>
+            <div class="bmi-ideal" id="bmi-ideal">—</div>
+          </div>
+        </div>
+        <div class="bmi-scale">
+          <div class="bmi-scale-bar">
+            <div class="bmi-marker" id="bmi-marker"></div>
+          </div>
+          <div class="bmi-scale-labels">
+            <span>低体重<br>&lt;18.5</span><span>普通体重<br>18.5–25</span><span>過体重<br>25–30</span><span>肥満<br>≥30</span>
+          </div>
+        </div>
+        <div class="share-row" id="bmi-share-row" style="margin-top:12px;display:none">
+          <button class="share-btn share-btn-x" id="bmi-share-x">𝕏 Xでシェア</button>
+          <button class="share-btn share-btn-line" id="bmi-share-line">💬 LINEでシェア</button>
+          <button class="share-btn share-btn-copy" id="bmi-share-copy">🔗 URLをコピー</button>
+        </div>
+      </div>
+
+      <div id="bmi-history-wrap" style="display:none">
+        <div class="chart-wrap"><canvas id="chart-weight" height="100"></canvas></div>
+        <div class="bmi-kpi-row">
+          <div class="kpi-card"><div class="kpi-label">記録日数</div><div class="kpi-val" id="bk-days">—</div></div>
+          <div class="kpi-card"><div class="kpi-label">最新体重</div><div class="kpi-val" id="bk-latest">—</div></div>
+          <div class="kpi-card"><div class="kpi-label">最低体重</div><div class="kpi-val" id="bk-min">—</div></div>
+          <div class="kpi-card"><div class="kpi-label">最高体重</div><div class="kpi-val" id="bk-max">—</div></div>
+        </div>
+        <section class="card">
+          <h2 class="card-title">📋 体重記録一覧</h2>
+          <div class="weight-log" id="weight-log"></div>
+          <button class="btn-danger" id="bmi-clear-btn">🗑️ 全記録を削除</button>
+        </section>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3>📊 BMI の目安（日本肥満学会）</h3>
+        <ul>
+          <li><strong>18.5未満</strong>: 低体重（やせ）</li>
+          <li><strong>18.5〜25</strong>: 普通体重</li>
+          <li><strong>25〜30</strong>: 過体重（肥満度1）</li>
+          <li><strong>30〜35</strong>: 肥満度2</li>
+          <li><strong>35以上</strong>: 高度肥満</li>
+          <li>理想BMIは22とされています</li>
+        </ul>
+      </div>
+      <div class="affiliate-card">
+        <h3>⚖️ 体重管理グッズ</h3>
+        <a href="https://amzn.to/3weight" target="_blank" rel="noopener" class="aff-link">スマート体重計（Amazon）</a>
+        <a href="https://amzn.to/3fitness" target="_blank" rel="noopener" class="aff-link">フィットネスバンド</a>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- ========== TAB 4: カロリー計算 ========== -->
+<main class="wrap main" id="tab-calorie" style="display:none">
+  <div class="layout">
+    <div class="panel">
+
+      <section class="card">
+        <h2 class="card-title">🍎 1日の必要カロリーを計算</h2>
+        <p class="card-note">Mifflin-St Jeor 式による基礎代謝計算。より正確な値は医師・栄養士にご相談ください。</p>
+        <div class="form-grid">
+          <div class="fg"><label>年齢</label>
+            <input type="number" id="cal-age" min="10" max="100" value="30"></div>
+          <div class="fg"><label>性別</label>
+            <select id="cal-sex">
+              <option value="male">男性</option>
+              <option value="female">女性</option>
+            </select></div>
+          <div class="fg"><label>身長 (cm)</label>
+            <input type="number" id="cal-height" min="100" max="250" step="0.1" value="170"></div>
+          <div class="fg"><label>体重 (kg)</label>
+            <input type="number" id="cal-weight" min="20" max="300" step="0.1" value="65"></div>
+          <div class="fg fg-full"><label>活動レベル</label>
+            <select id="cal-activity">
+              <option value="1.2">ほぼ座りっぱなし（デスクワーク中心）</option>
+              <option value="1.375">軽い運動（週1〜3回）</option>
+              <option value="1.55" selected>中程度の運動（週3〜5回）</option>
+              <option value="1.725">激しい運動（週6〜7回）</option>
+              <option value="1.9">非常に激しい（肉体労働・アスリート）</option>
+            </select></div>
+          <div class="fg fg-full"><label>目標</label>
+            <div class="goal-btns" id="cal-goal-btns">
+              <button class="goal-btn active" data-delta="-500">-0.5kg/週（減量）</button>
+              <button class="goal-btn active" data-delta="0">現状維持</button>
+              <button class="goal-btn" data-delta="500">+0.5kg/週（増量）</button>
+            </div></div>
+        </div>
+        <button class="btn-calc" id="cal-calc-btn">🍎 カロリーを計算する</button>
+      </section>
+
+      <div id="cal-result" style="display:none">
+        <div class="cal-kpi-row">
+          <div class="kpi-card"><div class="kpi-label">基礎代謝 (BMR)</div><div class="kpi-val" id="cal-bmr">—</div></div>
+          <div class="kpi-card"><div class="kpi-label">維持カロリー (TDEE)</div><div class="kpi-val" id="cal-tdee">—</div></div>
+          <div class="kpi-card kpi-target"><div class="kpi-label">目標カロリー</div><div class="kpi-val" id="cal-target">—</div></div>
+        </div>
+        <div class="macro-card">
+          <h3 class="macro-title">🥗 推奨マクロ栄養素</h3>
+          <div class="macro-grid" id="macro-grid"></div>
+          <div class="chart-wrap"><canvas id="chart-macro" height="200"></canvas></div>
+        </div>
+        <div class="food-ref-card">
+          <h3 class="macro-title">🍱 参考: 食品カロリー目安</h3>
+          <div class="food-list" id="food-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="tip-card">
+        <h3>💡 カロリー管理のコツ</h3>
+        <ul>
+          <li>急激な制限より-500kcal/日が安全</li>
+          <li>たんぱく質は体重×1.5〜2gが目安</li>
+          <li>朝食をしっかり摂ると代謝UP</li>
+          <li>食物繊維で満腹感を得やすく</li>
+          <li>水をしっかり飲む（1日1.5〜2L）</li>
+        </ul>
+      </div>
+      <div class="affiliate-card">
+        <h3>📱 カロリー管理アプリ</h3>
+        <a href="https://www.asken.jp/" target="_blank" rel="noopener" class="aff-link">あすけん（無料）</a>
+        <a href="https://calomeal.com/" target="_blank" rel="noopener" class="aff-link">カロミル（無料）</a>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>健康ツール — 飲み合わせチェック・睡眠記録・BMI管理・カロリー計算（無料・ログイン不要）</p>
+  <p class="footer-note">※ 本ツールの情報は参考のみです。薬の服用・健康管理は必ず医師・薬剤師にご相談ください。</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

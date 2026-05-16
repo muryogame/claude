@@ -1,0 +1,180 @@
+:root {
+  --bg: #faf5ff;
+  --card: #ffffff;
+  --primary: #7c3aed;
+  --primary-d: #6d28d9;
+  --accent: #db2777;
+  --green: #16a34a;
+  --blue: #2563eb;
+  --orange: #ea580c;
+  --text: #1e293b;
+  --text-sub: #64748b;
+  --border: #e9d5ff;
+  --radius: 14px;
+  --shadow: 0 2px 12px rgba(124,58,237,.08);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6}
+
+.header{background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;padding:14px 0;box-shadow:0 2px 12px rgba(124,58,237,.35)}
+.header-inner{display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;font-weight:800}
+.tagline{font-size:12px;opacity:.85}
+.lang-toggle{background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.6);color:#fff;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;transition:background .15s}
+.lang-toggle:hover{background:rgba(255,255,255,.3)}
+
+.tabs-bar{background:#4c1d95;border-bottom:3px solid var(--primary)}
+.tabs-bar .wrap{display:flex;gap:4px;padding:0 4px}
+.tab{background:transparent;border:none;color:rgba(255,255,255,.7);padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .2s;font-family:inherit}
+.tab:hover{color:#fff;background:rgba(255,255,255,.1)}
+.tab.active{color:#fff;border-bottom-color:#e9d5ff;background:rgba(255,255,255,.12)}
+
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+.main{padding:24px 16px}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start}
+
+/* ── カード ── */
+.card{background:var(--card);border-radius:var(--radius);padding:22px 26px;box-shadow:var(--shadow);margin-bottom:16px;border:1.5px solid var(--border)}
+.card-title{font-size:16px;font-weight:800;margin-bottom:12px;color:var(--primary)}
+
+/* ── クイズイントロ ── */
+.intro-text{font-size:14px;color:var(--text-sub);margin-bottom:16px;line-height:1.7}
+.type-grid-preview{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.type-chip{background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1.5px solid #ddd6fe;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;color:var(--primary-d)}
+.btn-start{display:block;width:100%;padding:16px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;border-radius:12px;font-size:18px;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity .15s,transform .1s;letter-spacing:.5px}
+.btn-start:hover{opacity:.9}
+.btn-start:active{transform:scale(.98)}
+
+/* ── プログレス ── */
+.progress-bar-wrap{background:#ede9fe;border-radius:20px;height:8px;margin-bottom:6px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:20px;transition:width .4s ease}
+.progress-label{font-size:13px;color:var(--text-sub);text-align:right;margin-bottom:16px}
+
+/* ── 質問カード ── */
+.question-card{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:1.5px solid var(--border)}
+.q-text{font-size:17px;font-weight:700;margin-bottom:20px;color:var(--text);line-height:1.6}
+.q-options{display:flex;flex-direction:column;gap:10px}
+.q-option{padding:13px 18px;background:#faf5ff;border:2px solid var(--border);border-radius:10px;font-size:15px;cursor:pointer;font-family:inherit;text-align:left;color:var(--text);transition:all .15s;font-weight:500}
+.q-option:hover{border-color:var(--primary);background:#ede9fe;color:var(--primary-d)}
+.q-option.selected{border-color:var(--primary);background:#ede9fe;color:var(--primary-d);font-weight:700}
+
+/* ── 結果 ── */
+.result-hero{display:flex;align-items:center;gap:20px;background:linear-gradient(135deg,#ede9fe,#fce7f3);border-radius:var(--radius);padding:24px;margin-bottom:16px;border:1.5px solid #ddd6fe}
+.result-char-icon{font-size:64px;line-height:1}
+.result-type-label{font-size:12px;font-weight:700;color:var(--primary);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.result-char-name{font-size:26px;font-weight:800;color:var(--text);margin-bottom:2px}
+.result-series{font-size:13px;color:var(--text-sub)}
+
+.result-desc-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1.5px solid var(--border);margin-bottom:16px;box-shadow:var(--shadow)}
+.res-desc{font-size:15px;line-height:1.75;margin-bottom:12px}
+.res-traits{display:flex;flex-wrap:wrap;gap:8px}
+.trait-tag{background:#ede9fe;color:var(--primary-d);border-radius:20px;padding:4px 14px;font-size:13px;font-weight:600}
+
+.result-radar-wrap{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:var(--shadow);border:1.5px solid var(--border);max-width:320px;margin-left:auto;margin-right:auto}
+
+.similar-chars{background:var(--card);border-radius:var(--radius);padding:20px;border:1.5px solid var(--border);margin-bottom:16px;box-shadow:var(--shadow)}
+.sim-title{font-size:15px;font-weight:700;color:var(--primary);margin-bottom:12px}
+.sim-list{display:flex;flex-wrap:wrap;gap:10px}
+.sim-char{background:#faf5ff;border:1.5px solid var(--border);border-radius:10px;padding:10px 16px;font-size:14px}
+.sim-char-name{font-weight:700;color:var(--text)}
+.sim-char-series{font-size:12px;color:var(--text-sub)}
+
+.share-area{display:flex;gap:12px;flex-wrap:wrap}
+.btn-share{padding:12px 24px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn-share.twitter{background:#000;color:#fff}
+.btn-share.twitter:hover{opacity:.8}
+.btn-share.line{background:#06C755;color:#fff}
+.btn-share.line:hover{opacity:.8}
+.btn-share.copy{background:#f1f5f9;color:#1e293b;border:1.5px solid #e2e8f0}
+.btn-share.copy:hover{background:#e2e8f0}
+.btn-share.copy.copied{background:#f0fdf4;border-color:#86efac;color:#15803d}
+.btn-retry{padding:12px 24px;background:#ede9fe;color:var(--primary-d);border:2px solid #ddd6fe;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-retry:hover{background:#ddd6fe}
+
+/* ── ゲーム記録 ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:12px;font-weight:700;color:var(--text-sub)}
+.fg input,.fg select{padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:inherit;background:#fafafa;color:var(--text)}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--primary);background:#fff}
+
+.btn-calc{display:block;width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),var(--primary-d));color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity .15s,transform .1s}
+.btn-calc:hover{opacity:.9}
+.btn-calc:active{transform:scale(.98)}
+
+.game-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 16px}
+.kpi-card{background:var(--card);border-radius:var(--radius);padding:16px;text-align:center;box-shadow:var(--shadow);border:1.5px solid var(--border);border-top:4px solid var(--primary)}
+.kpi-label{font-size:12px;color:var(--text-sub);font-weight:600;margin-bottom:6px}
+.kpi-val{font-size:20px;font-weight:800;color:var(--text)}
+
+.chart-wrap{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1.5px solid var(--border);margin-bottom:16px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chart-wrap.half{margin-bottom:0}
+
+.game-filter-row{display:flex;gap:10px;margin-bottom:12px}
+.game-search-input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit}
+.game-search-input:focus{outline:none;border-color:var(--primary)}
+.game-filter-sel{padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:#fafafa}
+
+.game-log{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.game-log-item{display:grid;grid-template-columns:90px 1fr 70px 80px auto auto;gap:10px;align-items:center;background:#faf5ff;border-radius:10px;padding:10px 14px;font-size:13px;border:1.5px solid var(--border)}
+.game-log-date{font-weight:700;color:var(--primary-d)}
+.game-log-title{font-weight:700}
+.game-log-hours{font-weight:800;color:var(--primary);text-align:right}
+.game-log-genre{background:#ede9fe;color:var(--primary-d);border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;text-align:center}
+.game-log-mood{font-size:16px;text-align:center}
+.game-log-del{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px}
+.game-log-del:hover{color:#dc2626}
+
+.btn-danger{padding:10px 20px;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;color:#dc2626;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px}
+.btn-danger:hover{background:#fee2e2}
+
+/* サイドバー */
+.sidebar{display:flex;flex-direction:column;gap:16px;position:sticky;top:16px}
+.ad-box{background:#faf5ff;border:2px dashed var(--border);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;text-align:center}
+.ad-box.tall{min-height:400px}
+.ad-lbl{font-size:11px;color:#94a3b8;margin-bottom:4px}
+.ad-inner{color:#ddd6fe;font-size:13px}
+.tip-card,.affiliate-card{background:var(--card);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);border:1.5px solid var(--border)}
+.tip-card h3,.affiliate-card h3{font-size:14px;color:var(--primary);margin-bottom:8px;font-weight:700}
+.tip-card ul{padding-left:16px;font-size:13px;color:var(--text-sub);display:flex;flex-direction:column;gap:4px}
+.aff-link{display:block;padding:8px 10px;background:#faf5ff;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--primary-d);text-decoration:none;margin-top:6px;font-weight:600}
+.aff-link:hover{background:#ede9fe}
+
+/* ── MBTI バッジ ── */
+.result-match-pct{margin-top:6px;font-size:13px;color:#fce7f3;font-weight:600}
+.result-mbti-card{background:linear-gradient(135deg,#4c1d95,#7c3aed);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:20px;box-shadow:0 4px 20px rgba(124,58,237,.3)}
+.mbti-type-letters{font-size:42px;font-weight:900;color:#fff;letter-spacing:6px;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.mbti-type-info{text-align:left}
+.mbti-type-name{font-size:17px;font-weight:800;color:#e9d5ff;margin-bottom:2px}
+.mbti-type-sub{font-size:13px;color:#c4b5fd;opacity:.9}
+
+/* ── 性格分布バー ── */
+.result-breakdown-card{background:var(--card);border-radius:var(--radius);padding:20px 24px;border:1.5px solid var(--border);margin-bottom:16px;box-shadow:var(--shadow)}
+.breakdown-title{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:14px}
+.breakdown-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bd-labels{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--text-sub);min-width:100%;position:relative}
+.bd-left-lbl{font-size:12px;font-weight:700;color:var(--text-sub);min-width:80px;text-align:right}
+.bd-right-lbl{font-size:12px;font-weight:700;color:var(--text-sub);min-width:80px;text-align:left}
+.bd-bar-wrap{flex:1;background:#e9d5ff;border-radius:20px;height:12px;overflow:hidden;position:relative}
+.bd-bar{height:100%;border-radius:20px;transition:width .6s ease}
+.bd-pct{font-size:13px;font-weight:800;min-width:36px;text-align:center}
+
+/* ── q-option アニメーション ── */
+.q-option.selected{border-color:var(--primary);background:#ede9fe;color:var(--primary-d);font-weight:700;transform:scale(1.02)}
+.q-option:disabled{cursor:not-allowed;opacity:.7}
+
+.footer{background:#1e293b;color:#94a3b8;text-align:center;padding:24px 16px;font-size:13px;margin-top:40px}
+.footer-note{margin-top:6px;font-size:11px;opacity:.7}
+
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .form-grid{grid-template-columns:1fr}
+  .game-kpi-row{grid-template-columns:1fr 1fr}
+  .chart-row{grid-template-columns:1fr}
+  .game-log-item{grid-template-columns:80px 1fr auto auto}
+  .game-log-genre,.game-log-mood{display:none}
+  .tab{padding:10px 14px;font-size:13px}
+}
