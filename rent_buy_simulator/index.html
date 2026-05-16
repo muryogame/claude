@@ -14,6 +14,10 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="家賃vs購入 コスト比較シミュレーター（無料・参考用）">
   <meta name="twitter:description" content="賃貸と購入どっちが得？損益分岐点・返済負担率・金利上昇リスクを一括試算。完全無料の不動産コスト比較ツール。">
+  <link rel="canonical" href="https://muryogame.github.io/claude/rent_buy_simulator/">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"賃貸vs購入 コスト比較シミュレーター","url":"https://muryogame.github.io/claude/rent_buy_simulator/","description":"賃貸と購入どちらが得か？損益分岐点・住宅ローン返済額・金利リスク・繰り上げ返済を無料計算。参考目的のシミュレーターです。","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"賃貸と購入どちらが得ですか？","acceptedAnswer":{"@type":"Answer","text":"一般的に15〜20年が損益分岐点と言われますが、地域・物件価格・金利・ライフプランによって大きく異なります。このシミュレーターで自分の条件で試算してください。"}},{"@type":"Question","name":"住宅ローンの返済額はどう計算されますか？","acceptedAnswer":{"@type":"Answer","text":"元利均等返済（毎月同額）と元金均等返済（利息が減少）の両方式で計算します。金利・借入額・返済期間を入力するだけです。"}},{"@type":"Question","name":"住宅ローン控除は考慮されますか？","acceptedAnswer":{"@type":"Answer","text":"13年間×0.7%×残高（上限あり）の住宅ローン控除を計算に含めています。ただし実際の控除額は税務署にご確認ください。"}}]}]}
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -41,6 +45,15 @@
     <div class="hobby-badge">趣味ツール</div>
   </div>
 </header>
+
+<div class="cross-tools-bar">
+  <div class="wrap cross-tools-inner">
+    <span class="cross-tools-label">他のツール：</span>
+    <a href="../anime_game_tools/" class="cross-tool-link">🎮 アニメキャラ診断</a>
+    <a href="../health_tools/" class="cross-tool-link">💊 健康管理ツール</a>
+    <a href="../" class="cross-tool-link">🛠️ ツール一覧</a>
+  </div>
+</div>
 
 <!-- ヒーローセクション -->
 <section class="hero">
@@ -81,6 +94,14 @@
 <main class="wrap main" id="tab-compare">
   <div class="layout">
     <div class="panel">
+
+      <!-- クイックプリセット -->
+      <div class="preset-bar">
+        <span class="preset-label">🚀 クイック入力：</span>
+        <button class="preset-btn" data-preset="urban_family">🏙️ 都市部ファミリー</button>
+        <button class="preset-btn" data-preset="rural_single">🌾 地方シングル</button>
+        <button class="preset-btn" data-preset="highrise">🏢 タワマン投資</button>
+      </div>
 
       <section class="card">
         <h2 class="card-title">🏠 購入の場合</h2>

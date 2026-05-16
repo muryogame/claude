@@ -14,6 +14,10 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="処方薬 飲み合わせチェッカー ＋ 睡眠・BMI・カロリー管理">
   <meta name="twitter:description" content="処方薬の飲み合わせチェック＋睡眠スコア記録＋BMI計算＋カロリー管理。完全無料・ログイン不要。">
+  <link rel="canonical" href="https://muryogame.github.io/claude/health_tools/">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"処方薬飲み合わせチェッカー・健康管理ツール","url":"https://muryogame.github.io/claude/health_tools/","description":"処方薬・市販薬の飲み合わせチェック、BMI計算、睡眠スコア記録、カロリー計算。完全無料・ログイン不要。","applicationCategory":"HealthApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"何種類の薬の飲み合わせをチェックできますか？","acceptedAnswer":{"@type":"Answer","text":"ワーファリン・アスピリン・NSAIDs・降圧薬・スタチン・睡眠薬・SSRIなど20種類のカテゴリに対応。18種類の相互作用パターンを確認できます。"}},{"@type":"Question","name":"データはどこに保存されますか？","acceptedAnswer":{"@type":"Answer","text":"すべてのデータはお使いのブラウザのLocalStorageにのみ保存されます。サーバーへの送信は一切ありません。"}},{"@type":"Question","name":"BMIの計算方法は？","acceptedAnswer":{"@type":"Answer","text":"BMI = 体重(kg) ÷ 身長(m)² で計算します。18.5未満が低体重、18.5〜25未満が普通体重、25以上が肥満です。"}}]}]}
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -25,6 +29,15 @@
     <div class="tagline">処方薬チェック ＋ 睡眠スコア記録 — 無料・ログイン不要</div>
   </div>
 </header>
+
+<div class="cross-tools-bar">
+  <div class="wrap cross-tools-inner">
+    <span class="cross-tools-label">他のツール：</span>
+    <a href="../anime_game_tools/" class="cross-tool-link">🎮 アニメキャラ診断</a>
+    <a href="../rent_buy_simulator/" class="cross-tool-link">🏠 賃貸vs購入 比較</a>
+    <a href="../" class="cross-tool-link">🛠️ ツール一覧</a>
+  </div>
+</div>
 
 <div class="tabs-bar">
   <div class="wrap">
@@ -134,6 +147,17 @@
         </div>
         <button class="btn-calc" id="sleep-add-btn">🌙 記録を保存</button>
       </section>
+
+      <div id="sleep-streak-card" style="display:none;margin-bottom:14px">
+        <div class="streak-card">
+          <span class="streak-flame">🔥</span>
+          <div class="streak-body">
+            <div class="streak-count" id="streak-count">0</div>
+            <div class="streak-label">日連続記録中！</div>
+          </div>
+          <div class="streak-msg" id="streak-msg">継続は力なり！</div>
+        </div>
+      </div>
 
       <div id="sleep-stats" style="display:none">
         <div class="sleep-kpi-row">

@@ -702,5 +702,41 @@ document.getElementById('calc-prepay').addEventListener('click', () => {
   document.getElementById('result-prepay').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 });
 
+// ── クイックプリセット / Quick Presets ────────────────────────────
+const PRESETS = {
+  urban_family: {
+    'b-price':5500,'b-down':1100,'b-rate':0.5,'b-years':35,
+    'b-fees':7,'b-tax':18,'b-maint':3,'b-repair':150,
+    'r-rent':18,'r-deposit':36,'r-renew':2,'r-increase':1,
+    'compare-years':30,'r-income':800,
+  },
+  rural_single: {
+    'b-price':2200,'b-down':300,'b-rate':0.7,'b-years':30,
+    'b-fees':6,'b-tax':8,'b-maint':1.5,'b-repair':80,
+    'r-rent':6,'r-deposit':12,'r-renew':1,'r-increase':0,
+    'compare-years':25,'r-income':400,
+  },
+  highrise: {
+    'b-price':7000,'b-down':2000,'b-rate':1.2,'b-years':35,
+    'b-fees':8,'b-tax':24,'b-maint':4,'b-repair':200,
+    'r-rent':25,'r-deposit':50,'r-renew':2,'r-increase':1.5,
+    'compare-years':20,'r-income':1000,
+  },
+};
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const preset = PRESETS[btn.dataset.preset];
+    if (!preset) return;
+    Object.entries(preset).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    });
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-compare').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
 // ── 初期化: URL パラメータ読み込み ────────────────────────────────
 loadFromURL();

@@ -168,6 +168,59 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(
 .footer{background:#1e293b;color:#94a3b8;text-align:center;padding:24px 16px;font-size:13px;margin-top:40px}
 .footer-note{margin-top:6px;font-size:11px;opacity:.7}
 
+/* ── クロスナビゲーション ── */
+.cross-tools-bar{background:#2d1b69;border-bottom:1px solid rgba(255,255,255,.12);padding:7px 0}
+.cross-tools-inner{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cross-tools-label{font-size:11px;color:rgba(255,255,255,.55);font-weight:700;white-space:nowrap}
+.cross-tool-link{font-size:12px;color:rgba(255,255,255,.85);text-decoration:none;padding:4px 10px;background:rgba(255,255,255,.12);border-radius:20px;transition:background .15s;white-space:nowrap}
+.cross-tool-link:hover{background:rgba(255,255,255,.25)}
+
+/* ── 見出し（小） ── */
+.section-title-sm{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--border)}
+
+/* ── 診断履歴 ── */
+.history-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#f5f3ff;border-radius:8px;margin-bottom:6px;border:1px solid #ddd6fe}
+.h-icon{font-size:20px;flex-shrink:0}
+.h-body{flex:1;min-width:0}
+.h-name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h-meta{font-size:11px;color:var(--text-sub)}
+.h-date{font-size:11px;color:#94a3b8;white-space:nowrap;flex-shrink:0}
+
+/* ── 人気ランキング ── */
+.pop-item{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid #f1f5f9}
+.pop-item:last-child{border-bottom:none}
+.pop-rank{font-size:13px;font-weight:900;color:var(--primary);width:18px;text-align:center;flex-shrink:0}
+.pop-icon{font-size:18px;flex-shrink:0}
+.pop-body{flex:1;min-width:0}
+.pop-name{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pop-series{font-size:10px;color:var(--text-sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pop-bar-wrap{width:56px;background:#ede9fe;border-radius:4px;height:6px;flex-shrink:0;overflow:hidden}
+.pop-bar{height:6px;background:var(--primary);border-radius:4px;transition:width .6s ease}
+
+/* ── アニメーション ── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.result-hero{animation:fadeInUp .38s ease both}
+.result-mbti-card{animation:fadeInUp .38s .07s ease both}
+.result-desc-card{animation:fadeInUp .38s .13s ease both}
+.result-breakdown-card{animation:fadeInUp .38s .19s ease both}
+.result-radar-wrap{animation:fadeInUp .38s .25s ease both}
+.similar-chars{animation:fadeInUp .38s .31s ease both}
+.share-area{animation:fadeInUp .38s .36s ease both}
+
+/* ── ダークモード ── */
+@media(prefers-color-scheme:dark){
+  :root{--bg:#0f0a1e;--card:#1a1428;--text:#e2e8f0;--text-sub:#94a3b8;--border:#2d2344;--shadow:0 2px 12px rgba(0,0,0,.35)}
+  body{background:var(--bg)}
+  .card,.tip-card,.affiliate-card,.chart-wrap{background:var(--card);border-color:var(--border)}
+  .q-option{background:#1e1a32;border-color:#3d2d6a;color:var(--text)}
+  .result-hero,.result-desc-card,.result-breakdown-card,.result-radar-wrap,.similar-chars,.result-mbti-card{background:var(--card);border-color:var(--border)}
+  .history-item{background:#1a1428;border-color:#2d2344}
+  .pop-item{border-bottom-color:#2d2344}
+  .bd-bar-wrap,.pop-bar-wrap{background:#2d2344}
+  .sim-card{background:#1a1428;border-color:#2d2344}
+  .game-log-item{background:#0f0a1e}
+}
+
 @media(max-width:768px){
   .layout{grid-template-columns:1fr}
   .sidebar{display:none}

@@ -304,6 +304,7 @@ function renderSleepUI() {
 
   document.getElementById('sleep-stats').style.display = 'block';
   document.getElementById('sleep-log-section').style.display = 'block';
+  renderSleepStreak(recs);
 }
 
 document.getElementById('sleep-log').addEventListener('click', e => {
@@ -320,6 +321,32 @@ document.getElementById('sleep-clear-btn').addEventListener('click', () => {
   localStorage.removeItem(SLEEP_KEY);
   renderSleepUI();
 });
+
+// ── 睡眠ストリーク ────────────────────────────────────────────────
+function calcSleepStreak(records) {
+  if (!records.length) return 0;
+  const dates = [...new Set(records.map(r => r.date))].sort().reverse();
+  const today = new Date();
+  let streak = 0;
+  for (let i = 0; i < dates.length; i++) {
+    const d = new Date(dates[i]);
+    const diff = Math.round((today - d) / 86400000);
+    if (diff === i || diff === i + 1) streak++;
+    else break;
+  }
+  return streak;
+}
+
+function renderSleepStreak(records) {
+  const streak = calcSleepStreak(records);
+  const card = document.getElementById('sleep-streak-card');
+  if (!card) return;
+  if (streak < 2) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  document.getElementById('streak-count').textContent = streak;
+  const msgs = streak >= 30 ? '🏆 驚異の継続力！' : streak >= 14 ? '🌟 素晴らしい！' : streak >= 7 ? '💪 いい習慣！' : '👍 継続は力なり！';
+  document.getElementById('streak-msg').textContent = msgs;
+}
 
 // 初期読み込み
 renderSleepUI();

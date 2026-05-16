@@ -206,4 +206,40 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(
   .detail-item:nth-last-child(2){border-bottom:1px solid var(--border)}
   .risk-grid{grid-template-columns:1fr}
   .disclaimer-banner{position:relative}
+  .preset-bar{gap:8px}
+  .preset-btn{padding:7px 12px;font-size:12px}
+}
+
+/* ── クロスナビゲーション ── */
+.cross-tools-bar{background:#1e3a5f;border-bottom:1px solid rgba(255,255,255,.15);padding:7px 0}
+.cross-tools-inner{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cross-tools-label{font-size:11px;color:rgba(255,255,255,.55);font-weight:700;white-space:nowrap}
+.cross-tool-link{font-size:12px;color:rgba(255,255,255,.85);text-decoration:none;padding:4px 10px;background:rgba(255,255,255,.12);border-radius:20px;transition:background .15s;white-space:nowrap}
+.cross-tool-link:hover{background:rgba(255,255,255,.25)}
+
+/* ── クイックプリセット ── */
+.preset-bar{display:flex;align-items:center;gap:10px;padding:12px 0 16px;flex-wrap:wrap}
+.preset-label{font-size:13px;font-weight:700;color:var(--text-sub);white-space:nowrap}
+.preset-btn{padding:9px 18px;background:#eff6ff;border:2px solid #bfdbfe;border-radius:20px;font-size:13px;font-weight:700;color:#1d4ed8;cursor:pointer;font-family:inherit;transition:all .18s;white-space:nowrap}
+.preset-btn:hover{background:#dbeafe;border-color:#93c5fd;transform:translateY(-1px)}
+.preset-btn.active{background:#2563eb;border-color:#2563eb;color:#fff}
+
+/* ── アニメーション ── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card{animation:fadeInUp .35s ease both}
+.chart-wrap{animation:fadeInUp .4s ease both}
+.hero{animation:fadeInUp .5s ease both}
+
+/* ── ダークモード ── */
+@media(prefers-color-scheme:dark){
+  :root{--bg:#080d1a;--card:#0f172a;--text:#e2e8f0;--text-sub:#94a3b8;--border:#1e293b}
+  body{background:var(--bg)}
+  .card,.chart-wrap,.tip-card,.affiliate-card{background:var(--card);border-color:var(--border)}
+  .fg input,.fg select{background:#0f172a;color:var(--text);border-color:var(--border)}
+  .hero{background:linear-gradient(135deg,#080d1a,#0f1e3d)}
+  .hero-notice{background:#0f172a;border-color:#1e293b;color:var(--text-sub)}
+  .disclaimer-banner{background:#1e1b4b;border-bottom-color:#2d2b6b}
+  .preset-btn{background:#1e293b;border-color:#334155;color:#93c5fd}
+  .url-loaded-notice{background:#0f172a;border-color:#1e3a5f}
+  .safe-box{background:#0f1e14;border-color:#1e3a24}
 }

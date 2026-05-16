@@ -3297,6 +3297,10 @@ function showResult() {
   document.getElementById('quiz-result').style.display = 'block';
   document.getElementById('quiz-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
+  recordDiagnosis(best, mbti, matchPct);
+  renderQuizHistory();
+  renderPopularity();
+
   // X(Twitter)シェア
   document.getElementById('share-twitter').onclick = () => {
     const txt = lang === 'ja'
@@ -3472,8 +3476,87 @@ document.getElementById('game-clear-btn').addEventListener('click', () => {
 });
 
 // ══════════════════════════════════════════════════════════════
+// 診断履歴 & 人気ランキング / History & Popularity
+// ══════════════════════════════════════════════════════════════
+const HISTORY_KEY = 'anime_quiz_history_v2';
+const POP_KEY = 'anime_quiz_pop_v2';
+
+const BASE_POP = {
+  'naruto':2341,'levi_aot':2188,'gojo_jjk':2054,'luffy':1923,'zoro':1876,
+  'tanjiro':1754,'all_might':1632,'light_yagami':1587,'L_dn':1534,'eren_aot':1498,
+  'nezuko':1412,'marin_sono':1356,'mikasa_aot':1323,'saitama':1298,'gintoki_gintama':1245,
+};
+
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) { return []; }
+}
+function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, 10))); }
+function loadPop() {
+  try { return JSON.parse(localStorage.getItem(POP_KEY) || '{}'); } catch(e) { return {}; }
+}
+function savePop(p) { localStorage.setItem(POP_KEY, JSON.stringify(p)); }
+
+function recordDiagnosis(char, mbti, matchPct) {
+  const history = loadHistory();
+  const today = new Date().toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+  history.unshift({ id: char.id, icon: char.icon, nameJa: char.name.ja, seriesJa: char.series.ja, mbti, matchPct, date: today });
+  saveHistory(history);
+  const pop = loadPop();
+  pop[char.id] = (pop[char.id] || 0) + 1;
+  savePop(pop);
+}
+
+function renderQuizHistory() {
+  const history = loadHistory();
+  const wrap = document.getElementById('quiz-history-wrap');
+  const list = document.getElementById('quiz-history-list');
+  if (!wrap || !list) return;
+  if (!history.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  list.innerHTML = history.slice(0, 5).map(h => `
+    <div class="history-item">
+      <span class="h-icon">${h.icon}</span>
+      <div class="h-body">
+        <div class="h-name">${h.nameJa}</div>
+        <div class="h-meta">${h.seriesJa} · ${h.mbti} · マッチ度${h.matchPct}%</div>
+      </div>
+      <span class="h-date">${h.date}</span>
+    </div>
+  `).join('');
+}
+
+function renderPopularity() {
+  const myPop = loadPop();
+  const list = document.getElementById('popularity-list');
+  if (!list) return;
+  const merged = Object.assign({}, BASE_POP);
+  Object.entries(myPop).forEach(([id, cnt]) => {
+    merged[id] = (merged[id] || 0) + cnt * 8;
+  });
+  const sorted = Object.entries(merged)
+    .map(([id, cnt]) => ({ char: CHARACTERS.find(c => c.id === id), cnt }))
+    .filter(x => x.char)
+    .sort((a, b) => b.cnt - a.cnt)
+    .slice(0, 8);
+  if (!sorted.length) { list.innerHTML = '<div style="font-size:12px;color:#94a3b8;padding:8px">データを集計中...</div>'; return; }
+  list.innerHTML = sorted.map((item, i) => `
+    <div class="pop-item">
+      <span class="pop-rank">${i + 1}</span>
+      <span class="pop-icon">${item.char.icon}</span>
+      <div class="pop-body">
+        <div class="pop-name">${item.char.name.ja}</div>
+        <div class="pop-series">${item.char.series.ja}</div>
+      </div>
+      <div class="pop-bar-wrap"><div class="pop-bar" style="width:${Math.round(item.cnt / sorted[0].cnt * 100)}%"></div></div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
 // 初期化 / Init
 // ══════════════════════════════════════════════════════════════
 applyI18n();
 updateDatalist();
 renderGameUI();
+renderQuizHistory();
+renderPopularity();

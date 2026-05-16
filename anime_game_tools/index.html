@@ -14,6 +14,10 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="アニメキャラ性格診断 ＋ ゲームプレイ時間記録">
   <meta name="twitter:description" content="20問でMBTI診断＆アニメキャラマッチング。1141キャラ対応・完全無料。あなたは誰？">
+  <link rel="canonical" href="https://muryogame.github.io/claude/anime_game_tools/">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"アニメキャラ性格診断","url":"https://muryogame.github.io/claude/anime_game_tools/","description":"20問の性格診断で自分に似たアニメキャラを発見。1141キャラクター対応。MBTI分析・レーダーチャート付き。完全無料・ログイン不要。","applicationCategory":"EntertainmentApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"アニメキャラ診断は何キャラ対応していますか？","acceptedAnswer":{"@type":"Answer","text":"1141キャラクターに対応しています。NARUTO・進撃の巨人・呪術廻戦・ワンピースなど人気作品を網羅しています。"}},{"@type":"Question","name":"診断にかかる時間は？","acceptedAnswer":{"@type":"Answer","text":"約3分で完了します。20問の質問に回答するだけです。ログイン不要・完全無料です。"}},{"@type":"Question","name":"診断結果は何で決まりますか？","acceptedAnswer":{"@type":"Answer","text":"20問への回答からMBTI（E/I/T/F/N/S/J/P）スコアを計算し、最も近い性格プロファイルのキャラをマッチングします。"}}]}]}
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -28,6 +32,15 @@
     <button class="lang-toggle" id="lang-toggle">EN</button>
   </div>
 </header>
+
+<div class="cross-tools-bar">
+  <div class="wrap cross-tools-inner">
+    <span class="cross-tools-label">他のツール：</span>
+    <a href="../health_tools/" class="cross-tool-link">💊 健康管理ツール</a>
+    <a href="../rent_buy_simulator/" class="cross-tool-link">🏠 賃貸vs購入 比較</a>
+    <a href="../" class="cross-tool-link">🛠️ ツール一覧</a>
+  </div>
+</div>
 
 <div class="tabs-bar">
   <div class="wrap">
@@ -47,6 +60,14 @@
         <p class="intro-text" data-i18n="quiz_desc">20問の質問に答えて、あなたにそっくりなアニメキャラクターを見つけよう。所要時間: 約3分</p>
         <div class="type-grid-preview" id="type-chips"></div>
         <button class="btn-start" id="start-quiz-btn" data-i18n="start_btn">✨ 診断スタート！</button>
+        <div id="quiz-history-wrap" style="margin-top:18px;display:none">
+          <div class="section-title-sm">📋 あなたの診断履歴</div>
+          <div id="quiz-history-list"></div>
+        </div>
+        <div id="popularity-wrap" style="margin-top:18px">
+          <div class="section-title-sm">🔥 人気キャラ ランキング</div>
+          <div id="popularity-list"></div>
+        </div>
       </div>
 
       <!-- 質問エリア -->
