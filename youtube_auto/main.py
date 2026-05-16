@@ -3,7 +3,7 @@
 YouTube雑学チャンネル自動運営システム
 - 動画投稿時間（23:00）以外は情報収集
 - 毎日23:00に通常動画（10分）を自動生成・投稿
-- 毎日9:00/13:00/18:00/22:00にShorts（1分）を自動生成・投稿（1日4回）
+- 毎日21:00/22:00/23:00/00:00/01:00にShorts（最低60秒）を自動生成・投稿（1日5回）
 """
 import sys
 import os
@@ -20,13 +20,16 @@ from tts_generator import generate_audio
 from video_creator import build_video
 from thumbnail_creator import create_thumbnail
 from uploader import upload_video, upload_shorts, check_credentials_ready
+from analytics import record_video, fetch_and_update_stats, print_analytics_report
+from strategy import generate_daily_strategy
 
-# Shorts投稿スケジュール（1日4回）
+# Shorts投稿スケジュール（1日5回・深夜帯）
 SHORTS_SCHEDULE = [
-    ( 9, 0),   # 第1回:  9:00
-    (13, 0),   # 第2回: 13:00
-    (18, 0),   # 第3回: 18:00
-    (22, 0),   # 第4回: 22:00
+    (21,  0),  # 第1回: 21:00
+    (22,  0),  # 第2回: 22:00
+    (23,  0),  # 第3回: 23:00
+    ( 0,  0),  # 第4回: 00:00
+    ( 1,  0),  # 第5回: 01:00
 ]
 
 
@@ -58,8 +61,9 @@ def create_and_upload_video():
 
         print("\n[5/5] YouTubeにアップロード中...")
         if check_credentials_ready():
-            url = upload_video(video_path, thumb_path, script)
+            url, video_id = upload_video(video_path, thumb_path, script)
             print(f"\n  ✅ 通常動画 投稿完了: {url}")
+            record_video(video_id, script, video_type="video")
         else:
             print("\n  ⚠️  認証情報未設定のためスキップ")
 
@@ -100,8 +104,9 @@ def create_and_upload_shorts(slot: int = 1):
 
         print("\n[4/4] YouTubeにアップロード中...")
         if check_credentials_ready():
-            url = upload_shorts(video_path, script)
+            url, video_id = upload_shorts(video_path, script)
             print(f"\n  ✅ Shorts 投稿完了: {url}")
+            record_video(video_id, script, video_type="shorts")
         else:
             print("\n  ⚠️  認証情報未設定のためスキップ")
 
@@ -138,10 +143,12 @@ def run_scheduler():
     print("=" * 60)
 
     collect_once()
+    print_analytics_report()
 
     posted_today = None
     # Shorts投稿済みフラグ: {(date, slot_index): True}
     shorts_posted = {}
+    stats_updated_today = None
     stop_event = threading.Event()
     collect_thread = _start_collect(stop_event)
 
@@ -149,6 +156,15 @@ def run_scheduler():
         now = datetime.now()
         today = now.date()
         did_post = False
+
+        # 毎日6:00に統計更新 → 戦略分析 → レポート表示
+        if now.hour == 6 and now.minute == 0 and stats_updated_today != today:
+            print(f"\n[{now.strftime('%H:%M')}] 📊 パフォーマンス統計更新中...")
+            fetch_and_update_stats()
+            print_analytics_report()
+            print(f"\n[{now.strftime('%H:%M')}] 🧠 戦略分析・更新中...")
+            generate_daily_strategy()
+            stats_updated_today = today
 
         # Shorts投稿（1日2回チェック）
         for slot_idx, (sh, sm) in enumerate(SHORTS_SCHEDULE, 1):
@@ -178,6 +194,10 @@ if __name__ == "__main__":
     if "--once" in sys.argv:
         create_and_upload_video()
     elif "--shorts" in sys.argv:
-        create_and_upload_shorts(slot=1)
+        slot = 1
+        for i, arg in enumerate(sys.argv):
+            if arg == "--slot" and i + 1 < len(sys.argv):
+                slot = int(sys.argv[i + 1])
+        create_and_upload_shorts(slot=slot)
     else:
         run_scheduler()
