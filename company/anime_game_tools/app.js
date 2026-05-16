@@ -3,7 +3,7 @@
 // ══════════════════════════════════════════════════════════════
 // 言語設定 / Language Setting
 // ══════════════════════════════════════════════════════════════
-let lang = localStorage.getItem(\'animeToolLang') || 'ja';
+let lang = localStorage.getItem('animeToolLang') || 'ja';
 
 const I18N = {
   ja: {
@@ -117,7 +117,7 @@ const ANIME_LIST = [
   { ja:'SAKAMOTO DAYS',                              en:'Sakamoto Days' },
   { ja:'ダンダダン',                                  en:'Dandadan' },
   { ja:'葬送のフリーレン',                            en:"Frieren: Beyond Journey's End" },
-  { ja:\'俺だけレベルアップな件',                     en:'Solo Leveling' },
+  { ja:'俺だけレベルアップな件',                     en:'Solo Leveling' },
   // バトル・アクション
   { ja:'鬼滅の刃',                                    en:'Demon Slayer' },
   { ja:'呪術廻戦',                                    en:'Jujutsu Kaisen' },
@@ -160,7 +160,7 @@ const ANIME_LIST = [
   { ja:'鋼の錬金術師 BROTHERHOOD',                   en:'Fullmetal Alchemist: Brotherhood' },
   { ja:'ヴァイオレット・エヴァーガーデン',           en:'Violet Evergarden' },
   { ja:'ジョジョの奇妙な冒険',                       en:"JoJo's Bizarre Adventure" },
-  { ja:\'ゴールデンカムイ',                            en:'Golden Kamuy' },
+  { ja:'ゴールデンカムイ',                            en:'Golden Kamuy' },
   { ja:'ドラゴンボール超',                            en:'Dragon Ball Super' },
   { ja:'ソードアート・オンライン',                   en:'Sword Art Online' },
   // 心理・ディストピア
@@ -183,7 +183,7 @@ const ANIME_LIST = [
   // 名作・クラシック追加
   { ja:'COWBOY BEBOP',                                en:'Cowboy Bebop' },
   { ja:'夏目友人帳',                                  en:"Natsume's Book of Friends" },
-  { ja:\'宝石の国',                                    en:'Land of the Lustrous' },
+  { ja:'宝石の国',                                    en:'Land of the Lustrous' },
   { ja:'Dr.STONE',                                    en:'Dr. Stone' },
   { ja:'とんがり帽子のアトリエ',                      en:'Witch Hat Atelier' },
   // ミステリー・心理追加
@@ -210,7 +210,7 @@ const ANIME_LIST = [
   // 異世界・ファンタジー追加
   { ja:'オーバーロード',                              en:'Overlord' },
   { ja:'この素晴らしい世界に祝福を！',               en:"KonoSuba: God's Blessing" },
-  { ja:\'盾の勇者の成り上がり',                        en:'The Rising of the Shield Hero' },
+  { ja:'盾の勇者の成り上がり',                        en:'The Rising of the Shield Hero' },
   { ja:'幼女戦記',                                    en:'The Saga of Tanya the Evil' },
   { ja:'はたらく魔王様！',                            en:'The Devil Is a Part-Timer!' },
   { ja:'ゴブリンスレイヤー',                          en:'Goblin Slayer' },
@@ -219,7 +219,7 @@ const ANIME_LIST = [
   { ja:'乙女ゲームの破滅フラグしかない悪役令嬢に転生してしまった…', en:"My Next Life as a Villainess" },
   { ja:'魔王学院の不適合者',                          en:'The Misfit of Demon King Academy' },
   { ja:'蜘蛛ですが、なにか？',                        en:"So I'm a Spider, So What?" },
-  { ja:\'陰の実力者になりたくて！',                    en:'The Eminence in Shadow' },
+  { ja:'陰の実力者になりたくて！',                    en:'The Eminence in Shadow' },
   { ja:'異世界おじさん',                              en:'Uncle from Another World' },
   { ja:'最弱テイマーはゴミ拾いの旅を始めました。',   en:'The Weakest Tamer Began a Journey' },
   // スポーツ追加
@@ -331,7 +331,7 @@ const ANIME_LIST = [
   { ja:'テイマーは異世界も余裕で生き抜きます！',     en:'The Tamer Survives' },
   { ja:'神達に拾われた男',                            en:'By the Grace of the Gods' },
   { ja:'蜘蛛ですが、なにか？',                        en:"So I'm a Spider So What" },
-  { ja:\'転生賢者の異世界ライフ',                      en:'My Isekai Life' },
+  { ja:'転生賢者の異世界ライフ',                      en:'My Isekai Life' },
   { ja:'ありふれた職業で世界最強',                    en:'Arifureta: From Commonplace to Strongest' },
   { ja:'進化の実〜知らないうちに勝ち組人生〜',       en:'The Fruit of Evolution' },
   { ja:'現代社会で乙女ゲームの悪役令嬢をするのはちょっと大変',en:'Little Apocalypse' },
@@ -350,7 +350,7 @@ const ANIME_LIST = [
   { ja:'有頂天家族',                                  en:'The Eccentric Family' },
   { ja:'干物妹！うまるちゃん',                        en:"Himouto! Umaru-chan" },
   { ja:'小林さんちのメイドラゴン',                    en:"Miss Kobayashi's Dragon Maid" },
-  { ja:\'ヤマノススメ',                                en:'Encouragement of Climb' },
+  { ja:'ヤマノススメ',                                en:'Encouragement of Climb' },
   { ja:'ゆるゆり',                                    en:'YuruYuri' },
   { ja:'この美術部には問題がある！',                  en:'This Art Club Has a Problem!' },
   { ja:'NEW GAME！',                                  en:'New Game!' },
@@ -443,18 +443,18 @@ const ANIME_LIST = [
   { ja:'ヴィンランド・サガ 第3期',                    en:'Vinland Saga Season 3' },
   { ja:'チェンソーマン 第2期',                        en:'Chainsaw Man Season 2' },
   { ja:'ジョジョの奇妙な冒険 ストーンオーシャン',     en:"JoJo's Stone Ocean" },
-  { ja:\'マッシュル-MASHLE-',                          en:'Mashle: Magic and Muscles' },
+  { ja:'マッシュル-MASHLE-',                          en:'Mashle: Magic and Muscles' },
   // U-NEXT 2025〜2026 注目・ランキング上位
   { ja:'アオのハコ',                                   en:'Blue Box' },
   { ja:'異修羅',                                       en:'Ishura' },
   { ja:'ちいかわ',                                     en:'Chiikawa' },
   { ja:'正反対な君と僕',                               en:'You and I Are Polar Opposites' },
   { ja:'違国日記',                                     en:"A Stranger's Diary" },
-  { ja:\'僕だけがいない街',                             en:'ERASED' },
+  { ja:'僕だけがいない街',                             en:'ERASED' },
   { ja:'ドロヘドロ',                                   en:'Dorohedoro' },
   { ja:'義妹生活',                                     en:'Gimai Seikatsu' },
   { ja:'夜のクラゲは泳げない',                         en:"Night's Jellyfish Can\'t Swim" },
-  { ja:\'時々ボソッとロシア語でデレる隣のアーリャさん', en:'Sometimes the Alya Next Door Drops Russian' },
+  { ja:'時々ボソッとロシア語でデレる隣のアーリャさん', en:'Sometimes the Alya Next Door Drops Russian' },
   { ja:'ギャグマンガ日和GO',                           en:'Gag Manga Biyori GO' },
   { ja:'機動戦士Gundam GQuuuuuuX',                     en:'Gundam GQuuuuuuX' },
   { ja:'ウマ娘 プリティーダービー',                    en:'Uma Musume Pretty Derby' },
@@ -471,7 +471,7 @@ const ANIME_LIST = [
   { ja:'魔法少女にあこがれて',                         en:'Witch and Mercenary' },
   { ja:'ひとりぼっちの異世界攻略',                     en:'Hitoribocchi no Isekai Kouryaku' },
   { ja:'八男って、それはないでしょう！',               en:"I'm the Villainess, So I\'m Taming the Final Boss" },
-  { ja:\'怪物事変',                                     en:'Monster Incidents' },
+  { ja:'怪物事変',                                     en:'Monster Incidents' },
   { ja:'見える子ちゃん Season 2',                      en:'Mieruko-chan Season 2' },
   { ja:'葬送のフリーレン 劇場版',                      en:'Frieren: The Movie' },
   { ja:'鬼滅の刃 無限城編（後編）',                    en:'Demon Slayer: Infinity Castle Part 2' },
@@ -615,7 +615,7 @@ const QUESTIONS = {
   ],
   en: [
     { text: "You're at a party full of strangers. What do you do?", opts: [
-      { text: \'Jump in and start talking to everyone!', axes: {E:3} },
+      { text: 'Jump in and start talking to everyone!', axes: {E:3} },
       { text: 'Find someone interesting and chat one-on-one', axes: {E:1,I:1} },
       { text: 'Wait for someone to approach you', axes: {I:2} },
       { text: 'Sneak out early', axes: {I:3} },
@@ -645,7 +645,7 @@ const QUESTIONS = {
       { text: 'Help analyze the root cause together', axes: {T:1,N:1} },
     ]},
     { text: "What's your ideal day off?", opts: [
-      { text: \'Going out with a big group of friends', axes: {E:3} },
+      { text: 'Going out with a big group of friends', axes: {E:3} },
       { text: 'Chilling with a few close friends', axes: {I:1,F:1} },
       { text: 'Alone, lost in a hobby, game, or book', axes: {I:3} },
       { text: 'Decide depending on mood that day', axes: {P:2} },
@@ -657,7 +657,7 @@ const QUESTIONS = {
       { text: 'Stability, peace, and comfort', axes: {S:2,I:1} },
     ]},
     { text: "What's your biggest weakness?", opts: [
-      { text: \'Overthinking before acting', axes: {I:2,T:1} },
+      { text: 'Overthinking before acting', axes: {I:2,T:1} },
       { text: 'Getting too emotional', axes: {F:2} },
       { text: 'Getting bored and giving up', axes: {P:2,N:1} },
       { text: 'Being stubborn and inflexible', axes: {J:2,T:1} },
@@ -675,7 +675,7 @@ const QUESTIONS = {
       { text: 'Rarely show emotions outwardly', axes: {I:3,T:1} },
     ]},
     { text: "What's your stance on the future?", opts: [
-      { text: \'Make a solid plan and execute steadily', axes: {J:3,S:1} },
+      { text: 'Make a solid plan and execute steadily', axes: {J:3,S:1} },
       { text: 'Dream big and start moving', axes: {N:2,E:1} },
       { text: 'Whatever will be, enjoy the now', axes: {P:3} },
       { text: 'Plan carefully, anticipating worst cases', axes: {T:2,J:1} },
@@ -701,7 +701,7 @@ const QUESTIONS = {
     { text: "Someone tells you their secret. You...", opts: [
       { text: 'Keep it no matter what', axes: {F:2,J:1} },
       { text: "Might tell if it's truly for their benefit", axes: {T:1,J:1} },
-      { text: \'Feel a bit burdened by heavy secrets', axes: {I:1,P:1} },
+      { text: 'Feel a bit burdened by heavy secrets', axes: {I:1,P:1} },
       { text: "Feel happy that they trust you", axes: {F:1,E:1} },
     ]},
     { text: 'What character/class do you pick in games?', opts: [
@@ -713,11 +713,11 @@ const QUESTIONS = {
     { text: "How do you overcome a slump?", opts: [
       { text: 'Get energy from friends or your favorite things', axes: {F:2,E:1} },
       { text: "Pump yourself up: \"I'll definitely do it!\"", axes: {T:1,J:1} },
-      { text: \'Rest and change the scenery first', axes: {I:2,P:1} },
+      { text: 'Rest and change the scenery first', axes: {I:2,P:1} },
       { text: 'Revisit your goals and rebuild your plan', axes: {J:2,N:1} },
     ]},
     { text: "What's your ideal hero?", opts: [
-      { text: \'An indomitable hero who protects no matter what', axes: {F:1,J:1,E:1} },
+      { text: 'An indomitable hero who protects no matter what', axes: {F:1,J:1,E:1} },
       { text: 'A genius who outsmarts every opponent', axes: {N:2,T:2} },
       { text: 'A mood-maker who brings smiles everywhere', axes: {E:3,F:1} },
       { text: 'A silent supporter who holds things together', axes: {I:2,F:2} },
@@ -928,7 +928,7 @@ const CHARACTERS = [
       en:"The world's greatest detective with a uniquely wired mind. Solves the impossible by fusing pure logic with intuition. Eccentric on the outside, sincere on the inside.",
     },
     traits:{
-      ja:[\'天才','論理的','独創的','観察眼','謎解き'],
+      ja:['天才','論理的','独創的','観察眼','謎解き'],
       en:['Genius','Logical','Original','Keen Observer','Problem Solver'],
     },
     radar:[70,45,40,98,75,62],
@@ -969,7 +969,7 @@ const CHARACTERS = [
     id:'rohan', icon:'🖊️',
     name:  {ja:'岸辺露伴',             en:'Rohan Kishibe'},
     series:{ja:'ジョジョの奇妙な冒険', en:"JoJo's Bizarre Adventure"},
-    type:  {ja:\'孤高の芸術家 (INTJ)',   en:'Solitary Artist (INTJ)'},
+    type:  {ja:'孤高の芸術家 (INTJ)',   en:'Solitary Artist (INTJ)'},
     profile:{I:4,T:3,N:4,J:3},
     desc:{
       ja:'自分の芸術と信念に絶対の自信を持つ孤高の天才。知的好奇心が極めて強く、面白いもののためなら何でもする。プライドは高いが本質的には真摯。',
@@ -1040,7 +1040,7 @@ const CHARACTERS = [
       en:"Appears cynical, but actually possesses sharper insight into people's true nature than anyone. Solves problems through self-sacrifice and has an unmatched pursuit of what is \"genuine.\"",
     },
     traits:{
-      ja:[\'観察眼','論理的','独自の価値観','本物を追求','自己犠牲'],
+      ja:['観察眼','論理的','独自の価値観','本物を追求','自己犠牲'],
       en:['Observant','Logical','Unique Values','Seeks Genuineness','Self-Sacrificing'],
     },
     radar:[65,68,40,92,72,75],
@@ -1113,7 +1113,7 @@ const CHARACTERS = [
     id:'frieren', icon:'🧙',
     name:  {ja:'フリーレン',       en:'Frieren'},
     series:{ja:'葬送のフリーレン', en:"Frieren: Beyond Journey's End"},
-    type:  {ja:\'千年の魔法使い (INTP)', en:'Millennial Mage (INTP)'},
+    type:  {ja:'千年の魔法使い (INTP)', en:'Millennial Mage (INTP)'},
     profile:{I:4,T:4,N:4,P:3},
     desc:{
       ja:'千年を生きた魔法使いとして、物事を淡々と観察し続ける分析家。感情表現は苦手だが、人間の心を理解しようと静かに努力し続ける姿が多くの人の共感を呼びます。',
@@ -1216,7 +1216,7 @@ const CHARACTERS = [
       en:"A boy who lives honestly according to simple desires. Doesn't think deeply — just maximizes the present moment. Rough and clumsy, but his raw honesty and all-or-nothing drive moves those around him.",
     },
     traits:{
-      ja:[\'衝動的','正直','今を生きる','行動力','純粋'],
+      ja:['衝動的','正直','今を生きる','行動力','純粋'],
       en:['Impulsive','Honest','Lives in the Now','Action-Oriented','Pure'],
     },
     radar:[78,55,72,62,42,85],
@@ -1353,7 +1353,7 @@ const CHARACTERS = [
     id:'natsume', icon:'📖',
     name:  {ja:'夏目貴志',  en:'Takashi Natsume'},
     series:{ja:'夏目友人帳', en:"Natsume's Book of Friends"},
-    type:  {ja:\'孤独な共感者 (INFP)', en:'Solitary Empath (INFP)'},
+    type:  {ja:'孤独な共感者 (INFP)', en:'Solitary Empath (INFP)'},
     profile:{I:3,F:4,N:3,P:3},
     desc:{
       ja:'妖怪が見える孤独な少年が、妖怪たちと心を通わせる中で少しずつ成長していく。繊細で傷つきやすいが、深い共感力と優しさで妖怪も人間も受け入れる温かい心の持ち主。',
@@ -1391,7 +1391,7 @@ const CHARACTERS = [
   {id:'rock_lee',icon:'💥',name:{ja:'ロック・リー',en:'Rock Lee'},series:{ja:'NARUTO -ナルト-',en:'Naruto'},type:{ja:'努力の天才 (ESFJ)',en:'Genius of Hard Work (ESFJ)'},profile:{E:3,F:3,S:4,J:4},desc:{ja:'忍術も幻術も使えないが、体術だけで天才たちに挑む不屈の努力家。情熱と根性は誰にも負けず、仲間への思いやりも深い。',en:'Unable to use ninjutsu or genjutsu, yet challenges geniuses with taijutsu alone. Unmatched passion and grit, with deep care for those around him.'},traits:{ja:['努力家','不屈','熱血','仲間想い','根性'],en:['Hard Worker','Indomitable','Hot-Blooded','Caring','Guts']},radar:[88,75,85,55,78,90]},
   {id:'itachi',icon:'🪶',name:{ja:'うちはイタチ',en:'Itachi Uchiha'},series:{ja:'NARUTO -ナルト-',en:'Naruto'},type:{ja:'静かなる英雄 (INFJ)',en:'Silent Hero (INFJ)'},profile:{I:4,F:3,N:4,J:4},desc:{ja:'一族を滅ぼした罪を一人で背負いながら、弟を守るため汚名に甘んじた真の英雄。深い洞察力と計算された行動の裏に、誰も知らない深い愛情がある。',en:'A true hero who bore the crime of destroying his clan alone to protect his brother. Behind deep insight and calculated actions lies a love that no one knew.'},traits:{ja:['自己犠牲','深謀','静かな愛','孤独','英雄'],en:['Self-Sacrificing','Deep Strategist','Silent Love','Solitary','Hero']},radar:[82,68,42,98,92,65]},
   {id:'jiraiya',icon:'📚',name:{ja:'自来也',en:'Jiraiya'},series:{ja:'NARUTO -ナルト-',en:'Naruto'},type:{ja:'伝説の三忍 (ENFP)',en:'Legendary Sannin (ENFP)'},profile:{E:3,F:3,N:3,P:3},desc:{ja:'カエルを使い小説を書く豪快な忍者。見た目は軽薄だが、教え子への愛情と平和への願いは本物。ナルトにとって最も大切な師匠の一人。',en:'A flamboyant ninja who uses frogs and writes novels. Beneath the carefree exterior lies genuine love for his students and a sincere desire for peace.'},traits:{ja:['豪快','愛情深い','自由人','平和主義','師匠'],en:['Flamboyant','Deeply Caring','Free Spirit','Pacifist','Mentor']},radar:[72,80,82,65,55,85]},
-  {id:'minato',icon:'⚡',name:{ja:'波風ミナト',en:'Minato Namikaze'},series:{ja:'NARUTO -ナルト-',en:'Naruto'},type:{ja:'黄色い閃光 (INFJ)',en:'Yellow Flash (INFJ)'},profile:{I:2,F:3,N:3,J:4},desc:{ja:'木の葉最速の天才にして四代目火影。穏やかで思いやり深く、息子と里を守るために命を捧げた真の英雄。静かな強さと深い愛情の持ち主。',en:"Konoha's fastest genius and the Fourth Hokage. Gentle and caring, a true hero who gave his life to protect his son and village. Possesses quiet strength and deep love."},traits:{ja:[\'天才','穏やか','自己犠牲','深い愛','守護者'],en:['Genius','Gentle','Self-Sacrificing','Deep Love','Protector']},radar:[88,78,58,95,90,80]},
+  {id:'minato',icon:'⚡',name:{ja:'波風ミナト',en:'Minato Namikaze'},series:{ja:'NARUTO -ナルト-',en:'Naruto'},type:{ja:'黄色い閃光 (INFJ)',en:'Yellow Flash (INFJ)'},profile:{I:2,F:3,N:3,J:4},desc:{ja:'木の葉最速の天才にして四代目火影。穏やかで思いやり深く、息子と里を守るために命を捧げた真の英雄。静かな強さと深い愛情の持ち主。',en:"Konoha's fastest genius and the Fourth Hokage. Gentle and caring, a true hero who gave his life to protect his son and village. Possesses quiet strength and deep love."},traits:{ja:['天才','穏やか','自己犠牲','深い愛','守護者'],en:['Genius','Gentle','Self-Sacrificing','Deep Love','Protector']},radar:[88,78,58,95,90,80]},
 
   // ── ONE PIECE ────────────────────────────────────────────────
   {id:'nami',icon:'🗺️',name:{ja:'ナミ',en:'Nami'},series:{ja:'ワンピース',en:'One Piece'},type:{ja:'航海士の女帝 (ENTJ)',en:'Navigator Empress (ENTJ)'},profile:{E:3,T:3,N:2,J:4},desc:{ja:'お金と仲間を誰より大切にする天才航海士。計算高く現実主義に見えるが、仲間のためなら命を張る情熱を内に秘めている。',en:'A genius navigator who values money and crew above all. Appears calculating and pragmatic, but carries fierce passion for her crew when it matters.'},traits:{ja:['現実主義','天才航海士','計算高い','情熱的','仲間想い'],en:['Pragmatic','Navigation Genius','Calculating','Passionate','Crew-Loyal']},radar:[68,72,80,85,75,68]},
@@ -1404,7 +1404,7 @@ const CHARACTERS = [
   {id:'shanks',icon:'⚓',name:{ja:'シャンクス',en:'Shanks'},series:{ja:'ワンピース',en:'One Piece'},type:{ja:'伝説の海賊 (ENFJ)',en:'Legendary Pirate (ENFJ)'},profile:{E:3,F:3,N:3,J:3},desc:{ja:'四皇にして最も気さくな大海賊。威圧的な強さを持ちながら人情味があふれ、ルフィの夢を支えた存在。笑いと涙が共存する人間的な魅力の持ち主。',en:'A Yonko yet the most approachable great pirate. Overwhelmingly powerful yet full of humanity, the one who supported Luffy\'s dream. A man where laughter and tears coexist.'},traits:{ja:['器の大きさ','人情','伝説','余裕','ルフィの師'],en:['Big-Hearted','Humane','Legendary','Composure',"Luffy's Mentor"]},radar:[92,82,88,80,78,75]},
 
   // ── DRAGON BALL ──────────────────────────────────────────────
-  {id:\'vegeta',icon:'👑',name:{ja:'ベジータ',en:'Vegeta'},series:{ja:'ドラゴンボール超',en:'Dragon Ball Super'},type:{ja:'サイヤ人の王子 (INTJ)',en:'Saiyan Prince (INTJ)'},profile:{I:2,T:4,N:3,J:4},desc:{ja:'プライドと強さへの執念で生きるサイヤ人の王子。ライバルへの対抗心を原動力に絶えず成長し続ける。冷酷に見えるが家族への愛情は確かに存在する。',en:'A Saiyan prince who lives by pride and obsession with strength. Fueled by rivalry to keep growing. Appears cold but genuine love for family definitely exists.'},traits:{ja:['プライド','強さへの執念','ライバル心','家族愛（隠れ）','成長'],en:['Pride','Obsession with Strength','Rivalry','Hidden Family Love','Growth']},radar:[95,48,55,92,88,50]},
+  {id:'vegeta',icon:'👑',name:{ja:'ベジータ',en:'Vegeta'},series:{ja:'ドラゴンボール超',en:'Dragon Ball Super'},type:{ja:'サイヤ人の王子 (INTJ)',en:'Saiyan Prince (INTJ)'},profile:{I:2,T:4,N:3,J:4},desc:{ja:'プライドと強さへの執念で生きるサイヤ人の王子。ライバルへの対抗心を原動力に絶えず成長し続ける。冷酷に見えるが家族への愛情は確かに存在する。',en:'A Saiyan prince who lives by pride and obsession with strength. Fueled by rivalry to keep growing. Appears cold but genuine love for family definitely exists.'},traits:{ja:['プライド','強さへの執念','ライバル心','家族愛（隠れ）','成長'],en:['Pride','Obsession with Strength','Rivalry','Hidden Family Love','Growth']},radar:[95,48,55,92,88,50]},
   {id:'piccolo',icon:'💚',name:{ja:'ピッコロ',en:'Piccolo'},series:{ja:'ドラゴンボール超',en:'Dragon Ball Super'},type:{ja:'厳格な師匠 (INFJ)',en:'Stern Mentor (INFJ)'},profile:{I:3,F:3,N:3,J:4},desc:{ja:'かつての敵から悟空の仲間、そして悟飯の師匠へ。厳しい指導の裏に深い愛情を隠し、孤独でも信念を貫く強さを持つ。',en:'From former enemy to ally, to Gohan\'s mentor. Hides deep affection behind strict guidance, with the strength to hold to his beliefs even alone.'},traits:{ja:['厳格','師匠気質','成長支援','孤独','深い愛情'],en:['Stern','Mentor Type','Growth Support','Solitary','Deep Affection']},radar:[85,70,50,90,85,62]},
   {id:'bulma',icon:'💡',name:{ja:'ブルマ',en:'Bulma'},series:{ja:'ドラゴンボール超',en:'Dragon Ball Super'},type:{ja:'天才科学者 (ENTP)',en:'Genius Scientist (ENTP)'},profile:{E:3,T:3,N:4,P:3},desc:{ja:'ドラゴンボールを探して旅を始めた天才女性科学者。好奇心旺盛で自信家、自分の頭脳を最大限に活かして困難を突破する。情熱的な性格と知識欲は誰にも負けない。',en:'A genius female scientist who started her journey searching for Dragon Balls. Curious and self-confident, she uses her intellect to overcome challenges. Her passion and thirst for knowledge are unmatched.'},traits:{ja:['天才','自信家','好奇心','リーダー気質','情熱的'],en:['Genius','Self-Confident','Curious','Natural Leader','Passionate']},radar:[65,58,80,95,68,72]},
   {id:'gohan',icon:'📚',name:{ja:'孫悟飯',en:'Son Gohan'},series:{ja:'ドラゴンボール超',en:'Dragon Ball Super'},type:{ja:'秘めたる力 (INFJ)',en:'Hidden Potential (INFJ)'},profile:{I:2,F:3,N:3,J:3},desc:{ja:'父の血を受け継ぐ戦士でありながら、学者の道を歩む平和主義者。追い詰められたとき覚醒する底知れない潜在能力と、優しさが共存する。',en:'A warrior with his father\'s blood who walks the path of a scholar, a pacifist at heart. Boundless hidden potential that awakens under pressure coexists with gentle kindness.'},traits:{ja:['平和主義','隠れた実力','学者','優しさ','潜在能力'],en:['Pacifist','Hidden Strength','Scholar','Kindness','Hidden Potential']},radar:[80,78,60,88,82,80]},
@@ -1507,9 +1507,9 @@ const CHARACTERS = [
   {id:'bokuto',icon:'🦉',name:{ja:'木兎光太郎',en:'Kotaro Bokuto'},series:{ja:'ハイキュー!!',en:'Haikyuu!!'},type:{ja:'天才エース (ESFP)',en:'Ace of Aces (ESFP)'},profile:{E:4,F:3,S:4,P:3},desc:{ja:'メンタルの波は激しいがトップレベルの実力を持つエース。仲間の声援で爆発的な力を発揮する。',en:'An ace with top-level ability but intense mental swings. Unleashes explosive power from his teammates support.'},traits:{ja:['天才','メンタル','エース','元気','仲間'],en:['Genius','Mental Swings','Ace','Energetic','Teammates']},radar:[90,80,92,55,55,82]},
 
   // ── 黒子のバスケ ─────────────────────────────────────────────
-  {id:'kuroko_basket',icon:'🏀',name:{ja:'黒子テツヤ',en:'Tetsuya Kuroko'},series:{ja:'黒子のバスケ',en:"Kuroko's Basketball"},type:{ja:\'幻の6人目 (INFP)',en:'Phantom Sixth Man (INFP)'},profile:{I:4,F:3,N:3,P:3},desc:{ja:'存在感の薄さを武器にするパッサー。「影」として「光」を輝かせるために戦い、バスケへの純粋な愛がある。',en:'A passer who weaponizes his low presence. Fights as the "shadow" to make the "light" shine with pure love for basketball.'},traits:{ja:['無存在感','パッサー','影','純粋','チーム'],en:['Low Presence','Passer','Shadow','Pure','Team']},radar:[55,72,40,78,72,88]},
-  {id:'kagami_basket',icon:'🔥',name:{ja:'火神大我',en:'Taiga Kagami'},series:{ja:'黒子のバスケ',en:"Kuroko's Basketball"},type:{ja:\'虎の本能 (ESTP)',en:'Tiger Instinct (ESTP)'},profile:{E:4,T:3,S:4,P:3},desc:{ja:'バスケへの本能的な情熱を持つアメリカ帰りの高校生。キセキの世代に対抗できる希少な存在として成長する。',en:'A high schooler returned from America with instinctive basketball passion. Grows as a rare existence who can rival the Generation of Miracles.'},traits:{ja:['本能','情熱','成長','ライバル','天才'],en:['Instinct','Passion','Growth','Rival','Genius']},radar:[90,62,80,68,68,72]},
-  {id:'aomine_basket',icon:'🌊',name:{ja:'青峰大輝',en:'Daiki Aomine'},series:{ja:'黒子のバスケ',en:"Kuroko's Basketball"},type:{ja:\'天才の孤独 (ISTP)',en:"Genius's Solitude (ISTP)"},profile:{I:3,T:3,S:4,P:3},desc:{ja:'「俺を倒せる奴は俺だけだ」と言い放つ無敗の天才。その圧倒的な実力ゆえに孤独になった悲しい天才。',en:\'An undefeated genius who declares "Only I can beat me." A sad genius made lonely by his overwhelming talent.'},traits:{ja:['天才','孤独','最強','本能','傲慢'],en:['Genius','Lonely','Strongest','Instinct','Arrogant']},radar:[95,45,58,75,55,50]},
+  {id:'kuroko_basket',icon:'🏀',name:{ja:'黒子テツヤ',en:'Tetsuya Kuroko'},series:{ja:'黒子のバスケ',en:"Kuroko's Basketball"},type:{ja:'幻の6人目 (INFP)',en:'Phantom Sixth Man (INFP)'},profile:{I:4,F:3,N:3,P:3},desc:{ja:'存在感の薄さを武器にするパッサー。「影」として「光」を輝かせるために戦い、バスケへの純粋な愛がある。',en:'A passer who weaponizes his low presence. Fights as the "shadow" to make the "light" shine with pure love for basketball.'},traits:{ja:['無存在感','パッサー','影','純粋','チーム'],en:['Low Presence','Passer','Shadow','Pure','Team']},radar:[55,72,40,78,72,88]},
+  {id:'kagami_basket',icon:'🔥',name:{ja:'火神大我',en:'Taiga Kagami'},series:{ja:'黒子のバスケ',en:"Kuroko's Basketball"},type:{ja:'虎の本能 (ESTP)',en:'Tiger Instinct (ESTP)'},profile:{E:4,T:3,S:4,P:3},desc:{ja:'バスケへの本能的な情熱を持つアメリカ帰りの高校生。キセキの世代に対抗できる希少な存在として成長する。',en:'A high schooler returned from America with instinctive basketball passion. Grows as a rare existence who can rival the Generation of Miracles.'},traits:{ja:['本能','情熱','成長','ライバル','天才'],en:['Instinct','Passion','Growth','Rival','Genius']},radar:[90,62,80,68,68,72]},
+  {id:'aomine_basket',icon:'🌊',name:{ja:'青峰大輝',en:'Daiki Aomine'},series:{ja:'黒子のバスケ',en:"Kuroko's Basketball"},type:{ja:'天才の孤独 (ISTP)',en:"Genius's Solitude (ISTP)"},profile:{I:3,T:3,S:4,P:3},desc:{ja:'「俺を倒せる奴は俺だけだ」と言い放つ無敗の天才。その圧倒的な実力ゆえに孤独になった悲しい天才。',en:'An undefeated genius who declares "Only I can beat me." A sad genius made lonely by his overwhelming talent.'},traits:{ja:['天才','孤独','最強','本能','傲慢'],en:['Genius','Lonely','Strongest','Instinct','Arrogant']},radar:[95,45,58,75,55,50]},
 
   // ── Fate ─────────────────────────────────────────────────────
   {id:'shirou_fate',icon:'🔧',name:{ja:'衛宮士郎',en:'Emiya Shirou'},series:{ja:'Fate/stay night',en:'Fate/stay night'},type:{ja:'正義の味方 (ENFJ)',en:'Ally of Justice (ENFJ)'},profile:{E:3,F:4,N:3,J:3},desc:{ja:'「正義の味方」を目指す少年。自己犠牲も厭わない強い意志で戦い続ける頑固さと純粋さが魅力。',en:'A boy who aims to become an "Ally of Justice." His stubbornness and purity while fighting with strong will regardless of self-sacrifice are charming.'},traits:{ja:['正義','自己犠牲','成長','頑固','純粋'],en:['Justice','Self-Sacrifice','Growth','Stubborn','Pure']},radar:[78,82,72,72,85,88]},
@@ -1890,8 +1890,8 @@ const CHARACTERS = [
   {id:'shirase_yorimoi',icon:'🌌',name:{ja:'白石結月',en:'Yuzuki Shiraishi'},series:{ja:'宇宙よりも遠い場所',en:'A Place Further Than the Universe'},type:{ja:'南極への意志 (INFJ)',en:'Will Toward Antarctica (INFJ)'},profile:{I:3,F:3,N:4,J:3},desc:{ja:'亡き母を追って南極を目指す少女。強い意志と純粋な行動力で仲間を引っ張る。',en:'A girl who aims for Antarctica chasing her deceased mother. Pulls companions forward with strong will and pure action.'},traits:{ja:['意志','南極','母','成長','勇気'],en:['Will','Antarctica','Mother','Growth','Courage']},radar:[68,78,62,78,80,80]},
 
   // ── ジョジョの奇妙な冒険 ──────────────────────────────────
-  {id:'giorno_jojo',icon:'🌟',name:{ja:'ジョルノ・ジョバァーナ',en:'Giorno Giovanna'},series:{ja:'ジョジョの奇妙な冒険 第5部',en:"JoJo's Bizarre Adventure: Golden Wind"},type:{ja:\'黄金の精神 (INFJ)',en:'Golden Spirit (INFJ)'},profile:{I:3,F:3,N:4,J:4},desc:{ja:'マフィアのボスを目指す少年。「夢は終わらせることができない」という信念で困難に立ち向かう。',en:'A boy who aims to become a mafia boss. Faces difficulties with the conviction "a dream is not something you give up on."'},traits:{ja:['黄金の精神','夢','成長','カリスマ','誇り'],en:['Golden Spirit','Dream','Growth','Charismatic','Pride']},radar:[72,72,62,85,82,75]},
-  {id:'josuke_jojo',icon:'👑',name:{ja:'東方仗助',en:'Josuke Higashikata'},series:{ja:'ジョジョの奇妙な冒険 第4部',en:"JoJo's Bizarre Adventure: Diamond is Unbreakable"},type:{ja:\'ダイヤモンドは砕けない (ESFP)',en:'Diamond is Unbreakable (ESFP)'},profile:{E:3,F:3,S:4,P:3},desc:{ja:'故郷杜王町を守る優しい少年。プロマイドほど大切なものを守る義侠心と温かい心が魅力。',en:'A gentle boy who protects his hometown of Morioh. A sense of justice to protect what matters like his trademark pompadour and warm heart are charming.'},traits:{ja:['義侠','ヘアスタイル','成長','仲間','地元愛'],en:['Chivalry','Hairstyle','Growth','Comrades','Hometown Love']},radar:[80,78,78,65,72,80]},
+  {id:'giorno_jojo',icon:'🌟',name:{ja:'ジョルノ・ジョバァーナ',en:'Giorno Giovanna'},series:{ja:'ジョジョの奇妙な冒険 第5部',en:"JoJo's Bizarre Adventure: Golden Wind"},type:{ja:'黄金の精神 (INFJ)',en:'Golden Spirit (INFJ)'},profile:{I:3,F:3,N:4,J:4},desc:{ja:'マフィアのボスを目指す少年。「夢は終わらせることができない」という信念で困難に立ち向かう。',en:'A boy who aims to become a mafia boss. Faces difficulties with the conviction "a dream is not something you give up on."'},traits:{ja:['黄金の精神','夢','成長','カリスマ','誇り'],en:['Golden Spirit','Dream','Growth','Charismatic','Pride']},radar:[72,72,62,85,82,75]},
+  {id:'josuke_jojo',icon:'👑',name:{ja:'東方仗助',en:'Josuke Higashikata'},series:{ja:'ジョジョの奇妙な冒険 第4部',en:"JoJo's Bizarre Adventure: Diamond is Unbreakable"},type:{ja:'ダイヤモンドは砕けない (ESFP)',en:'Diamond is Unbreakable (ESFP)'},profile:{E:3,F:3,S:4,P:3},desc:{ja:'故郷杜王町を守る優しい少年。プロマイドほど大切なものを守る義侠心と温かい心が魅力。',en:'A gentle boy who protects his hometown of Morioh. A sense of justice to protect what matters like his trademark pompadour and warm heart are charming.'},traits:{ja:['義侠','ヘアスタイル','成長','仲間','地元愛'],en:['Chivalry','Hairstyle','Growth','Comrades','Hometown Love']},radar:[80,78,78,65,72,80]},
 
   // ── スパイファミリー（追加） ──────────────────────────────────
   {id:'fiona_spy',icon:'❄️',name:{ja:'フィオナ・フロスト（夜帷）',en:'Fiona Frost (Nightfall)'},series:{ja:'SPY×FAMILY',en:'SPY×FAMILY'},type:{ja:'任務優先のスパイ (ISTJ)',en:'Mission-First Spy (ISTJ)'},profile:{I:4,T:4,S:3,J:4},desc:{ja:'ロイドへの隠れた恋心を持つスパイ。任務遂行能力は高いが感情表現が苦手で不器用な恋愛観が愛らしい。',en:'A spy with hidden love for Loid. Has high mission execution ability but poor emotional expression with a clumsy romantic view that is endearing.'},traits:{ja:['任務','恋心','不器用','強さ','成長'],en:['Mission','Hidden Love','Clumsy','Strong','Growth']},radar:[72,55,42,85,82,52]},
@@ -2769,20 +2769,20 @@ const CHARACTERS = [
     id:'fern_frieren', icon:'🌸',
     name:  {ja:'フェルン',                en:'Fern'},
     series:{ja:'葬送のフリーレン',         en:"Frieren: Beyond Journey's End"},
-    type:  {ja:\'優秀な弟子魔法使い (ISTJ)',en:'Gifted Apprentice Mage (ISTJ)'},
+    type:  {ja:'優秀な弟子魔法使い (ISTJ)',en:'Gifted Apprentice Mage (ISTJ)'},
     profile:{I:3,S:4,T:4,J:4},
     desc:{
       ja:'フリーレンの弟子で優秀な魔法使い。感情表現は少ないが実力は師匠に迫るほど。真面目で努力家、規律を重んじる完璧主義者。スタルクへの態度が実はツンデレ。',
       en:"Frieren's apprentice and gifted mage. Rarely expresses emotions but her skill approaches her master\'s. Serious, hardworking perfectionist who values discipline. Her attitude toward Stark is secretly tsundere.",
     },
-    traits:{ja:[\'努力家','クール','優秀','規律','ツンデレ'],en:['Hardworking','Cool','Gifted','Disciplined','Tsundere']},
+    traits:{ja:['努力家','クール','優秀','規律','ツンデレ'],en:['Hardworking','Cool','Gifted','Disciplined','Tsundere']},
     radar:[75,45,42,90,88,65],
   },
   {
     id:'himmel_frieren', icon:'⚔️',
     name:  {ja:'ヒンメル',               en:'Himmel'},
     series:{ja:'葬送のフリーレン',        en:"Frieren: Beyond Journey's End"},
-    type:  {ja:\'皆に愛された英雄 (ENFJ)', en:'Hero Beloved by All (ENFJ)'},
+    type:  {ja:'皆に愛された英雄 (ENFJ)', en:'Hero Beloved by All (ENFJ)'},
     profile:{E:4,F:4,N:3,J:3},
     desc:{
       ja:'魔王を倒した勇者。自分を主人公だと信じて疑わない眩しいほどのポジティブさで仲間を鼓舞する英雄。フリーレンに「人間を知ること」の大切さを教えた存在。',
@@ -2829,7 +2829,7 @@ const CHARACTERS = [
       ja:'霊が見える体質の少女。宇宙人を信じないが、オカルンとの出会いで次々と霊的事件に巻き込まれる。感情豊かでエネルギッシュ、仲間への愛情が行動力の源。',
       en:"A girl who can see spirits. Doesn't believe in aliens but gets involved in supernatural incidents after meeting Okarun. Emotionally rich and energetic, with love for friends as her driving force.",
     },
-    traits:{ja:[\'霊感','情熱的','エネルギッシュ','仲間思い','直感'],en:['Psychic','Passionate','Energetic','Loyal','Intuitive']},
+    traits:{ja:['霊感','情熱的','エネルギッシュ','仲間思い','直感'],en:['Psychic','Passionate','Energetic','Loyal','Intuitive']},
     radar:[70,85,88,58,52,82],
   },
   // 呪術廻戦
@@ -3297,11 +3297,40 @@ function showResult() {
   document.getElementById('quiz-result').style.display = 'block';
   document.getElementById('quiz-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
+  // X(Twitter)シェア
   document.getElementById('share-twitter').onclick = () => {
     const txt = lang === 'ja'
-      ? `私のアニメキャラ診断結果は「${best.name.ja}（${best.series.ja}）」でした！✨ タイプ: ${mbti} #アニメキャラ診断`
-      : `My anime character quiz result is "${best.name.en} (${best.series.en})"! Type: ${mbti} ✨ #AnimeCharacterQuiz`;
-    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(txt), '_blank');
+      ? `私のアニメキャラ診断結果は「${best.name.ja}（${best.series.ja}）」でした！✨ MBTIタイプ: ${mbti} / マッチ度: ${matchPct}%\nあなたは誰と診断される？ #アニメキャラ診断 #MBTI`
+      : `My anime character quiz result is "${best.name.en} (${best.series.en})"! Type: ${mbti} / Match: ${matchPct}% ✨ Who are you? #AnimeCharacterQuiz #MBTI`;
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(txt) + '&url=' + encodeURIComponent(location.href), '_blank');
+  };
+
+  // LINEシェア
+  document.getElementById('share-line').onclick = () => {
+    const txt = lang === 'ja'
+      ? `アニメキャラ診断で「${best.name.ja}」と判定されました！タイプ: ${mbti} / ${matchPct}% #アニメキャラ診断`
+      : `I got "${best.name.en}" in the anime character quiz! Type: ${mbti} / ${matchPct}%`;
+    window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(location.href) + '&text=' + encodeURIComponent(txt), '_blank');
+  };
+
+  // URLコピー
+  const copyBtn = document.getElementById('share-copy');
+  const copyLabel = lang === 'ja' ? '🔗 URLをコピー' : '🔗 Copy URL';
+  copyBtn.textContent = copyLabel;
+  copyBtn.classList.remove('copied');
+  copyBtn.onclick = () => {
+    const copyDone = () => {
+      copyBtn.textContent = lang === 'ja' ? '✅ コピーしました！' : '✅ Copied!';
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = copyLabel; copyBtn.classList.remove('copied'); }, 2000);
+    };
+    navigator.clipboard
+      ? navigator.clipboard.writeText(location.href).then(copyDone)
+      : (() => {
+          const ta = Object.assign(document.createElement('textarea'), { value: location.href });
+          document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+          document.body.removeChild(ta); copyDone();
+        })();
   };
 }
 

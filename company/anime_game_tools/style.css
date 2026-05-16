@@ -84,6 +84,11 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(
 .btn-share{padding:12px 24px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
 .btn-share.twitter{background:#000;color:#fff}
 .btn-share.twitter:hover{opacity:.8}
+.btn-share.line{background:#06C755;color:#fff}
+.btn-share.line:hover{opacity:.8}
+.btn-share.copy{background:#f1f5f9;color:#1e293b;border:1.5px solid #e2e8f0}
+.btn-share.copy:hover{background:#e2e8f0}
+.btn-share.copy.copied{background:#f0fdf4;border-color:#86efac;color:#15803d}
 .btn-retry{padding:12px 24px;background:#ede9fe;color:var(--primary-d);border:2px solid #ddd6fe;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
 .btn-retry:hover{background:#ddd6fe}
 

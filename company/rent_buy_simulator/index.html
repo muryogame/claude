@@ -3,18 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>家賃vs購入 コスト比較シミュレーター | 無料・住み替え総額計算</title>
-  <meta name="description" content="賃貸と購入どちらが得か？月々のローン返済額、総支払額、損益分岐点を無料計算。住み替えコストシミュレーターも搭載。ログイン不要。">
-  <meta name="keywords" content="家賃 購入 比較,賃貸 持ち家 どっちが得,住宅ローン 計算,住み替え費用,不動産 コスト計算">
+  <title>家賃vs購入 コスト比較シミュレーター | 参考用・無料</title>
+  <meta name="description" content="賃貸と購入どちらが得か？月々のローン返済額・損益分岐点・金利上昇リスク・繰り上げ返済を無料計算。趣味・参考目的のシミュレーターです。">
+  <meta name="keywords" content="家賃 購入 比較,賃貸 持ち家 どっちが得,住宅ローン 計算,繰り上げ返済,損益分岐点 不動産">
+  <!-- SNS OGP -->
+  <meta property="og:title" content="家賃vs購入 コスト比較シミュレーター（無料・参考用）">
+  <meta property="og:description" content="賃貸と購入どっちが得？損益分岐点・返済負担率・金利上昇リスクを一括試算。住宅ローン控除・繰り上げ返済シミュレーションも。完全無料。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="家賃vs購入 コスト比較シミュレーター（無料・参考用）">
+  <meta name="twitter:description" content="賃貸と購入どっちが得？損益分岐点・返済負担率・金利上昇リスクを一括試算。完全無料の不動産コスト比較ツール。">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- ⚠️ 免責バナー（常時表示） -->
+<div class="disclaimer-banner">
+  <div class="wrap disclaimer-inner">
+    <span class="disc-icon">📝</span>
+    <div class="disc-text">
+      <strong>趣味・参考目的のシミュレーターです</strong>
+      計算結果は概算であり、実際の費用・税額・金利とは異なります。
+      不動産の購入・賃貸の判断には、必ず<strong>不動産会社・ファイナンシャルプランナー・銀行担当者</strong>への相談を行ってください。
+    </div>
+    <button class="disc-close" id="disc-close" aria-label="閉じる">×</button>
+  </div>
+</div>
+
 <header class="header">
-  <div class="wrap">
-    <div class="logo">🏠 家賃vs購入 シミュレーター</div>
-    <div class="tagline">無料・ログイン不要・データ保存なし</div>
+  <div class="wrap header-inner">
+    <div>
+      <div class="logo">🏠 家賃vs購入 シミュレーター</div>
+      <div class="tagline">参考・趣味用 — 数字で「なんとなく」比べてみよう</div>
+    </div>
+    <div class="hobby-badge">趣味ツール</div>
   </div>
 </header>
 
@@ -22,18 +46,25 @@
 <section class="hero">
   <div class="wrap hero-inner">
     <div class="hero-text">
-      <h1 class="hero-h1">賃貸 vs 購入<br>どっちが<span class="hero-accent">お得</span>か<br>一発で分かる</h1>
-      <p class="hero-sub">物件価格・家賃・ローン金利を入力するだけ。損益分岐点・総コスト・住宅ローン控除まで一括計算。完全無料・ログイン不要。</p>
+      <h1 class="hero-h1">賃貸 vs 購入<br><span class="hero-accent">数字で比べる</span><br>参考シミュレーター</h1>
+      <p class="hero-sub">物件価格・家賃・ローン金利を入力するだけ。損益分岐点・返済負担率・金利上昇リスクまで一括試算。<br>
+        <strong class="hero-warn">⚠️ 実際の意思決定は専門家への相談を強く推奨します。</strong></p>
       <div class="hero-badges">
-        <span class="badge">📊 損益分岐点を自動計算</span>
+        <span class="badge">📊 損益分岐点を試算</span>
         <span class="badge">💴 住宅ローン控除を考慮</span>
-        <span class="badge">🚚 住み替えコストも計算</span>
+        <span class="badge">📈 金利上昇リスクを確認</span>
+        <span class="badge">🔄 繰り上げ返済シミュレーション</span>
       </div>
     </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="hs-val">35年</div><div class="hs-label">標準的な<br>ローン期間</div></div>
-      <div class="hero-stat"><div class="hs-val">約15〜20年</div><div class="hs-label">一般的な<br>損益分岐点</div></div>
-      <div class="hero-stat"><div class="hs-val">最大420万円</div><div class="hs-label">住宅ローン<br>控除の恩恵</div></div>
+    <div class="hero-notice">
+      <div class="notice-title">🔔 このツールについて</div>
+      <ul class="notice-list">
+        <li>個人が趣味で作成したシミュレーターです</li>
+        <li>計算は简略化されており実際と異なります</li>
+        <li>税制・法規制は随時変わります</li>
+        <li>投資判断・購入決定の根拠にしないでください</li>
+        <li>専門家（FP・不動産会社・銀行）への相談が必須です</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -42,7 +73,7 @@
   <div class="wrap">
     <button class="tab active" data-tab="compare">📊 家賃vs購入 比較</button>
     <button class="tab" data-tab="move">🚚 住み替えコスト</button>
-    <button class="tab" data-tab="loan">💴 ローン返済計算</button>
+    <button class="tab" data-tab="loan">💴 ローン返済・繰り上げ</button>
   </div>
 </div>
 
@@ -58,18 +89,22 @@
             <input type="number" id="b-price" value="3500" min="100" step="100"></div>
           <div class="fg"><label>頭金（万円）</label>
             <input type="number" id="b-down" value="500" min="0" step="50"></div>
-          <div class="fg"><label>住宅ローン金利（年%）</label>
-            <input type="number" id="b-rate" value="1.5" min="0.1" step="0.1"></div>
+          <div class="fg"><label>住宅ローン金利 — 現在（年%）</label>
+            <input type="number" id="b-rate" value="0.5" min="0" step="0.05"></div>
           <div class="fg"><label>返済期間（年）</label>
             <input type="number" id="b-years" value="35" min="5" max="50"></div>
-          <div class="fg"><label>購入諸費用（物件価格の%）</label>
-            <input type="number" id="b-fees" value="6" min="0" max="15"></div>
+          <div class="fg"><label>購入諸費用（物件価格の%）<span class="hint">※登記・税・仲介等</span></label>
+            <input type="number" id="b-fees" value="6" min="0" max="15" step="0.5"></div>
           <div class="fg"><label>固定資産税（年・万円）</label>
-            <input type="number" id="b-tax" value="12" min="0"></div>
+            <input type="number" id="b-tax" value="12" min="0" step="1"></div>
           <div class="fg"><label>管理費・修繕積立（月・万円）</label>
             <input type="number" id="b-maint" value="2" min="0" step="0.5"></div>
-          <div class="fg"><label>売却想定価格（万円・空欄=計算）</label>
-            <input type="number" id="b-sell" placeholder="自動計算" min="0"></div>
+          <div class="fg"><label>大規模修繕費（15〜20年後想定・万円）</label>
+            <input type="number" id="b-repair" value="100" min="0" step="10" placeholder="一戸建なら200〜300万"></div>
+          <div class="fg"><label>売却想定価格（万円・空欄=自動）</label>
+            <input type="number" id="b-sell" placeholder="自動：年1%で減価" min="0"></div>
+          <div class="fg"><label>年収（万円）<span class="hint">返済負担率チェック用</span></label>
+            <input type="number" id="b-income" value="600" min="0" step="50"></div>
         </div>
       </section>
 
@@ -84,7 +119,7 @@
             <input type="number" id="r-key" value="1" min="0" max="3" step="0.5"></div>
           <div class="fg"><label>仲介手数料（月数）</label>
             <input type="number" id="r-agent" value="1" min="0" max="2" step="0.5"></div>
-          <div class="fg"><label>更新料（年数ごと・月数）</label>
+          <div class="fg"><label>更新料（2年ごと・月数）</label>
             <input type="number" id="r-renew" value="1" min="0" max="2" step="0.5"></div>
           <div class="fg"><label>家賃値上がり率（年%）</label>
             <input type="number" id="r-rise" value="1" min="0" step="0.5"></div>
@@ -96,23 +131,23 @@
         <div class="form-grid">
           <div class="fg"><label>比較期間（年）</label>
             <input type="number" id="c-period" value="35" min="5" max="50"></div>
-          <div class="fg"><label>運用利回り（年%・投資想定）</label>
+          <div class="fg"><label>運用利回り（年%・賃貸の差額投資想定）</label>
             <input type="number" id="c-invest" value="3" min="0" step="0.5"></div>
         </div>
       </section>
 
       <section class="card tax-card">
         <h2 class="card-title">💴 住宅ローン控除（減税）</h2>
-        <p class="card-note">住宅ローン控除は最大13年間、年末ローン残高の0.7%が所得税等から還付されます。</p>
+        <p class="card-note">住宅ローン控除は最大13年間、年末ローン残高の0.7%が所得税等から還付されます。※2024年以降の税制を参考に試算。</p>
         <div class="form-grid">
-          <div class="fg"><label>控除適用（する/しない）</label>
+          <div class="fg"><label>控除適用</label>
             <select id="tax-apply">
               <option value="1">適用する（新築・認定住宅等）</option>
               <option value="0">適用しない</option>
             </select></div>
           <div class="fg"><label>控除上限借入額（万円）</label>
             <select id="tax-limit">
-              <option value="3000">3,000万円（既存住宅）</option>
+              <option value="2000">2,000万円（既存住宅）</option>
               <option value="3000">3,000万円（その他新築）</option>
               <option value="4000">4,000万円（ZEH水準）</option>
               <option value="4500" selected>4,500万円（長期優良住宅等）</option>
@@ -120,26 +155,51 @@
         </div>
       </section>
 
-      <button class="btn-calc" id="calc-compare">📊 計算する</button>
+      <section class="card risk-card">
+        <h2 class="card-title">📈 金利上昇リスク試算</h2>
+        <p class="card-note">変動金利の場合、将来の金利上昇による返済額増加リスクを確認できます。</p>
+        <div class="form-grid">
+          <div class="fg"><label>上昇シナリオ1（年%）</label>
+            <input type="number" id="risk-rate1" value="1.5" min="0" step="0.5"></div>
+          <div class="fg"><label>上昇シナリオ2（年%）</label>
+            <input type="number" id="risk-rate2" value="3.0" min="0" step="0.5"></div>
+        </div>
+      </section>
+
+      <button class="btn-calc" id="calc-compare">📊 比較計算する</button>
     </div>
 
     <aside class="sidebar">
-      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="disc-sidebar">
+        <h3>⚠️ ご利用上の注意</h3>
+        <p>このツールは<strong>個人の趣味</strong>で作成した<strong>参考用シミュレーター</strong>です。</p>
+        <p>実際の不動産購入・賃貸の判断には<strong>専門家への相談が不可欠</strong>です。</p>
+        <ul>
+          <li>🏢 不動産会社</li>
+          <li>💼 ファイナンシャルプランナー</li>
+          <li>🏦 住宅ローン担当者</li>
+          <li>⚖️ 不動産・税務の専門家</li>
+        </ul>
+      </div>
       <div class="tip-card">
         <h3>📌 計算のポイント</h3>
         <ul>
           <li>購入は「資産になる」が固定費も大きい</li>
           <li>賃貸は「柔軟に動ける」が資産が残らない</li>
           <li>一般的に15〜20年で損益分岐する</li>
-          <li>金利・家賃値上がりで大きく変わる</li>
+          <li>変動金利は低いが将来上昇リスクあり</li>
+          <li>修繕費・リフォーム費用も要考慮</li>
         </ul>
       </div>
-      <div class="ad-box tall"><div class="ad-lbl">広告</div><div class="ad-inner">160×600</div></div>
     </aside>
   </div>
 
   <!-- 結果エリア -->
   <div id="result-compare" style="display:none">
+
+    <!-- 返済負担率 -->
+    <div class="affordability-box" id="affordability-box"></div>
+
     <div class="result-cards">
       <div class="result-card buy">
         <div class="rc-label">🏠 購入 実質コスト</div>
@@ -152,17 +212,41 @@
         <div class="rc-sub" id="res-rent-sub"></div>
       </div>
       <div class="result-card winner" id="res-winner-card">
-        <div class="rc-label">🏆 有利な選択</div>
+        <div class="rc-label">🏆 試算上の有利な選択</div>
         <div class="rc-value" id="res-winner">—</div>
         <div class="rc-sub" id="res-diff"></div>
       </div>
     </div>
+
     <div id="tax-deduction-box" class="tax-result-box" style="display:none"></div>
+
     <div class="chart-wrap">
       <canvas id="chart-compare" height="100"></canvas>
     </div>
+
     <div class="breakeven-box" id="breakeven-box"></div>
+
+    <!-- 購入費用詳細内訳 -->
+    <div class="detail-card">
+      <h3 class="detail-title">📋 購入時 費用の詳細内訳（参考）</h3>
+      <div class="detail-grid" id="buy-detail-grid"></div>
+      <p class="detail-note">※ 登録免許税・不動産取得税・印紙税等は物件種別・価格・地域により大きく異なります。</p>
+    </div>
+
+    <!-- 金利上昇シナリオ -->
+    <div class="risk-result-card" id="risk-result-card"></div>
+
     <div class="advice-card" id="advice-card"></div>
+
+    <!-- SNSシェア -->
+    <div id="share-compare"></div>
+
+    <!-- 結果下免責 -->
+    <div class="result-disclaimer">
+      ⚠️ <strong>この計算結果は参考値です。</strong>
+      実際の費用・税額・金利は物件・契約内容・税制・個人の所得等により大きく異なります。
+      不動産の購入・賃貸の最終判断には、必ず不動産会社・ファイナンシャルプランナー・銀行等の専門家にご相談ください。
+    </div>
   </div>
 </main>
 
@@ -201,6 +285,8 @@
             <input type="number" id="m-to-buy" value="3500" step="100"></div>
           <div class="fg"><label>引越し費用（万円）</label>
             <input type="number" id="m-move-cost" value="15" step="1"></div>
+          <div class="fg"><label>家具・家電の買替費用（万円）</label>
+            <input type="number" id="m-furniture" value="30" step="5"></div>
           <div class="fg"><label>その他諸費用（万円）</label>
             <input type="number" id="m-other" value="5" step="1"></div>
         </div>
@@ -210,14 +296,18 @@
     </div>
 
     <aside class="sidebar">
-      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="disc-sidebar">
+        <h3>⚠️ 参考ツールです</h3>
+        <p>実際の費用は物件・地域・時期により異なります。不動産会社への確認を推奨します。</p>
+      </div>
       <div class="tip-card">
         <h3>📌 住み替えの主なコスト</h3>
         <ul>
           <li><strong>賃貸→賃貸</strong>: 敷金礼金+引越費で50〜80万</li>
-          <li><strong>賃貸→購入</strong>: 頭金+諸費用で数百万</li>
-          <li><strong>持ち家→売却</strong>: 仲介手数料3%+税</li>
-          <li>新生活の家電・家具費用も忘れずに</li>
+          <li><strong>賃貸→購入</strong>: 頭金+諸費用で数百万〜</li>
+          <li><strong>持ち家売却</strong>: 仲介手数料3%+税など</li>
+          <li>新生活の家電・家具も意外と高額</li>
+          <li>仮住まいが必要な場合も追加費用</li>
         </ul>
       </div>
     </aside>
@@ -227,10 +317,13 @@
     <h3 class="section-h3">💰 住み替え費用の内訳</h3>
     <div id="move-items" class="move-items"></div>
     <div class="move-total" id="move-total"></div>
+    <div class="result-disclaimer" style="margin-top:12px">
+      ⚠️ 上記は概算です。実際の費用は物件・契約・地域で大きく異なります。各業者へご確認ください。
+    </div>
   </div>
 </main>
 
-<!-- ========== TAB 3: ローン返済 ========== -->
+<!-- ========== TAB 3: ローン返済・繰り上げ ========== -->
 <main class="wrap main" id="tab-loan" style="display:none">
   <div class="layout">
     <div class="panel">
@@ -240,7 +333,7 @@
           <div class="fg"><label>借入金額（万円）</label>
             <input type="number" id="l-amount" value="3000" step="100"></div>
           <div class="fg"><label>年利（%）</label>
-            <input type="number" id="l-rate" value="1.5" step="0.1"></div>
+            <input type="number" id="l-rate" value="0.5" step="0.05"></div>
           <div class="fg"><label>返済期間（年）</label>
             <input type="number" id="l-years" value="35" min="5" max="50"></div>
           <div class="fg"><label>返済方式</label>
@@ -250,25 +343,49 @@
             </select></div>
           <div class="fg"><label>ボーナス返済（年・万円）</label>
             <input type="number" id="l-bonus" value="0" step="5"></div>
+          <div class="fg"><label>年収（万円）<span class="hint">返済比率確認用</span></label>
+            <input type="number" id="l-income" value="600" step="50"></div>
         </div>
         <button class="btn-calc" id="calc-loan">💴 計算する</button>
       </section>
+
+      <section class="card prepay-card">
+        <h2 class="card-title">🔄 繰り上げ返済シミュレーション</h2>
+        <p class="card-note">上記で計算後、繰り上げ返済の効果を試算できます。</p>
+        <div class="form-grid">
+          <div class="fg"><label>繰り上げ返済 金額（万円）</label>
+            <input type="number" id="p-amount" value="100" min="0" step="10"></div>
+          <div class="fg"><label>実施タイミング（返済開始から何年後）</label>
+            <input type="number" id="p-timing" value="5" min="1" step="1"></div>
+          <div class="fg"><label>繰り上げ方式</label>
+            <select id="p-type">
+              <option value="shorten">返済期間短縮型（利息削減効果大）</option>
+              <option value="reduce">毎月返済額軽減型（月々の負担を減らす）</option>
+            </select></div>
+        </div>
+        <button class="btn-calc" id="calc-prepay" disabled>🔄 繰り上げ効果を計算</button>
+      </section>
     </div>
     <aside class="sidebar">
-      <div class="ad-box"><div class="ad-lbl">広告</div><div class="ad-inner">300×250</div></div>
+      <div class="disc-sidebar">
+        <h3>⚠️ 参考ツールです</h3>
+        <p>繰り上げ返済の実際の条件・手数料は金融機関により異なります。銀行担当者へご確認ください。</p>
+      </div>
       <div class="tip-card">
-        <h3>💡 ローン豆知識</h3>
+        <h3>💡 ローン・繰り上げ返済の知識</h3>
         <ul>
-          <li>変動金利: 現在低いが将来上昇リスク</li>
-          <li>固定金利: 金額が確定で安心感あり</li>
-          <li>繰り上げ返済で総利息を大幅削減</li>
-          <li>返済比率25%以下が目安</li>
+          <li>変動金利: 現在低いが将来上昇リスクあり</li>
+          <li>固定金利: 安心だが当初金利は高め</li>
+          <li>繰り上げは<strong>早いほど</strong>利息削減効果大</li>
+          <li>返済負担率は<strong>手取りの25%以内</strong>が目安</li>
+          <li>繰り上げ前に緊急予備資金を確保すること</li>
         </ul>
       </div>
     </aside>
   </div>
 
   <div id="result-loan" style="display:none">
+    <div class="affordability-box" id="loan-affordability-box"></div>
     <div class="result-cards" style="grid-template-columns:repeat(4,1fr)">
       <div class="result-card"><div class="rc-label">月返済額</div><div class="rc-value" id="l-monthly">—</div></div>
       <div class="result-card"><div class="rc-label">総返済額</div><div class="rc-value" id="l-total">—</div></div>
@@ -280,15 +397,39 @@
       <h3 class="section-h3">📋 返済スケジュール（5年ごと）</h3>
       <div style="overflow-x:auto"><table class="amort-table" id="amort-table"></table></div>
     </div>
+    <div class="result-disclaimer">
+      ⚠️ 計算は概算です。実際の返済額・利息は金融機関の条件により異なります。
+    </div>
+  </div>
+
+  <div id="result-prepay" style="display:none">
+    <h3 class="section-h3">🔄 繰り上げ返済の効果</h3>
+    <div class="result-cards" style="grid-template-columns:repeat(3,1fr)">
+      <div class="result-card"><div class="rc-label">利息削減額</div><div class="rc-value" id="p-interest-save">—</div></div>
+      <div class="result-card"><div class="rc-label">期間短縮</div><div class="rc-value" id="p-months-save">—</div></div>
+      <div class="result-card"><div class="rc-label">繰り上げ後の月返済</div><div class="rc-value" id="p-new-monthly">—</div></div>
+    </div>
+    <div class="prepay-summary" id="prepay-summary"></div>
+    <div class="result-disclaimer">
+      ⚠️ 繰り上げ返済の実際の手数料・条件は金融機関により異なります。必ず銀行に確認してください。
+    </div>
   </div>
 </main>
 
 <footer class="footer">
-  <p>家賃vs購入シミュレーター — 不動産コスト計算ツール（無料・ログイン不要）</p>
-  <p class="footer-note">※ 計算結果はあくまで参考値です。実際の費用は物件・条件により異なります。</p>
+  <div class="wrap">
+    <p class="footer-main">🏠 家賃vs購入シミュレーター — 不動産コスト参考ツール（趣味・個人制作）</p>
+    <div class="footer-disclaimer">
+      ⚠️ <strong>重要な免責事項</strong>：このサイトは個人が趣味で制作した参考用シミュレーターです。
+      計算結果は大幅に简略化されており、実際の費用・税額・金利とは異なります。
+      掲載情報の正確性・完全性を保証するものではありません。
+      不動産の購入・賃貸・ローンの契約に際しては、必ず不動産会社・ファイナンシャルプランナー・税理士・金融機関等の専門家にご相談ください。
+      本ツールの利用により生じた損害について、制作者は一切の責任を負いません。
+    </div>
+    <p class="footer-copy">© 2025 個人制作 — 趣味ツール</p>
+  </div>
 </footer>
 
-<link rel="stylesheet" href="style.css">
 <script src="app.js"></script>
 </body>
 </html>

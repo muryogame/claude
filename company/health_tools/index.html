@@ -6,6 +6,14 @@
   <title>処方薬 飲み合わせチェッカー ＋ 睡眠スコア記録 | 無料・ログイン不要</title>
   <meta name="description" content="処方薬の飲み合わせを無料チェック。OTC市販薬との相互作用も確認。睡眠スコア・起床時間を毎日記録してグラフで可視化。">
   <meta name="keywords" content="処方薬 飲み合わせ,薬 相互作用チェック,睡眠スコア 記録,睡眠グラフ,市販薬 飲み合わせ">
+  <!-- SNS OGP -->
+  <meta property="og:title" content="処方薬 飲み合わせチェッカー ＋ 睡眠・BMI・カロリー管理 | 無料">
+  <meta property="og:description" content="処方薬・市販薬の飲み合わせを無料チェック。睡眠スコア記録・BMI計算・カロリー管理も。完全無料・ログイン不要。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="処方薬 飲み合わせチェッカー ＋ 睡眠・BMI・カロリー管理">
+  <meta name="twitter:description" content="処方薬の飲み合わせチェック＋睡眠スコア記録＋BMI計算＋カロリー管理。完全無料・ログイン不要。">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -203,6 +211,11 @@
           <div class="bmi-scale-labels">
             <span>低体重<br>&lt;18.5</span><span>普通体重<br>18.5–25</span><span>過体重<br>25–30</span><span>肥満<br>≥30</span>
           </div>
+        </div>
+        <div class="share-row" id="bmi-share-row" style="margin-top:12px;display:none">
+          <button class="share-btn share-btn-x" id="bmi-share-x">𝕏 Xでシェア</button>
+          <button class="share-btn share-btn-line" id="bmi-share-line">💬 LINEでシェア</button>
+          <button class="share-btn share-btn-copy" id="bmi-share-copy">🔗 URLをコピー</button>
         </div>
       </div>
 

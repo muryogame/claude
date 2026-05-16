@@ -373,6 +373,28 @@ document.getElementById('bmi-calc-btn').addEventListener('click', () => {
   document.getElementById('bmi-marker').style.left = markerPct + '%';
   document.getElementById('bmi-result').style.display = 'block';
 
+  // BMIシェアボタン
+  const shareRow = document.getElementById('bmi-share-row');
+  shareRow.style.display = 'flex';
+  const bmiTxt = `⚖️ BMI計算しました！\nBMI: ${bmi.toFixed(1)}（${cls.label}）\n適正体重: ${ideal.toFixed(1)}kg\nあなたのBMIは？ #BMI計算 #健康管理`;
+  const bmiUrl = location.href;
+  document.getElementById('bmi-share-x').onclick = () => {
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(bmiTxt) + '&url=' + encodeURIComponent(bmiUrl), '_blank');
+  };
+  document.getElementById('bmi-share-line').onclick = () => {
+    window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(bmiUrl) + '&text=' + encodeURIComponent(`BMI: ${bmi.toFixed(1)}（${cls.label}）あなたは？`), '_blank');
+  };
+  const copyBtnBmi = document.getElementById('bmi-share-copy');
+  copyBtnBmi.onclick = () => {
+    const done = () => {
+      copyBtnBmi.textContent = '✅ コピーしました！';
+      copyBtnBmi.classList.add('copied');
+      setTimeout(() => { copyBtnBmi.textContent = '🔗 URLをコピー'; copyBtnBmi.classList.remove('copied'); }, 2000);
+    };
+    navigator.clipboard ? navigator.clipboard.writeText(bmiUrl).then(done)
+      : (() => { const ta = Object.assign(document.createElement('textarea'), {value: bmiUrl}); document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); done(); })();
+  };
+
   // 記録保存
   const recs = loadWeightRecs();
   const idx = recs.findIndex(r => r.date === date);

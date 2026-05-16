@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>無料Webツール集 | アニメ診断・健康管理・不動産シミュレーター</title>
+  <meta name="description" content="完全無料のWebツール集。アニメキャラ性格診断・ゲーム時間記録、処方薬飲み合わせチェック・BMI・睡眠記録、賃貸vs購入コスト比較シミュレーター。ログイン不要。">
+  <meta property="og:title" content="無料Webツール集 | アニメ・健康・不動産">
+  <meta property="og:description" content="アニメ性格診断・健康管理・不動産コスト比較など完全無料のWebツール集。ログイン不要。">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f8fafc;color:#1e293b;font-size:15px;line-height:1.6}
+    .header{background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff;padding:48px 16px;text-align:center}
+    .header h1{font-size:28px;font-weight:900;margin-bottom:10px}
+    .header p{font-size:15px;opacity:.9;max-width:560px;margin:0 auto}
+    .wrap{max-width:960px;margin:0 auto;padding:0 16px}
+    .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:40px 16px;max-width:960px;margin:0 auto}
+    .tool-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);transition:transform .2s,box-shadow .2s;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+    .tool-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,.14)}
+    .tool-card-banner{padding:32px 24px;text-align:center;font-size:48px}
+    .tool-card-body{padding:20px 24px;flex:1;display:flex;flex-direction:column;gap:10px}
+    .tool-name{font-size:17px;font-weight:800;color:#1e293b}
+    .tool-desc{font-size:13px;color:#64748b;line-height:1.6;flex:1}
+    .tool-tags{display:flex;flex-wrap:wrap;gap:6px}
+    .tag{background:#f1f5f9;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;color:#475569}
+    .tool-cta{display:block;margin:0 24px 24px;padding:12px;background:var(--c);color:#fff;border-radius:10px;text-align:center;font-weight:700;font-size:14px;text-decoration:none;transition:opacity .15s}
+    .tool-cta:hover{opacity:.85}
+    .free-badge{display:inline-block;background:#dcfce7;color:#15803d;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700}
+    footer{background:#1e293b;color:#94a3b8;text-align:center;padding:24px;font-size:12px;margin-top:20px}
+    @media(max-width:720px){.tools{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🛠️ 無料 Web ツール集</h1>
+  <p>ログイン不要・完全無料。アニメ診断から健康管理、不動産コスト比較まで。</p>
+</div>
+
+<div class="tools">
+
+  <a class="tool-card" href="anime_game_tools/" style="--c:#7c3aed">
+    <div class="tool-card-banner" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)">🎮</div>
+    <div class="tool-card-body">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="tool-name">アニメキャラ性格診断</div>
+        <span class="free-badge">無料</span>
+      </div>
+      <p class="tool-desc">20問に答えて自分に似たアニメキャラを発見！MBTI分析・レーダーチャート付き。1,141キャラ対応。ゲームプレイ時間記録機能も搭載。</p>
+      <div class="tool-tags">
+        <span class="tag">MBTI診断</span>
+        <span class="tag">アニメ</span>
+        <span class="tag">ゲーム記録</span>
+        <span class="tag">日英対応</span>
+      </div>
+    </div>
+    <span class="tool-cta" style="background:#7c3aed">✨ 診断スタート →</span>
+  </a>
+
+  <a class="tool-card" href="health_tools/" style="--c:#16a34a">
+    <div class="tool-card-banner" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)">💊</div>
+    <div class="tool-card-body">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="tool-name">健康管理ツール</div>
+        <span class="free-badge">無料</span>
+      </div>
+      <p class="tool-desc">処方薬・市販薬の飲み合わせチェック、睡眠スコア記録、BMI計算・体重管理、カロリー計算まで。完全無料・ログイン不要。</p>
+      <div class="tool-tags">
+        <span class="tag">飲み合わせ</span>
+        <span class="tag">睡眠記録</span>
+        <span class="tag">BMI</span>
+        <span class="tag">カロリー計算</span>
+      </div>
+    </div>
+    <span class="tool-cta" style="background:#16a34a">⚕️ 健康チェック →</span>
+  </a>
+
+  <a class="tool-card" href="rent_buy_simulator/" style="--c:#2563eb">
+    <div class="tool-card-banner" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">🏠</div>
+    <div class="tool-card-body">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="tool-name">賃貸 vs 購入 比較</div>
+        <span class="free-badge">無料</span>
+      </div>
+      <p class="tool-desc">賃貸と購入どっちが得？損益分岐点・返済負担率・金利リスク・繰り上げ返済を一括試算。計算結果をURLでシェア可能。参考目的ツール。</p>
+      <div class="tool-tags">
+        <span class="tag">住宅ローン</span>
+        <span class="tag">不動産比較</span>
+        <span class="tag">損益分岐点</span>
+        <span class="tag">繰り上げ返済</span>
+      </div>
+    </div>
+    <span class="tool-cta" style="background:#2563eb">📊 シミュレーション →</span>
+  </a>
+
+</div>
+
+<footer>
+  <p>完全無料・個人制作のWebツール集。ログイン不要・データはすべてブラウザ内に保存。</p>
+  <p style="margin-top:6px;opacity:.6">© 2025 個人制作 — 診断・計算結果はエンタメ・参考目的です。</p>
+</footer>
+
+</body>
+</html>
