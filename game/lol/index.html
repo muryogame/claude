@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOLの始め方 〜League of Legends 完全入門ガイド〜</title>
+<meta name="description" content="League of Legendsの始め方を完全解説。アカウント作成・基本用語・マップ・レーンの役割・チャンピオン選びまで初心者向けに詳しく紹介。">
+<meta property="og:title" content="LOLの始め方 〜League of Legends 完全入門ガイド〜">
+<meta property="og:description" content="League of Legendsを0から学べる完全入門ガイド。用語・マップ・チャンピオン・レーンの役割まで全て解説。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C89B3C;
+  --gold-light:#F0C659;
+  --blue-dark:#0A1428;
+  --blue-mid:#1E2D50;
+  --blue-light:#2D4A8A;
+  --teal:#0BC4E3;
+  --text:#F0E6D3;
+  --text-muted:#A9B4D0;
+  --surface:#1A2744;
+  --border:#2D4A8A44;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--blue-dark);color:var(--text);font-size:15px;line-height:1.7}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,20,40,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 16px}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:8px;height:56px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-logo{font-weight:900;color:var(--gold);font-size:16px;white-space:nowrap;margin-right:12px;text-decoration:none}
+.nav-link{color:var(--text-muted);text-decoration:none;font-size:13px;white-space:nowrap;padding:6px 10px;border-radius:6px;transition:all .2s}
+.nav-link:hover{color:var(--gold);background:rgba(200,155,60,.1)}
+.nav-link.champion{background:var(--gold);color:#0A1428;font-weight:700;padding:6px 14px}
+.nav-link.champion:hover{background:var(--gold-light)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0A1428 0%,#1E2D50 50%,#0A1428 100%);padding:80px 16px 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg') center/cover;opacity:.12}
+.hero-content{position:relative;z-index:1;max-width:800px;margin:0 auto}
+.hero-badge{display:inline-block;background:rgba(200,155,60,.2);border:1px solid var(--gold);color:var(--gold);border-radius:20px;padding:4px 16px;font-size:12px;font-weight:700;margin-bottom:16px;letter-spacing:.05em}
+.hero h1{font-size:clamp(24px,5vw,48px);font-weight:900;line-height:1.2;margin-bottom:16px;background:linear-gradient(135deg,#F0C659,#C89B3C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(14px,2.5vw,18px);color:var(--text-muted);margin-bottom:32px;line-height:1.6}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#0A1428;padding:14px 28px;border-radius:8px;font-weight:800;font-size:15px;text-decoration:none;transition:all .2s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,155,60,.4)}
+.btn-secondary{background:rgba(11,196,227,.15);border:1px solid var(--teal);color:var(--teal);padding:14px 28px;border-radius:8px;font-weight:700;font-size:15px;text-decoration:none;transition:all .2s}
+.btn-secondary:hover{background:rgba(11,196,227,.25);transform:translateY(-2px)}
+
+/* CONTENT */
+.container{max-width:900px;margin:0 auto;padding:0 16px}
+.section{padding:60px 0}
+.section-header{margin-bottom:40px}
+.section-num{color:var(--gold);font-size:13px;font-weight:700;letter-spacing:.1em;margin-bottom:8px}
+.section-title{font-size:clamp(20px,4vw,32px);font-weight:900;color:var(--text)}
+.section-title span{color:var(--gold)}
+.section-desc{color:var(--text-muted);margin-top:10px;font-size:14px}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+.card-title{font-size:16px;font-weight:800;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title .icon{font-size:20px}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:16px}
+.step{display:flex;gap:16px;align-items:flex-start}
+.step-num{background:var(--gold);color:#0A1428;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0;margin-top:2px}
+.step-body h4{font-weight:700;color:var(--text);margin-bottom:4px}
+.step-body p{color:var(--text-muted);font-size:13px}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;margin:16px 0;border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:rgba(200,155,60,.2);color:var(--gold);font-weight:700;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top}
+td:first-child{color:var(--text);font-weight:600}
+tr:hover td{background:rgba(255,255,255,.03)}
+tr:last-child td{border-bottom:none}
+
+/* MAP VISUAL */
+.map-box{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:10px;padding:20px;font-family:monospace;font-size:12px;color:var(--teal);overflow-x:auto;white-space:pre;line-height:1.6}
+
+/* CALLOUT */
+.callout{background:rgba(11,196,227,.08);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;font-size:13px;color:var(--text-muted)}
+.callout strong{color:var(--teal)}
+
+.callout-gold{background:rgba(200,155,60,.08);border-left:3px solid var(--gold)}
+.callout-gold strong{color:var(--gold)}
+
+/* CHAMPION CARDS */
+.champ-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:24px}
+@media(max-width:600px){.champ-grid{grid-template-columns:repeat(3,1fr)}}
+.champ-card{border-radius:10px;overflow:hidden;border:1px solid var(--border);transition:all .2s;cursor:pointer;text-decoration:none}
+.champ-card:hover{transform:translateY(-4px);border-color:var(--gold)}
+.champ-img{width:100%;aspect-ratio:2/1;object-fit:cover;object-position:top}
+.champ-info{padding:8px;background:var(--surface)}
+.champ-name{font-size:12px;font-weight:700;color:var(--text)}
+.champ-role{font-size:10px;color:var(--text-muted)}
+
+/* LANE CARDS */
+.lane-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:600px){.lane-grid{grid-template-columns:1fr}}
+.lane-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden}
+.lane-card::before{content:attr(data-icon);position:absolute;right:16px;top:12px;font-size:36px;opacity:.15}
+.lane-tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:12px}
+.tag-top{background:rgba(34,197,94,.2);color:#4ade80}
+.tag-jg{background:rgba(168,85,247,.2);color:#c084fc}
+.tag-mid{background:rgba(59,130,246,.2);color:#60a5fa}
+.tag-adc{background:rgba(239,68,68,.2);color:#f87171}
+.tag-sup{background:rgba(234,179,8,.2);color:#facc15}
+.lane-card h3{font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px}
+.lane-card p{font-size:13px;color:var(--text-muted);margin-bottom:10px}
+.lane-tips{display:flex;flex-direction:column;gap:4px}
+.lane-tip{font-size:12px;color:var(--text-muted);padding-left:12px;position:relative}
+.lane-tip::before{content:'•';position:absolute;left:0;color:var(--gold)}
+.lane-champ{font-size:12px;margin-top:10px;color:var(--text-muted)}
+.lane-champ span{color:var(--teal);font-weight:600}
+
+/* SUMMARY */
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+@media(max-width:600px){.summary-grid{grid-template-columns:1fr}}
+.summary-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;text-align:center}
+.summary-num{font-size:32px;font-weight:900;color:var(--gold)}
+.summary-label{font-size:12px;color:var(--text-muted);margin-top:4px}
+
+/* DIVIDER */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:40px 0}
+
+/* PHASE */
+.phase-grid{display:flex;flex-direction:column;gap:16px}
+.phase{display:flex;gap:16px}
+.phase-time{background:rgba(200,155,60,.15);border:1px solid rgba(200,155,60,.3);border-radius:8px;padding:8px 12px;text-align:center;flex-shrink:0;width:90px}
+.phase-time .time{font-size:11px;color:var(--gold);font-weight:700}
+.phase-time .label{font-size:10px;color:var(--text-muted);margin-top:2px}
+.phase-content h4{font-weight:700;color:var(--text);margin-bottom:6px}
+.phase-content ul{list-style:none;display:flex;flex-direction:column;gap:3px}
+.phase-content li{font-size:13px;color:var(--text-muted);padding-left:12px;position:relative}
+.phase-content li::before{content:'▶';font-size:9px;position:absolute;left:0;top:2px;color:var(--teal)}
+
+/* FOOTER */
+footer{background:rgba(0,0,0,.4);border-top:1px solid var(--border);padding:32px 16px;text-align:center}
+.footer-title{font-size:18px;font-weight:900;color:var(--gold);margin-bottom:8px}
+.footer-sub{font-size:13px;color:var(--text-muted);margin-bottom:16px}
+.footer-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.footer-link{color:var(--teal);font-size:12px;text-decoration:none}
+.footer-link:hover{color:var(--gold)}
+.footer-copy{font-size:11px;color:var(--text-muted);margin-top:20px}
+
+/* UL LISTS */
+.content-list{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.content-list li{font-size:13px;color:var(--text-muted);padding-left:16px;position:relative}
+.content-list li::before{content:'✓';position:absolute;left:0;color:var(--gold);font-size:11px;top:1px}
+
+/* BADGES */
+.diff-stars{color:var(--gold);font-size:12px}
+.diff-empty{color:var(--blue-light);font-size:12px}
+
+.highlight{color:var(--teal);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">🎮 LOL入門</a>
+    <a href="#start" class="nav-link">始め方</a>
+    <a href="#terms" class="nav-link">用語</a>
+    <a href="#gameguide" class="nav-link">ゲームの進め方</a>
+    <a href="#champions" class="nav-link">チャンピオン</a>
+    <a href="#skills" class="nav-link">スキル</a>
+    <a href="#lanes" class="nav-link">レーン</a>
+    <a href="champions.html" class="nav-link champion">全チャンピオン →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🎮 完全初心者ガイド</div>
+    <h1>League of Legends<br>完全入門ガイド</h1>
+    <p class="hero-sub">世界最大のPCオンラインゲーム「LOL」を0から学べる日本語ガイド。<br>アカウント作成からランク戦まで、全て無料で解説。</p>
+    <div class="hero-btns">
+      <a href="#start" class="btn-primary">今すぐ始める</a>
+      <a href="champions.html" class="btn-secondary">チャンピオン一覧 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="container" style="padding:32px 16px">
+  <div class="summary-grid">
+    <div class="summary-item">
+      <div class="summary-num">172<span style="font-size:18px">体+</span></div>
+      <div class="summary-label">チャンピオン数（2025年）</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num">5</div>
+      <div class="summary-label">レーン（ポジション）</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num">無料</div>
+      <div class="summary-label">ゲーム本体は完全無料</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1: 始め方 -->
+<section class="section" id="start">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">SECTION 01</div>
+      <h2 class="section-title">1から<span>始める</span></h2>
+      <p class="section-desc">アカウント作成からチュートリアルまで、最初にやることをステップごとに解説します。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🖥️</span>アカウント作成</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>公式サイトにアクセス</h4>
+            <p><strong style="color:var(--teal)">leagueoflegends.com</strong> にアクセスして「今すぐプレイ」をクリック</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>アカウント登録</h4>
+            <p>メールアドレスとパスワードを設定。サモナーネーム（ゲーム内名前）を決める</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Riot Clientをダウンロード</h4>
+            <p>ゲームクライアントをインストール。ダウンロードには時間がかかる場合あり（約10GB）</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>チュートリアルを完了</h4>
+            <p>基本チュートリアルで移動・攻撃・スキルの使い方を学ぶ。完了でチャンピオンがもらえる</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🤖</span>チュートリアルの流れ</div>
+      <ul class="content-list">
+        <li><strong>基本チュートリアル</strong> — 移動・攻撃・スキルの使い方を学ぶ</li>
+        <li><strong>AI戦（BOT戦）</strong> — 初心者向けBOTと戦いながらゲームの流れを体験</li>
+        <li>まずはBOT戦を <strong class="highlight">10〜20試合</strong> こなして基本操作に慣れよう</li>
+      </ul>
+      <div class="callout" style="margin-top:16px">
+        <strong>📌 ポイント:</strong> チュートリアル完了後はまずBOT戦でチャンピオンの操作に慣れることを推奨。いきなりPvPは難しい！
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⭐</span>最初にやること</div>
+      <ul class="content-list">
+        <li>チュートリアル完了でチャンピオンが <strong>数体</strong> もらえる</li>
+        <li>最初は <strong class="highlight">アッシュ (Ashe)</strong> や <strong class="highlight">ガレン (Garen)</strong> などの簡単なチャンピオンがおすすめ</li>
+        <li><strong>召喚師レベル</strong> を上げながらゲームシステムを少しずつ覚えていく</li>
+        <li>レベル <strong>30</strong> になるとランク戦（ランクゲーム）が解放される</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider container"></div>
+
+<!-- SECTION 2: 用語 -->
+<section class="section" id="terms">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">SECTION 02</div>
+      <h2 class="section-title">始めたときに必要な<span>用語</span></h2>
+      <p class="section-desc">LOLには独自の用語がたくさんあります。少しずつ覚えていきましょう。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📖</span>基本用語</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>用語</th><th>読み方</th><th>意味</th></tr>
+          <tr><td>CS</td><td>シーエス</td><td>クリープスコア。ミニオンを倒した数。ゴールドの主な収入源</td></tr>
+          <tr><td>キル（K）</td><td>キル</td><td>敵チャンピオンを倒すこと</td></tr>
+          <tr><td>デス（D）</td><td>デス</td><td>自分が倒されること</td></tr>
+          <tr><td>アシスト（A）</td><td>アシスト</td><td>キルに貢献したが止めを刺さなかった場合</td></tr>
+          <tr><td>KDA</td><td>ケーディーエー</td><td>キル/デス/アシストの比率。実力の指標</td></tr>
+          <tr><td>ネクサス</td><td>ネクサス</td><td>本拠地。これを壊すと勝利</td></tr>
+          <tr><td>タワー/タレット</td><td>タワー</td><td>各レーンにある防衛砲台。破壊するとゴールドが入る</td></tr>
+          <tr><td>ミニオン</td><td>ミニオン</td><td>自動で進軍するNPC。倒すとCSとゴールドが得られる</td></tr>
+          <tr><td>ウェーブ</td><td>ウェーブ</td><td>ミニオンの群れ</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⚔️</span>戦略用語</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>用語</th><th>意味</th></tr>
+          <tr><td>ガンク</td><td>ジャングラーが他のレーンを奇襲してキルを狙うこと</td></tr>
+          <tr><td>ロール（ローム）</td><td>自分のレーンを離れて他のレーンを支援すること</td></tr>
+          <tr><td>プッシュ</td><td>ウェーブをタワーへ向けて押し込むこと</td></tr>
+          <tr><td>フリーズ</td><td>ウェーブを自分のタワー付近で止めておくこと</td></tr>
+          <tr><td>リコール（B）</td><td>本拠地に帰ること（Bキーで発動）</td></tr>
+          <tr><td>TP</td><td>テレポート。タワーやワードに瞬間移動するサモナースペル</td></tr>
+          <tr><td>フラッシュ</td><td>瞬時に短距離ダッシュするサモナースペル。最重要スペル</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🗺️</span>マップ用語</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>用語</th><th>意味</th></tr>
+          <tr><td>バロン（ナサー）</td><td>マップ北側にいる強力なモンスター。倒すと強力なバフが得られる</td></tr>
+          <tr><td>ドラゴン</td><td>マップ南側にいるモンスター。種類によって異なるバフが得られる</td></tr>
+          <tr><td>リフトヘラルド</td><td>バロンの代わりに序盤に出現。タワー破壊に使える</td></tr>
+          <tr><td>ワード</td><td>視界を確保するためのアイテム。置くとマップが見える</td></tr>
+          <tr><td>視界 / ビジョン</td><td>マップで見えているエリア。重要な戦略要素</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider container"></div>
+
+<!-- SECTION 3: ゲームの進め方 -->
+<section class="section" id="gameguide">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">SECTION 03</div>
+      <h2 class="section-title">ゲームの<span>進め方</span></h2>
+      <p class="section-desc">サモナーズリフトのマップ構造と試合の流れを理解しましょう。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🗺️</span>サモナーズリフト マップ構造</div>
+      <div class="map-box">      [ブルーチーム側ネクサス]
+┌─────────────────────────────────┐
+│  🛡️ トップレーン        🌲 JG  │
+│             [バロン]            │
+│      ✨ ミッドレーン（中央）    │
+│             [ドラゴン]          │
+│  🏹 ボットレーン (ADC+サポート) │
+└─────────────────────────────────┘
+      [レッドチーム側ネクサス]</div>
+      <div class="callout" style="margin-top:12px">
+        <strong>ポイント:</strong> 5人が各レーン・ジャングルに分かれてミニオンを倒しながらゴールドを稼ぎ、最終的に敵のネクサスを破壊するのが目標です。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⏱️</span>試合の流れ</div>
+      <div class="phase-grid">
+        <div class="phase">
+          <div class="phase-time">
+            <div class="time">0〜15分</div>
+            <div class="label">レーニング</div>
+          </div>
+          <div class="phase-content">
+            <h4>序盤〜レーニングフェーズ〜</h4>
+            <ul>
+              <li>各プレイヤーが担当レーンでCSとゴールドを稼ぐ</li>
+              <li>ジャングラーはモンスターを狩りながらガンクに行く</li>
+              <li>ドラゴンを倒してバフを獲得（開始2:30〜）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-time">
+            <div class="time">15〜25分</div>
+            <div class="label">ローテーション</div>
+          </div>
+          <div class="phase-content">
+            <h4>中盤〜ローテーションフェーズ〜</h4>
+            <ul>
+              <li>タワーが壊れてレーンが崩れ始める</li>
+              <li>集団戦（チームファイト）が増えてくる</li>
+              <li>バロン・リフトヘラルド・ドラゴンを巡る争い</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-time">
+            <div class="time">25分〜</div>
+            <div class="label">クロージング</div>
+          </div>
+          <div class="phase-content">
+            <h4>終盤〜クロージングフェーズ〜</h4>
+            <ul>
+              <li>バロンバフを活かして集団でタワーとネクサスを狙う</li>
+              <li><strong style="color:var(--gold)">ネクサスを破壊すると「VICTORY」で試合終了！</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🏆</span>勝つための基本戦術</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>CSを毎分7〜8体以上狙う</h4>
+            <p>10分で70〜80CSが理想。ゴールドの安定収入がアイテム購入に直結する</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>死なないことを最優先</h4>
+            <p>デスするとゴールドを相手に渡し、リスポーン時間も無駄になる。生存最優先</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>タワーを折ってから集団行動に合流</h4>
+            <p>タワーはゴールドになり、合流後の動きが自由になる</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>ドラゴン・バロンなどオブジェクトを優先</h4>
+            <p>キルは局所的な優位、オブジェクトはチーム全体に恩恵をもたらすグローバルな優位</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>ワードを積極的に置いて視界を確保</h4>
+            <p>視界がないとガンクされる。ブッシュにワードを置いて敵の動きを把握しよう</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider container"></div>
+
+<!-- SECTION 4: チャンピオン -->
+<section class="section" id="champions">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">SECTION 04</div>
+      <h2 class="section-title">チャンピオンの<span>種類</span></h2>
+      <p class="section-desc">2025年時点で172体以上のチャンピオンが存在します。役割別に理解しましょう。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🎭</span>チャンピオンの種類（役割別）</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>役割</th><th>特徴</th><th>代表チャンピオン</th><th>難易度</th></tr>
+          <tr><td>タンク</td><td>耐久力が高く前線を張る</td><td>マルファイト、レオナ、ノーチラス</td><td><span class="diff-stars">★★</span><span class="diff-empty">☆</span></td></tr>
+          <tr><td>ファイター</td><td>近距離で戦う攻防バランス型</td><td>ダリウス、ガレン、フィオラ</td><td><span class="diff-stars">★</span><span class="diff-empty">☆☆</span></td></tr>
+          <tr><td>アサシン</td><td>瞬間的に大ダメージを与えるが脆い</td><td>ゼド、カタリナ</td><td><span class="diff-stars">★★★</span></td></tr>
+          <tr><td>メイジ（AP）</td><td>魔法ダメージで戦うキャスター</td><td>ラックス、アニー、ビクター</td><td><span class="diff-stars">★★</span><span class="diff-empty">☆</span></td></tr>
+          <tr><td>マークスマン（ADC）</td><td>遠距離から物理ダメージを与える</td><td>ジン、エズリアル、アッシュ</td><td><span class="diff-stars">★★</span><span class="diff-empty">☆</span></td></tr>
+          <tr><td>サポート</td><td>味方を回復・保護・補助する</td><td>ソラカ、ナミ、スレッシュ</td><td><span class="diff-stars">★</span><span class="diff-empty">☆☆</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🌟</span>初心者おすすめチャンピオン（各レーン別）</div>
+      <div class="champ-grid">
+        <a href="champions.html?role=TOP" class="champ-card">
+          <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Garen_0.jpg" alt="Garen" class="champ-img">
+          <div class="champ-info">
+            <div class="champ-name">ガレン</div>
+            <div class="champ-role">🛡️ TOP おすすめ</div>
+          </div>
+        </a>
+        <a href="champions.html?role=ADC" class="champ-card">
+          <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_0.jpg" alt="Ashe" class="champ-img">
+          <div class="champ-info">
+            <div class="champ-name">アッシュ</div>
+            <div class="champ-role">🏹 ADC おすすめ</div>
+          </div>
+        </a>
+        <a href="champions.html?role=JG" class="champ-card">
+          <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Amumu_0.jpg" alt="Amumu" class="champ-img">
+          <div class="champ-info">
+            <div class="champ-name">アムム</div>
+            <div class="champ-role">🌲 JG おすすめ</div>
+          </div>
+        </a>
+        <a href="champions.html?role=MID" class="champ-card">
+          <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg" alt="Lux" class="champ-img">
+          <div class="champ-info">
+            <div class="champ-name">ラックス</div>
+            <div class="champ-role">✨ MID おすすめ</div>
+          </div>
+        </a>
+        <a href="champions.html?role=SUPPORT" class="champ-card">
+          <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Soraka_0.jpg" alt="Soraka" class="champ-img">
+          <div class="champ-info">
+            <div class="champ-name">ソラカ</div>
+            <div class="champ-role">💛 SUP おすすめ</div>
+          </div>
+        </a>
+      </div>
+      <div style="margin-top:20px">
+        <a href="champions.html" class="btn-primary" style="display:inline-block">全144チャンピオンを見る →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🆓</span>無料ローテーション</div>
+      <ul class="content-list">
+        <li>毎週ローテーションで <strong class="highlight">無料でプレイできるチャンピオンが約15体</strong> 入れ替わる</li>
+        <li>購入には <strong>Blue Essence（BE）</strong> またはRP（課金通貨）が必要</li>
+        <li>最初は無料チャンピオンを使って色々試してみよう</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider container"></div>
+
+<!-- SECTION 5: スキル -->
+<section class="section" id="skills">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">SECTION 05</div>
+      <h2 class="section-title">スキル・<span>パッシブ</span></h2>
+      <p class="section-desc">全てのチャンピオンはP・Q・W・E・Rの5種類のスキルを持ちます。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⚡</span>スキル構成</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>キー</th><th>名前</th><th>内容</th></tr>
+          <tr><td><strong style="color:var(--gold);font-size:16px">P</strong></td><td>パッシブ</td><td>操作不要で常時発動する固有能力。レベルアップ不可</td></tr>
+          <tr><td><strong style="color:var(--teal);font-size:16px">Q</strong></td><td>基本スキル①</td><td>最初に習得できる。最も使用頻度が高いことが多い</td></tr>
+          <tr><td><strong style="color:var(--teal);font-size:16px">W</strong></td><td>基本スキル②</td><td>防御・補助系が多い</td></tr>
+          <tr><td><strong style="color:var(--teal);font-size:16px">E</strong></td><td>基本スキル③</td><td>移動・補助・攻撃など多様</td></tr>
+          <tr><td><strong style="color:#a855f7;font-size:16px">R</strong></td><td>アルティメット</td><td>最強スキル。レベル6・11・16でのみ習得・強化できる</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span>スキルレベルアップの仕組み</div>
+      <ul class="content-list">
+        <li>チャンピオンレベルが上がるたびにスキルポイントが1つ得られる</li>
+        <li><strong class="highlight">R（アルティメット）</strong> はレベル6・11・16でのみ習得・強化できる</li>
+        <li>残りのQ・W・Eは任意の順番でレベルアップ可能（最大レベル5）</li>
+        <li>基本的には <strong>メインスキル（一番使うもの）を最優先</strong> でレベルアップする</li>
+        <li>ショートカット: <strong>Ctrl+Q / Ctrl+W / Ctrl+E / Ctrl+R</strong> でレベルアップ</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span>スキルの種類</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+        <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:14px">
+          <div style="color:var(--gold);font-weight:700;margin-bottom:4px">ポイントクリックスキル</div>
+          <div style="font-size:12px;color:var(--text-muted)">クリックした対象に確定ヒット。初心者向け</div>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:14px">
+          <div style="color:var(--gold);font-weight:700;margin-bottom:4px">スキルショット</div>
+          <div style="font-size:12px;color:var(--text-muted)">狙いを定めて発射。エイム力が必要</div>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:14px">
+          <div style="color:var(--gold);font-weight:700;margin-bottom:4px">範囲スキル（AoE）</div>
+          <div style="font-size:12px;color:var(--text-muted)">範囲内の全対象にダメージ</div>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:14px">
+          <div style="color:var(--gold);font-weight:700;margin-bottom:4px">バフ/デバフスキル</div>
+          <div style="font-size:12px;color:var(--text-muted)">味方強化や敵弱体化系スキル</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider container"></div>
+
+<!-- SECTION 6: レーン -->
+<section class="section" id="lanes">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">SECTION 06</div>
+      <h2 class="section-title">各レーンの<span>役割</span></h2>
+      <p class="section-desc">5つのポジションそれぞれの特徴と役割を理解しましょう。</p>
+    </div>
+
+    <div class="lane-grid">
+      <div class="lane-card" data-icon="🛡️">
+        <div class="lane-tag tag-top">TOP</div>
+        <h3>🛡️ トップレーン</h3>
+        <p>耐久力の高いタンクやファイターが1人で担当するマップ上側のレーン。</p>
+        <div class="lane-tips">
+          <div class="lane-tip">序盤は1vs1の個人技が重要</div>
+          <div class="lane-tip">テレポート（TP）を使って他レーンを支援</div>
+          <div class="lane-tip">試合中盤からフロントラインとして活躍</div>
+        </div>
+        <div class="lane-champ">おすすめ: <span>ガレン、マルファイト</span></div>
+      </div>
+
+      <div class="lane-card" data-icon="🌲">
+        <div class="lane-tag tag-jg">JUNGLE</div>
+        <h3>🌲 ジャングル</h3>
+        <p>レーン以外の森エリアを動き回る司令塔的存在。ガンクで各レーンを支援する。</p>
+        <div class="lane-tips">
+          <div class="lane-tip">モンスターを狩りながらレベル・ゴールドを稼ぐ</div>
+          <div class="lane-tip">ドラゴン・バロン・リフトヘラルドの管理も担当</div>
+          <div class="lane-tip">スミート（Smite）というサモナースペルが必須</div>
+        </div>
+        <div class="lane-champ">おすすめ: <span>アムム、ウォリック</span></div>
+      </div>
+
+      <div class="lane-card" data-icon="✨">
+        <div class="lane-tag tag-mid">MID</div>
+        <h3>✨ ミッドレーン</h3>
+        <p>AP（魔法）チャンピオンやアサシンが担当。マップ中央から試合全体に影響力を発揮。</p>
+        <div class="lane-tips">
+          <div class="lane-tip">レーンが短いのでロール（他レーン支援）がしやすい</div>
+          <div class="lane-tip">試合への影響力が最も大きいポジション</div>
+          <div class="lane-tip">視界管理が特に重要</div>
+        </div>
+        <div class="lane-champ">おすすめ: <span>ラックス、アニー</span></div>
+      </div>
+
+      <div class="lane-card" data-icon="🏹">
+        <div class="lane-tag tag-adc">ADC</div>
+        <h3>🏹 ボットレーン ADC</h3>
+        <p>遠距離物理アタッカー。サポートと2人でレーン。アイテムが揃うと後半の主な火力源に。</p>
+        <div class="lane-tips">
+          <div class="lane-tip">サポートと2人でレーン（2vs2）</div>
+          <div class="lane-tip">ポジショニング（立ち位置）が特に重要</div>
+          <div class="lane-tip">序盤は脆いが後半は最強クラスのDPS</div>
+        </div>
+        <div class="lane-champ">おすすめ: <span>アッシュ、ジン</span></div>
+      </div>
+
+      <div class="lane-card" data-icon="💛" style="grid-column:1/-1;max-width:440px">
+        <div class="lane-tag tag-sup">SUPPORT</div>
+        <h3>💛 ボットレーン サポート</h3>
+        <p>ADCや味方を回復・シールド・CC（行動妨害）で守る。初心者でも貢献しやすいポジション。</p>
+        <div class="lane-tips">
+          <div class="lane-tip">CSをほとんど取らず、サポートアイテムでゴールドを稼ぐ</div>
+          <div class="lane-tip">視界管理（ワード設置）がメインの仕事の一つ</div>
+          <div class="lane-tip">ゲームシステムを学びながらチームに貢献しやすい</div>
+        </div>
+        <div class="lane-champ">おすすめ: <span>ソラカ、ルル</span></div>
+      </div>
+    </div>
+
+    <div class="callout-gold callout" style="margin-top:24px">
+      <strong>💡 どのレーンから始めるべき?</strong> 初心者には <strong>サポート</strong> または <strong>トップ（ガレン）</strong> がおすすめ。死ながら覚えるのではなく、チームに貢献しながら安全に学べます。
+    </div>
+  </div>
+</section>
+
+<div class="divider container"></div>
+
+<!-- SUMMARY -->
+<section class="section" id="summary">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">SUMMARY</div>
+      <h2 class="section-title">まとめ：初心者<span>おすすめの流れ</span></h2>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>チュートリアルを完了する</h4>
+          <p>まず基本操作を覚えてからBOT戦へ進もう</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>BOT戦で操作に慣れる（20試合以上）</h4>
+          <p>本物の相手と戦う前に基礎をBOTで固める</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>1〜2つのチャンピオンに絞って練習する</h4>
+          <p>最初からたくさんのチャンピオンを使うと混乱する</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>用語を少しずつ覚えながらノーマル戦に挑戦</h4>
+          <p>全部一度に覚えようとしない。少しずつ積み上げよう</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>レベル30になったらランク戦を解放</h4>
+          <p>ランク戦で本格的な対戦が楽しめるようになる</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>勝敗より「CSを稼ぐ」「死なない」を意識する</h4>
+          <p>最初は基礎を固めることが上達への近道</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:32px">
+      <strong>💡 最後のヒント:</strong> 「最初はうまくいかなくて当然です。LoLは奥が深いゲームなので、焦らず少しずつ上達を楽しみましょう！学ぶ量を一度に詰め込みすぎると楽しめなくなるので、一つずつ段階的に覚えていきましょう」
+    </div>
+
+    <div style="margin-top:32px;text-align:center">
+      <a href="champions.html" class="btn-primary" style="font-size:18px;padding:16px 40px">全144チャンピオンのガイドを見る →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-title">🎮 LOL完全入門ガイド</div>
+  <div class="footer-sub">League of Legends 初心者向け日本語ガイドサイト</div>
+  <div class="footer-links">
+    <a href="https://www.leagueoflegends.com/en-us/how-to-play/" class="footer-link" target="_blank">公式サイト</a>
+    <a href="https://wiki.leagueoflegends.com/" class="footer-link" target="_blank">LoL Wiki</a>
+    <a href="https://mobalytics.gg/" class="footer-link" target="_blank">Mobalytics</a>
+    <a href="champions.html" class="footer-link">チャンピオン一覧</a>
+  </div>
+  <div class="footer-copy">© 2025 LOL入門ガイド | このサイトはLeague of Legendsの非公式ファンサイトです。Riot Games, League of Legends および関連する全てのコンテンツはRiot Gamesの商標または登録商標です。</div>
+</footer>
+
+</body>
+</html>

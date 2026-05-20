@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">チャンピオン詳細 | LOL初心者ガイド</title>
+  <meta name="description" id="pageDesc" content="League of Legendsチャンピオン詳細情報">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --gold:#C89B3C;--gold-light:#F0E6D3;--blue-dark:#0A1428;--blue-mid:#0D1B2E;
+      --blue-card:#091428;--teal:#0BC4E3;
+      --text:#A0A9B4;--text-light:#C8D0DC;--white:#fff;
+    }
+    body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN',sans-serif;background:var(--blue-dark);color:var(--text-light);min-height:100vh}
+
+    /* NAV */
+    nav{background:rgba(10,20,40,0.97);border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+    .nav-inner{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px;height:60px}
+    .nav-logo{font-size:1.3rem;font-weight:900;color:var(--gold);text-decoration:none;white-space:nowrap}
+    .nav-links{display:flex;gap:4px;flex:1}
+    .nav-links a{color:var(--text);text-decoration:none;font-size:0.85rem;padding:6px 12px;border-radius:4px;transition:color .2s}
+    .nav-links a:hover{color:var(--gold)}
+    .back-btn{margin-left:auto;padding:8px 16px;border-radius:6px;border:1px solid var(--gold);color:var(--gold);text-decoration:none;font-size:0.85rem;transition:background .2s}
+    .back-btn:hover{background:rgba(200,155,60,.15)}
+
+    /* HERO / SPLASH */
+    .splash-section{
+      position:relative;min-height:360px;overflow:hidden;
+      background:linear-gradient(160deg,#0D1B2E,#091020)
+    }
+    .splash-bg{
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;object-position:top center;
+      opacity:.35;filter:blur(1px)
+    }
+    .splash-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to right,rgba(10,20,40,.95) 0%,rgba(10,20,40,.6) 50%,rgba(10,20,40,.1) 100%)
+    }
+    .splash-content{
+      position:relative;max-width:1100px;margin:0 auto;padding:48px 20px 40px;
+      display:flex;align-items:flex-end;gap:32px
+    }
+    .splash-portrait{
+      width:140px;height:140px;border-radius:12px;border:3px solid var(--gold);
+      object-fit:cover;object-position:top;flex-shrink:0;background:#0A1428
+    }
+    .splash-info{flex:1}
+    .champ-name-jp{font-size:clamp(1.8rem,5vw,3rem);font-weight:900;color:var(--white);line-height:1.1;margin-bottom:4px}
+    .champ-name-en{font-size:1rem;color:var(--gold);margin-bottom:12px}
+    .tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .tag{padding:4px 12px;border-radius:16px;font-size:0.8rem;font-weight:700;border:1px solid transparent}
+    .tag-role-TOP{background:rgba(227,89,89,.2);border-color:#E35959;color:#E35959}
+    .tag-role-JG{background:rgba(89,200,89,.2);border-color:#59C859;color:#59C859}
+    .tag-role-MID{background:rgba(200,155,60,.2);border-color:var(--gold);color:var(--gold)}
+    .tag-role-ADC{background:rgba(89,160,227,.2);border-color:#59A0E3;color:#59A0E3}
+    .tag-role-SUPPORT{background:rgba(160,89,227,.2);border-color:#A059E3;color:#A059E3}
+    .tag-class{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:var(--text-light)}
+    .champ-style{color:var(--text-light);font-size:0.95rem;line-height:1.6;max-width:560px}
+
+    /* MAIN */
+    .main{max-width:1100px;margin:0 auto;padding:32px 20px 64px;display:grid;grid-template-columns:1fr 300px;gap:32px}
+    @media(max-width:760px){.main{grid-template-columns:1fr}.side{order:2}}
+
+    /* CARDS */
+    .card{background:var(--blue-card);border-radius:12px;border:1px solid rgba(200,155,60,.15);padding:24px;margin-bottom:24px}
+    .card-title{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .card-title::before{content:'';width:3px;height:18px;background:var(--gold);border-radius:2px}
+
+    /* DIFF METER */
+    .diff-meter{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+    .diff-label{font-size:0.85rem;color:var(--text);width:80px}
+    .diff-bar{flex:1;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden}
+    .diff-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#59C859,#C89B3C,#E35959)}
+    .diff-stars{color:var(--gold);font-size:0.9rem;margin-left:8px}
+
+    /* SIMILAR */
+    .similar-list{display:flex;flex-direction:column;gap:10px}
+    .similar-item{
+      display:flex;align-items:center;gap:12px;text-decoration:none;
+      padding:10px 12px;border-radius:8px;border:1px solid rgba(200,155,60,.1);
+      background:rgba(255,255,255,.03);transition:border-color .2s,background .2s
+    }
+    .similar-item:hover{border-color:var(--gold);background:rgba(200,155,60,.08)}
+    .similar-img{width:44px;height:44px;border-radius:6px;object-fit:cover;object-position:top;background:#0A1428}
+    .similar-info{}
+    .similar-jp{font-size:0.85rem;font-weight:700;color:var(--white)}
+    .similar-role{font-size:0.72rem;color:var(--text)}
+
+    /* TIPS */
+    .tip-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .tip-list li{padding:12px 14px;background:rgba(11,196,227,.06);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;font-size:0.88rem;line-height:1.6;color:var(--text-light)}
+
+    /* STATS */
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .stat-item{padding:12px;background:rgba(255,255,255,.04);border-radius:8px;text-align:center}
+    .stat-val{font-size:1.3rem;font-weight:900;color:var(--gold)}
+    .stat-key{font-size:0.72rem;color:var(--text);margin-top:2px}
+
+    /* NOT FOUND */
+    .not-found{text-align:center;padding:120px 20px;color:var(--text)}
+    .not-found .nf-icon{font-size:5rem;margin-bottom:20px}
+    .not-found h2{font-size:1.5rem;color:var(--text-light);margin-bottom:12px}
+    .not-found a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold)}
+
+    footer{background:#060e1a;border-top:1px solid rgba(200,155,60,.2);padding:24px 20px;text-align:center;color:var(--text);font-size:0.8rem}
+    footer a{color:var(--gold);text-decoration:none}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">⚔ LOL初心者ガイド</a>
+    <div class="nav-links">
+      <a href="index.html">始め方</a>
+      <a href="champions.html">チャンピオン一覧</a>
+    </div>
+    <a href="champions.html" class="back-btn">← 一覧に戻る</a>
+  </div>
+</nav>
+
+<div id="appContent"></div>
+
+<footer>
+  <p><a href="champions.html">← チャンピオン一覧へ戻る</a> ｜ <a href="index.html">始め方ガイド</a></p>
+</footer>
+
+<script src="js/champions-data.js"></script>
+<script>
+const ROLE_TIPS = {
+  TOP: ['序盤はCSを集中して後半に備えよう','テレポートのタイミングが試合の流れを変える','1vs1が得意なチャンピオンが多いレーン'],
+  JG: ['序盤はカウンタージャングルより自レーンのゲンク支援を優先','Dragonは必ず優先して取るよう意識しよう','死ぬくらいなら退いてOK、チャンピオンが生きていることが最優先'],
+  MID: ['ローミングのタイミングを覚えると試合に大きく影響できる','ウェーブ管理でレーン優位を作り他レーンを助けに行こう','マップ中央のレーンなのでジャングラーのサポートが来やすい'],
+  ADC: ['サポートと連携してトレードを有利に進めよう','後衛ポジションを守ってダメージを出し続けるのが役割','アイテムが揃う後半に強くなるチャンピオンが多い'],
+  SUPPORT: ['ワードを積極的に置いてマップビジョンを確保しよう','ADCのCS妨害を防ぎながらエンゲージのチャンスを窺おう','Dragonタイム前後のポジショニングが特に重要'],
+};
+
+const DIFF_TEXT = ['','非常に簡単','簡単','普通','難しい','非常に難しい'];
+
+function diffStars(n){return '★'.repeat(n)+'☆'.repeat(5-n)}
+
+function getSimilar(champ){
+  return CHAMPIONS
+    .filter(c=>c.en!==champ.en && c.role===champ.role)
+    .sort(()=>Math.random()-.5)
+    .slice(0,3);
+}
+
+function renderChampion(c){
+  const key = c.img || c.en;
+  const splashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${key}_0.jpg`;
+  const portraitUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${key}_0.jpg`;
+  const squareUrl = `https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/${key}.png`;
+  const roleLabelMap={TOP:'TOP レーン',JG:'ジャングル',MID:'MID レーン',ADC:'ボット AD',SUPPORT:'サポート'};
+  const tips = ROLE_TIPS[c.role] || [];
+  const similar = getSimilar(c);
+  const diffPct = (c.diff/5)*100;
+
+  document.getElementById('pageTitle').textContent = `${c.jp}（${c.en}）| LOL初心者ガイド`;
+  document.getElementById('pageDesc').content = `${c.jp}の役割・難易度・初心者向けヒントを解説。${c.style}`;
+
+  document.getElementById('appContent').innerHTML = `
+    <section class="splash-section">
+      <img class="splash-bg" src="${splashUrl}" alt="${c.jp}" onerror="this.style.display='none'">
+      <div class="splash-overlay"></div>
+      <div class="splash-content">
+        <img class="splash-portrait" src="${portraitUrl}" alt="${c.jp}"
+          onerror="this.src='${squareUrl}'" loading="eager">
+        <div class="splash-info">
+          <div class="champ-name-jp">${c.jp}</div>
+          <div class="champ-name-en">${c.en}</div>
+          <div class="tag-row">
+            <span class="tag tag-role-${c.role}">${roleLabelMap[c.role]||c.role}</span>
+            <span class="tag tag-class">${c.class}</span>
+          </div>
+          <p class="champ-style">${c.style}</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="main">
+      <div class="content">
+        <div class="card">
+          <div class="card-title">難易度・基本情報</div>
+          <div class="diff-meter">
+            <span class="diff-label">難易度</span>
+            <div class="diff-bar"><div class="diff-fill" style="width:${diffPct}%"></div></div>
+            <span class="diff-stars">${diffStars(c.diff)}</span>
+          </div>
+          <p style="font-size:0.85rem;color:var(--text);margin-top:4px">
+            ${DIFF_TEXT[c.diff]} — ${c.diff<=2?'初心者にもおすすめ！':c.diff===3?'慣れれば十分扱いやすい':c.diff===4?'練習が必要だが覚えると強い':'上級者向け。ハイリワードなチャンピオン'}
+          </p>
+          <div class="stat-grid" style="margin-top:16px">
+            <div class="stat-item"><div class="stat-val">${roleLabelMap[c.role]||c.role}</div><div class="stat-key">メインロール</div></div>
+            <div class="stat-item"><div class="stat-val">${c.diff}/5</div><div class="stat-key">難易度</div></div>
+            <div class="stat-item" style="grid-column:1/-1"><div class="stat-val" style="font-size:.95rem">${c.class}</div><div class="stat-key">クラス</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">初心者向けヒント</div>
+          <ul class="tip-list">
+            ${tips.map(t=>`<li>${t}</li>`).join('')}
+            <li>${c.jp}は「${c.style}」というプレイスタイルが特徴。まずはこの点を意識してプレイしてみよう。</li>
+            ${c.diff<=2?'<li>難易度が低めなので、LOL初心者がまず使い始めるのに最適なチャンピオンの一つです。</li>':''}
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">このチャンピオンの強み</div>
+          <p style="font-size:0.9rem;line-height:1.8;color:var(--text-light)">
+            ${c.jp}は${c.class}タイプのチャンピオンで、${roleLabelMap[c.role]||c.role}を担当します。
+            ${c.style}。<br><br>
+            同じ役割のチャンピオンと比べた場合、
+            ${c.diff<=2?'操作がシンプルで基本的なゲームプレイを学ぶのに最適です。':c.diff===3?'中程度の操作難易度で、ゲームに慣れてきたプレイヤーに向いています。':'高い操作スキルが求められますが、マスターすれば非常に大きな影響力を発揮できます。'}
+          </p>
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="card">
+          <div class="card-title">同じロールのチャンピオン</div>
+          <div class="similar-list">
+            ${similar.map(s=>{
+              const sk = s.img||s.en;
+              return `<a href="champion.html?name=${encodeURIComponent(s.en)}" class="similar-item">
+                <img class="similar-img" src="https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${sk}_0.jpg"
+                  alt="${s.jp}" onerror="this.src='https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/${sk}.png'">
+                <div class="similar-info">
+                  <div class="similar-jp">${s.jp}</div>
+                  <div class="similar-role">${diffStars(s.diff)} ${DIFF_TEXT[s.diff]}</div>
+                </div>
+              </a>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">一覧に戻る</div>
+          <a href="champions.html" style="display:block;text-align:center;padding:12px;border-radius:8px;background:rgba(200,155,60,.15);border:1px solid var(--gold);color:var(--gold);text-decoration:none;font-weight:700;font-size:0.9rem">
+            ← 全チャンピオン一覧
+          </a>
+          <div style="margin-top:12px">
+            <a href="index.html" style="display:block;text-align:center;padding:10px;border-radius:8px;background:rgba(11,196,227,.1);border:1px solid var(--teal);color:var(--teal);text-decoration:none;font-size:0.85rem">
+              始め方ガイドを見る
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderNotFound(name){
+  document.getElementById('appContent').innerHTML = `
+    <div class="not-found">
+      <div class="nf-icon">⚔</div>
+      <h2>チャンピオン「${name}」が見つかりません</h2>
+      <p style="margin-bottom:24px">URLが正しいか確認してください</p>
+      <a href="champions.html">← チャンピオン一覧へ</a>
+    </div>`;
+}
+
+// Parse URL param
+const params = new URLSearchParams(location.search);
+const nameParam = params.get('name') || '';
+const champ = CHAMPIONS.find(c => c.en.toLowerCase() === nameParam.toLowerCase());
+
+if (champ) {
+  renderChampion(champ);
+} else {
+  renderNotFound(nameParam || '不明');
+}
+</script>
+</body>
+</html>
