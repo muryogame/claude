@@ -1,10 +1,11 @@
 """
 YouTube動画アップロードモジュール
 OAuth 2.0 認証を使って動画を投稿する
+ローカル実行: token.json ファイルを使用
+GitHub Actions: YOUTUBE_TOKEN_JSON / YOUTUBE_CLIENT_SECRET_JSON 環境変数を使用
 """
 import os
 import json
-import pickle
 from datetime import datetime
 from config import (YOUTUBE_CLIENT_SECRET_FILE, YOUTUBE_TOKEN_FILE,
                     YOUTUBE_CHANNEL_ID)
@@ -22,16 +23,35 @@ def get_authenticated_service():
 
     creds = None
 
-    # 保存済みトークンがあれば読み込む
-    if os.path.exists(YOUTUBE_TOKEN_FILE):
-        with open(YOUTUBE_TOKEN_FILE, "rb") as token:
-            creds = pickle.load(token)
+    # 環境変数からトークンを読み込む（GitHub Actions用）
+    token_json_env = os.environ.get("YOUTUBE_TOKEN_JSON")
+    if token_json_env:
+        creds = Credentials.from_authorized_user_info(json.loads(token_json_env), SCOPES)
+    # ファイルからトークンを読み込む（ローカル用）
+    elif os.path.exists(YOUTUBE_TOKEN_FILE):
+        with open(YOUTUBE_TOKEN_FILE, "r", encoding="utf-8") as f:
+            creds = Credentials.from_authorized_user_info(json.load(f), SCOPES)
 
     # トークンが無効か期限切れなら再取得
     if not creds or not creds.valid:
+        needs_new_flow = True
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
+            try:
+                creds.refresh(Request())
+                _save_token(creds)
+                needs_new_flow = False
+            except Exception:
+                print("  トークンの更新に失敗しました。再認証を行います...")
+                if os.path.exists(YOUTUBE_TOKEN_FILE):
+                    os.remove(YOUTUBE_TOKEN_FILE)
+
+        if needs_new_flow:
+            # client_secret.json を環境変数から書き出す（GitHub Actions用）
+            client_secret_env = os.environ.get("YOUTUBE_CLIENT_SECRET_JSON")
+            if client_secret_env and not os.path.exists(YOUTUBE_CLIENT_SECRET_FILE):
+                with open(YOUTUBE_CLIENT_SECRET_FILE, "w", encoding="utf-8") as f:
+                    f.write(client_secret_env)
+
             if not os.path.exists(YOUTUBE_CLIENT_SECRET_FILE):
                 raise FileNotFoundError(
                     f"client_secret.json が見つかりません: {YOUTUBE_CLIENT_SECRET_FILE}\n"
@@ -43,14 +63,18 @@ def get_authenticated_service():
             try:
                 creds = flow.run_local_server(port=8080)
             except Exception:
-                # WSL2などブラウザが開けない環境ではコンソールフローを使用
                 creds = flow.run_console()
-
-        # トークンを保存
-        with open(YOUTUBE_TOKEN_FILE, "wb") as token:
-            pickle.dump(creds, token)
+            _save_token(creds)
 
     return build("youtube", "v3", credentials=creds)
+
+
+def _save_token(creds):
+    """トークンを JSON ファイルに保存する。"""
+    token_data = json.loads(creds.to_json())
+    with open(YOUTUBE_TOKEN_FILE, "w", encoding="utf-8") as f:
+        json.dump(token_data, f, ensure_ascii=False, indent=2)
+    print(f"  トークンを保存しました: {YOUTUBE_TOKEN_FILE}")
 
 
 def upload_video(video_path: str, thumbnail_path: str, script_data: dict) -> str:
@@ -122,7 +146,7 @@ def upload_video(video_path: str, thumbnail_path: str, script_data: dict) -> str
 
     video_url = f"https://www.youtube.com/watch?v={video_id}"
     print(f"  動画URL: {video_url}")
-    return video_url
+    return video_url, video_id
 
 
 def upload_shorts(video_path: str, script_data: dict) -> str:
@@ -177,7 +201,7 @@ def upload_shorts(video_path: str, script_data: dict) -> str:
     video_id = response["id"]
     url = f"https://www.youtube.com/shorts/{video_id}"
     print(f"  Shorts完了: {url}")
-    return url
+    return url, video_id
 
 
 def check_credentials_ready() -> bool:

@@ -1,0 +1,83 @@
+name: YouTube Shorts 自動投稿
+
+on:
+  schedule:
+    # JST = UTC+9 なので各時刻から9時間引く
+    - cron: '0 12 * * *'  # 21:00 JST
+    - cron: '0 13 * * *'  # 22:00 JST
+    - cron: '0 14 * * *'  # 23:00 JST
+    - cron: '0 15 * * *'  # 00:00 JST (翌日)
+    - cron: '0 16 * * *'  # 01:00 JST (翌日)
+  workflow_dispatch:  # 手動実行も可能
+
+jobs:
+  post-shorts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python をセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: 日本語フォントをインストール
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk ffmpeg
+          mkdir -p /home/runner/.local/share/fonts
+          cp /usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc \
+             /home/runner/.local/share/fonts/NotoSansCJKjp-Bold.otf 2>/dev/null || true
+          cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc \
+             /home/runner/.local/share/fonts/NotoSansCJKjp-Regular.otf 2>/dev/null || true
+          fc-cache -f
+
+      - name: 依存パッケージをインストール
+        run: pip install -r youtube_auto/requirements.txt
+
+      - name: 認証情報を配置
+        working-directory: youtube_auto
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON }}
+        run: |
+          echo "$YOUTUBE_TOKEN_JSON" > token.json
+          echo "$YOUTUBE_CLIENT_SECRET_JSON" > client_secret.json
+
+      - name: スロット番号を決定
+        id: slot
+        run: |
+          HOUR=$(date -u +%H)
+          case "$HOUR" in
+            12) SLOT=1 ;;   # 21:00 JST
+            13) SLOT=2 ;;   # 22:00 JST
+            14) SLOT=3 ;;   # 23:00 JST
+            15) SLOT=4 ;;   # 00:00 JST
+            16) SLOT=5 ;;   # 01:00 JST
+             *) SLOT=1 ;;
+          esac
+          echo "slot=$SLOT" >> $GITHUB_OUTPUT
+
+      - name: Shorts 動画を生成・投稿
+        working-directory: youtube_auto
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON }}
+        run: python3 main.py --shorts --slot ${{ steps.slot.outputs.slot }}
+
+      - name: 更新されたトークンを GitHub Secret に書き戻す
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          if [ -f youtube_auto/token.json ]; then
+            TOKEN=$(cat youtube_auto/token.json)
+            echo "$TOKEN" | gh secret set YOUTUBE_TOKEN_JSON --repo ${{ github.repository }}
+            echo "トークンを更新しました"
+          fi
