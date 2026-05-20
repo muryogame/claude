@@ -37,41 +37,50 @@ def _get_font(size: int) -> ImageFont.FreeTypeFont:
 
 
 def _render_subtitle_frame(text: str, alpha: float, w: int = SHORTS_W, h: int = SHORTS_H) -> np.ndarray:
-    """字幕テキストをRGBA numpy配列として描画する（背景付き）。"""
-    font_main = _get_font(58)
-    font_small = _get_font(44)
+    """字幕テキストをRGBA numpy配列として描画する（アウトライン + グラデーション背景付き）。"""
+    font_main = _get_font(66)
+    font_small = _get_font(52)
     font = font_main if len(text) <= 20 else font_small
 
-    # テキストを折り返す
-    wrapped = textwrap.fill(text, width=16)
+    wrapped = textwrap.fill(text, width=15)
     lines = wrapped.split("\n")
 
-    line_h = font.size + 12
-    box_h = line_h * len(lines) + 40
-    box_w = w - 80
+    line_h = font.size + 16
+    box_h = line_h * len(lines) + 48
+    box_w = w - 60
 
-    # 半透明黒背景 + テキスト
-    img = Image.new("RGBA", (w, box_h), (0, 0, 0, 0))
+    img = Image.new("RGBA", (w, box_h + 20), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    bg_alpha = int(180 * alpha)
-    draw.rounded_rectangle([0, 0, box_w, box_h - 1], radius=20,
-                            fill=(10, 10, 10, bg_alpha))
+    # グラデーション背景バー（上部が少し明るい）
+    bg_alpha = int(195 * alpha)
+    for row in range(box_h):
+        ratio = row / box_h
+        brightness = int(25 * (1 - ratio))
+        draw.line([(0, row), (box_w, row)],
+                  fill=(brightness + 8, brightness + 8, brightness + 8, bg_alpha))
+    draw.rounded_rectangle([0, 0, box_w, box_h - 1], radius=24,
+                            fill=None, outline=(255, 255, 255, int(60 * alpha)), width=2)
 
     text_alpha = int(255 * alpha)
+    stroke_w = 3
     for i, line in enumerate(lines):
         bbox = draw.textbbox((0, 0), line, font=font)
         tw = bbox[2] - bbox[0]
         x = (box_w - tw) // 2
-        y = 20 + i * line_h
-        # 影
-        draw.text((x + 3, y + 3), line, font=font, fill=(0, 0, 0, int(text_alpha * 0.6)))
-        # 本文（白）
-        draw.text((x, y), line, font=font, fill=(255, 255, 255, text_alpha))
+        y = 24 + i * line_h
 
-    # キャンバス中央下に配置
+        # 8方向アウトライン（黒）
+        for dx, dy in [(-stroke_w, -stroke_w), (0, -stroke_w), (stroke_w, -stroke_w),
+                       (-stroke_w, 0), (stroke_w, 0),
+                       (-stroke_w, stroke_w), (0, stroke_w), (stroke_w, stroke_w)]:
+            draw.text((x + dx, y + dy), line, font=font,
+                      fill=(0, 0, 0, text_alpha))
+        # 本文（白 + わずかに黄色がかる）
+        draw.text((x, y), line, font=font, fill=(255, 252, 220, text_alpha))
+
     canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    y_pos = h - box_h - 120
+    y_pos = h - box_h - 140
     x_pos = (w - box_w) // 2
     canvas.paste(img.crop((0, 0, box_w, box_h)), (x_pos, y_pos))
     return np.array(canvas)
@@ -118,19 +127,19 @@ def ken_burns_clip(image_path: str, duration: float, motion_type: str = None,
         progress = t / max(duration, 0.001)
 
         if motion_type == "zoom_in":
-            scale, ox, oy = 1.0 + 0.18 * progress, 0.5, 0.5
+            scale, ox, oy = 1.0 + 0.25 * progress, 0.5, 0.5
         elif motion_type == "zoom_out":
-            scale, ox, oy = 1.18 - 0.18 * progress, 0.5, 0.5
+            scale, ox, oy = 1.25 - 0.25 * progress, 0.5, 0.5
         elif motion_type == "pan_left":
-            scale, ox, oy = 1.12, 0.5 + 0.5 * progress, 0.5
+            scale, ox, oy = 1.18, 0.3 + 0.7 * progress, 0.5
         elif motion_type == "pan_right":
-            scale, ox, oy = 1.12, 1.0 - 0.5 * progress, 0.5
+            scale, ox, oy = 1.18, 1.0 - 0.7 * progress, 0.5
         elif motion_type == "diagonal_in":
-            scale = 1.0 + 0.15 * progress
-            ox, oy = 0.3 + 0.2 * progress, 0.3 + 0.2 * progress
+            scale = 1.0 + 0.20 * progress
+            ox, oy = 0.25 + 0.25 * progress, 0.25 + 0.25 * progress
         else:  # diagonal_out
-            scale = 1.15 - 0.15 * progress
-            ox, oy = 0.7 - 0.2 * progress, 0.7 - 0.2 * progress
+            scale = 1.20 - 0.20 * progress
+            ox, oy = 0.75 - 0.25 * progress, 0.75 - 0.25 * progress
 
         new_w = int(SHORTS_W * scale)
         new_h = int(SHORTS_H * scale)
@@ -504,7 +513,14 @@ def build_shorts_video(script_data: dict, audio_path: str, output_path: str) -> 
         final = final.with_audio(audio.subclipped(0, total_duration))
 
     final = final.with_fps(30)
-    final.write_videofile(output_path, codec="libx264", audio_codec="aac", logger=None)
+    final.write_videofile(
+        output_path,
+        codec="libx264",
+        audio_codec="aac",
+        bitrate="8000k",
+        ffmpeg_params=["-crf", "20", "-preset", "medium"],
+        logger=None,
+    )
 
     import glob
     for f in glob.glob(os.path.join(OUTPUT_DIR, "shorts_slide_*.png")):

@@ -1,11 +1,12 @@
 """
 サムネイル自動生成モジュール
-Pillowを使ってYouTubeサムネイル（1280x720）を生成する
+DALL-E 3 背景 + 高コントラストテキストオーバーレイ（1280x720）
 """
 import os
 import textwrap
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont
 from config import OUTPUT_DIR
+from image_utils import generate_dalle_bg, make_gradient_bg
 
 THUMB_W = 1280
 THUMB_H = 720
@@ -13,89 +14,85 @@ FONT_PATH = "/home/takah/.local/share/fonts/NotoSansCJKjp-Bold.otf"
 FONT_PATH_FALLBACK = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
 
-def get_font(size: int):
-    """フォントを取得する（日本語対応）。"""
+def _font(size: int):
     for path in [FONT_PATH, FONT_PATH_FALLBACK]:
         if os.path.exists(path):
             return ImageFont.truetype(path, size)
     return ImageFont.load_default()
 
 
-def create_gradient_bg(width: int, height: int, color1=(10, 10, 40), color2=(40, 10, 80)) -> Image.Image:
-    """グラデーション背景を生成する。"""
-    img = Image.new("RGB", (width, height))
-    draw = ImageDraw.Draw(img)
-    for y in range(height):
-        ratio = y / height
-        r = int(color1[0] + (color2[0] - color1[0]) * ratio)
-        g = int(color1[1] + (color2[1] - color1[1]) * ratio)
-        b = int(color1[2] + (color2[2] - color1[2]) * ratio)
-        draw.line([(0, y), (width, y)], fill=(r, g, b))
-    return img
+def _centered_x(draw, text, font):
+    bbox = draw.textbbox((0, 0), text, font=font)
+    return (THUMB_W - (bbox[2] - bbox[0])) // 2
 
 
-def draw_decorations(draw: ImageDraw.Draw, width: int, height: int):
-    """装飾要素を描く（円・ライン等）。"""
-    # 右上に大きな円
-    draw.ellipse([width - 300, -100, width + 100, 300], fill=(60, 0, 120, 80))
-    # 左下に小さな円
-    draw.ellipse([-50, height - 200, 200, height + 50], fill=(0, 60, 120, 80))
-    # 上部のゴールドライン
-    draw.rectangle([60, 60, width - 60, 68], fill=(255, 215, 0))
-    # 下部のゴールドライン
-    draw.rectangle([60, height - 68, width - 60, height - 60], fill=(255, 215, 0))
+def _shadow_text(draw, x, y, text, font, fill, shadow_offset=4):
+    draw.text((x + shadow_offset, y + shadow_offset), text, font=font,
+              fill=(0, 0, 0, 200))
+    draw.text((x, y), text, font=font, fill=fill)
 
 
-def create_thumbnail(title: str, subtitle: str = "知らないと損する！", output_path: str = None) -> str:
-    """サムネイルを生成して保存する。"""
+def create_thumbnail(title: str, subtitle: str = "知らないと損する！",
+                     output_path: str = None) -> str:
+    """DALL-E 3 背景 + テキストオーバーレイでサムネイルを生成する。"""
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     if output_path is None:
         output_path = os.path.join(OUTPUT_DIR, "thumbnail.jpg")
 
-    # 背景
-    img = create_gradient_bg(THUMB_W, THUMB_H)
-    draw = ImageDraw.Draw(img, "RGBA")
-    draw_decorations(draw, THUMB_W, THUMB_H)
+    # タイトルから背景プロンプトを生成
+    clean_title = title.strip()
+    topic_hint = clean_title[:30]
+    image_prompt = (
+        f"Dramatic cinematic scene representing: {topic_hint}. "
+        "Extremely bold vivid colors, high contrast, shocking visual, "
+        "professional YouTube thumbnail style, wide landscape orientation, no text."
+    )
 
-    # 上部ラベル（雑学チャンネル）
-    label_font = get_font(40)
-    draw.rectangle([60, 80, 380, 130], fill=(255, 50, 50))
-    draw.text((80, 85), "【雑学チャンネル】", font=label_font, fill=(255, 255, 255))
+    print(f"  サムネイル背景を DALL-E 3 で生成中...")
+    bg = generate_dalle_bg(image_prompt, THUMB_W, THUMB_H,
+                           brightness=0.35, blur_radius=0.6)
+    if bg is None:
+        bg = make_gradient_bg(THUMB_W, THUMB_H,
+                              color1=(20, 0, 0), color2=(100, 10, 10))
 
-    # AIバッジ（右上）
-    ai_font = get_font(38)
-    draw.rectangle([THUMB_W - 220, 80, THUMB_W - 60, 130], fill=(0, 150, 255))
-    draw.text((THUMB_W - 210, 87), "🤖 AI生成", font=ai_font, fill=(255, 255, 255))
+    draw = ImageDraw.Draw(bg, "RGBA")
 
-    # タイトル（折り返し対応）
-    title_font = get_font(80)
-    wrapped = textwrap.wrap(title, width=14)
-    y_start = 180
-    for line in wrapped[:3]:  # 最大3行
-        bbox = draw.textbbox((0, 0), line, font=title_font)
-        w = bbox[2] - bbox[0]
-        x = (THUMB_W - w) // 2
-        # シャドウ
-        draw.text((x + 3, y_start + 3), line, font=title_font, fill=(0, 0, 0, 180))
-        draw.text((x, y_start), line, font=title_font, fill=(255, 215, 0))
-        y_start += 95
+    # ── 左上：衝撃度バッジ（赤） ──
+    f_label = _font(44)
+    draw.rectangle([20, 16, 260, 72], fill=(220, 20, 20))
+    draw.rectangle([18, 14, 258, 70], fill=(0, 0, 0, 0))   # アウトライン
+    draw.rounded_rectangle([18, 14, 262, 72], radius=8, fill=(220, 20, 20))
+    draw.text((32, 22), "衝撃の真実", font=f_label, fill=(255, 255, 255))
 
-    # サブタイトル
-    sub_font = get_font(52)
-    sub_wrapped = textwrap.wrap(subtitle, width=20)
-    for line in sub_wrapped[:2]:
-        bbox = draw.textbbox((0, 0), line, font=sub_font)
-        w = bbox[2] - bbox[0]
-        x = (THUMB_W - w) // 2
-        draw.text((x, y_start + 10), line, font=sub_font, fill=(200, 230, 255))
-        y_start += 65
+    # ── 中央タイトルエリア ──
+    draw.rectangle([0, 90, THUMB_W, THUMB_H - 90], fill=(0, 0, 0, 130))
 
-    # 下部にAI告知バー
-    ai_bar_font = get_font(34)
-    draw.rectangle([0, THUMB_H - 60, THUMB_W, THUMB_H], fill=(0, 100, 200))
-    ai_text = "🤖 スクリプト・ナレーション・映像・サムネイルすべてAI自動生成"
-    draw.text((60, THUMB_H - 50), ai_text, font=ai_bar_font, fill=(255, 255, 255))
+    f_title = _font(92)
+    wrapped = textwrap.wrap(clean_title, width=12)
 
-    img.save(output_path, "JPEG", quality=95)
+    total_h = len(wrapped[:3]) * 112
+    y = max(100, (THUMB_H - total_h) // 2 - 20)
+    for line in wrapped[:3]:
+        x = _centered_x(draw, line, f_title)
+        # 黄色アウトライン + 白文字で最大視認性
+        for dx, dy in [(-3, -3), (3, -3), (-3, 3), (3, 3)]:
+            draw.text((x + dx, y + dy), line, font=f_title, fill=(255, 200, 0))
+        draw.text((x, y), line, font=f_title, fill=(255, 255, 255))
+        y += 112
+
+    # ── サブタイトル ──
+    f_sub = _font(56)
+    sub_lines = textwrap.wrap(subtitle, width=22)
+    for line in sub_lines[:1]:
+        x = _centered_x(draw, line, f_sub)
+        _shadow_text(draw, x, y + 8, line, f_sub, fill=(255, 80, 80))
+
+    # ── 下部バー（シンプル） ──
+    draw.rectangle([0, THUMB_H - 64, THUMB_W, THUMB_H], fill=(0, 0, 0, 210))
+    f_bottom = _font(34)
+    bottom_text = "🔔 チャンネル登録で毎日お届け！  #雑学 #豆知識 #衝撃"
+    draw.text((40, THUMB_H - 52), bottom_text, font=f_bottom, fill=(220, 220, 220))
+
+    bg.save(output_path, "JPEG", quality=95)
     print(f"  サムネイル生成完了: {output_path}")
     return output_path

@@ -13,6 +13,7 @@ def _load_env():
 
 _load_env()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY", "")
 
 # YouTube設定
 YOUTUBE_CHANNEL_ID = "UC9OU39CTBi2fPEtXJAQdh8w"
@@ -23,7 +24,7 @@ YOUTUBE_TOKEN_FILE = os.path.join(os.path.dirname(__file__), "token.json")
 # 動画設定
 SEARCH_QUERY = "雑学"        # 情報収集の検索キーワード
 VIDEO_DURATION_MINUTES = 10  # 目標動画長
-POST_HOUR = 23               # 投稿時刻（23時）
+POST_HOUR = 20               # 投稿時刻（20時・夜ゴールデンタイム）
 POST_MINUTE = 0
 
 # ファイルパス
@@ -45,3 +46,8 @@ TITLE_COLOR = (255, 215, 0)        # ゴールド
 TEXT_COLOR = (240, 240, 240)       # 白
 ACCENT_COLOR = (100, 180, 255)     # 水色
 SUBTITLE_COLOR = (200, 200, 200)   # グレー
+
+# DALL-E 3 画像生成（Trueにすると画質が大幅向上するがAPIコストが増加する）
+# 1画像あたり約$0.08(standard) / $0.12(hd)
+USE_DALLE = True
+DALLE_QUALITY = "hd"  # "standard" or "hd"
