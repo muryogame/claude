@@ -104,6 +104,36 @@
     .not-found h2{font-size:1.5rem;color:var(--text-light);margin-bottom:12px}
     .not-found a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold)}
 
+    /* PROS / CONS */
+    .pros-cons-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:500px){.pros-cons-grid{grid-template-columns:1fr}}
+    .pros-col-title{font-size:0.78rem;font-weight:700;margin-bottom:8px;padding:3px 10px;border-radius:12px;display:inline-block}
+    .pros-col-title.pros{background:rgba(89,200,89,.18);color:#59C859}
+    .pros-col-title.cons{background:rgba(227,89,89,.18);color:#E35959}
+    .pros-list,.cons-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+    .pros-list li{font-size:0.85rem;line-height:1.55;padding:8px 10px;border-radius:6px;background:rgba(89,200,89,.07);border-left:2px solid #59C859;color:var(--text-light)}
+    .cons-list li{font-size:0.85rem;line-height:1.55;padding:8px 10px;border-radius:6px;background:rgba(227,89,89,.07);border-left:2px solid #E35959;color:var(--text-light)}
+
+    /* COMBOS */
+    .combo-block{margin-bottom:18px}
+    .combo-block:last-child{margin-bottom:0}
+    .combo-name{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+    .combo-steps{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+    .combo-step{padding:5px 13px;background:rgba(11,196,227,.1);border:1px solid rgba(11,196,227,.35);border-radius:20px;font-size:0.8rem;color:var(--teal);white-space:nowrap}
+    .combo-arrow{color:rgba(255,255,255,.3);font-size:0.8rem;line-height:1}
+
+    /* MATCHUP */
+    .matchup-section-title{font-size:0.82rem;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    .matchup-section-title.good{color:#59C859}
+    .matchup-section-title.bad{color:#E35959}
+    .matchup-section-title:not(:first-child){margin-top:16px}
+    .matchup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-bottom:6px}
+    .matchup-item{padding:10px 8px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid rgba(255,255,255,.08);text-align:center;text-decoration:none;transition:border-color .2s,background .2s;display:block}
+    .matchup-item:hover{border-color:var(--gold);background:rgba(200,155,60,.06)}
+    .matchup-img{width:48px;height:48px;border-radius:6px;object-fit:cover;object-position:top;background:#0A1428}
+    .matchup-jp{font-size:0.75rem;font-weight:700;color:var(--white);margin-top:6px;line-height:1.3}
+    .matchup-reason{font-size:0.67rem;color:var(--text);margin-top:4px;line-height:1.4}
+
     footer{background:#060e1a;border-top:1px solid rgba(200,155,60,.2);padding:24px 20px;text-align:center;color:var(--text);font-size:0.8rem}
     footer a{color:var(--gold);text-decoration:none}
   </style>
@@ -128,6 +158,7 @@
 </footer>
 
 <script src="js/champions-data.js"></script>
+<script src="js/champion-details.js"></script>
 <script>
 const ROLE_TIPS = {
   TOP: ['序盤はCSを集中して後半に備えよう','テレポートのタイミングが試合の流れを変える','1vs1が得意なチャンピオンが多いレーン'],
@@ -148,15 +179,90 @@ function getSimilar(champ){
     .slice(0,3);
 }
 
+function matchupCard(m){
+  const mk = m.key||m.en;
+  const sqUrl = `https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/${mk}.png`;
+  return `<a href="champion.html?name=${encodeURIComponent(m.en)}" class="matchup-item">
+    <img class="matchup-img" src="${sqUrl}" alt="${m.jp}" onerror="this.style.opacity='.4'">
+    <div class="matchup-jp">${m.jp}</div>
+    <div class="matchup-reason">${m.reason}</div>
+  </a>`;
+}
+
 function renderChampion(c){
   const key = c.img || c.en;
   const splashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${key}_0.jpg`;
   const portraitUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${key}_0.jpg`;
   const squareUrl = `https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/${key}.png`;
   const roleLabelMap={TOP:'TOP レーン',JG:'ジャングル',MID:'MID レーン',ADC:'ボット AD',SUPPORT:'サポート'};
-  const tips = ROLE_TIPS[c.role] || [];
   const similar = getSimilar(c);
   const diffPct = (c.diff/5)*100;
+
+  const details = (typeof CHAMPION_DETAILS !== 'undefined') ? (CHAMPION_DETAILS[key] || CHAMPION_DETAILS[c.en] || null) : null;
+  const tips = (details && details.tips && details.tips.length) ? details.tips : (ROLE_TIPS[c.role] || []);
+
+  // 強み・弱み section
+  const proConsHtml = details && (details.strengths || details.weaknesses) ? `
+    <div class="card">
+      <div class="card-title">強み・弱み</div>
+      <div class="pros-cons-grid">
+        <div>
+          <div class="pros-col-title pros">✔ 強み</div>
+          <ul class="pros-list">
+            ${(details.strengths||[]).map(s=>`<li>${s}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <div class="pros-col-title cons">✖ 弱み</div>
+          <ul class="cons-list">
+            ${(details.weaknesses||[]).map(w=>`<li>${w}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    </div>` : '';
+
+  // コンボ section
+  const comboHtml = details && details.combos && details.combos.length ? `
+    <div class="card">
+      <div class="card-title">基本コンボ</div>
+      ${details.combos.map(combo=>`
+        <div class="combo-block">
+          <div class="combo-name">${combo.name}</div>
+          <div class="combo-steps">
+            ${combo.steps.map((step,i)=>`
+              ${i>0?'<span class="combo-arrow">▶</span>':''}
+              <span class="combo-step">${step}</span>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>` : '';
+
+  // 相性 section
+  const matchupHtml = details && (details.goodVs || details.badVs) ? `
+    <div class="card">
+      <div class="card-title">相性・マッチアップ</div>
+      ${details.goodVs && details.goodVs.length ? `
+        <div class="matchup-section-title good">◎ 有利な相手</div>
+        <div class="matchup-grid">${details.goodVs.map(matchupCard).join('')}</div>
+      ` : ''}
+      ${details.badVs && details.badVs.length ? `
+        <div class="matchup-section-title bad">✕ 苦手な相手</div>
+        <div class="matchup-grid">${details.badVs.map(matchupCard).join('')}</div>
+      ` : ''}
+    </div>` : '';
+
+  // 強み card (generic fallback if no details)
+  const strengthHtml = !details ? `
+    <div class="card">
+      <div class="card-title">このチャンピオンの強み</div>
+      <p style="font-size:0.9rem;line-height:1.8;color:var(--text-light)">
+        ${c.jp}は${c.class}タイプのチャンピオンで、${roleLabelMap[c.role]||c.role}を担当します。
+        ${c.style}。<br><br>
+        同じ役割のチャンピオンと比べた場合、
+        ${c.diff<=2?'操作がシンプルで基本的なゲームプレイを学ぶのに最適です。':c.diff===3?'中程度の操作難易度で、ゲームに慣れてきたプレイヤーに向いています。':'高い操作スキルが求められますが、マスターすれば非常に大きな影響力を発揮できます。'}
+      </p>
+    </div>` : '';
 
   document.getElementById('pageTitle').textContent = `${c.jp}（${c.en}）| LOL初心者ガイド`;
   document.getElementById('pageDesc').content = `${c.jp}の役割・難易度・初心者向けヒントを解説。${c.style}`;
@@ -199,23 +305,18 @@ function renderChampion(c){
           </div>
         </div>
 
+        ${proConsHtml}
+        ${comboHtml}
+        ${matchupHtml}
+        ${strengthHtml}
+
         <div class="card">
           <div class="card-title">初心者向けヒント</div>
           <ul class="tip-list">
             ${tips.map(t=>`<li>${t}</li>`).join('')}
-            <li>${c.jp}は「${c.style}」というプレイスタイルが特徴。まずはこの点を意識してプレイしてみよう。</li>
+            ${!details?`<li>${c.jp}は「${c.style}」というプレイスタイルが特徴。まずはこの点を意識してプレイしてみよう。</li>`:''}
             ${c.diff<=2?'<li>難易度が低めなので、LOL初心者がまず使い始めるのに最適なチャンピオンの一つです。</li>':''}
           </ul>
-        </div>
-
-        <div class="card">
-          <div class="card-title">このチャンピオンの強み</div>
-          <p style="font-size:0.9rem;line-height:1.8;color:var(--text-light)">
-            ${c.jp}は${c.class}タイプのチャンピオンで、${roleLabelMap[c.role]||c.role}を担当します。
-            ${c.style}。<br><br>
-            同じ役割のチャンピオンと比べた場合、
-            ${c.diff<=2?'操作がシンプルで基本的なゲームプレイを学ぶのに最適です。':c.diff===3?'中程度の操作難易度で、ゲームに慣れてきたプレイヤーに向いています。':'高い操作スキルが求められますが、マスターすれば非常に大きな影響力を発揮できます。'}
-          </p>
         </div>
       </div>
 

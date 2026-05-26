@@ -121,6 +121,7 @@ const CHAMPIONS = [
   {en:"Samira",jp:"サミーラ",role:"ADC",class:"マークスマン/ファイター",diff:4,style:"スタイルランクSでRが解放される無双系ガンブレードADC"},
   {en:"Senna",jp:"セナ",role:"ADC",class:"マークスマン/サポート",diff:3,style:"魂を集めて無限成長するADC/サポート兼用チャンピオン"},
   {en:"Sivir",jp:"シヴィア",role:"ADC",class:"マークスマン",diff:2,style:"ブーメランとリコシェとスペルシールドを持つ万能ADC"},
+  {en:"Smolder",jp:"スモルダー",role:"ADC",class:"マークスマン/メイジ",diff:3,style:"竜の成長とともに強化されるドラゴンブレスで戦うベビードラゴンADC"},
   {en:"Tristana",jp:"トリスターナ",role:"ADC",class:"マークスマン",diff:2,style:"レベルで射程が伸び続けるW爆弾ADC"},
   {en:"Twitch",jp:"トウィッチ",role:"ADC",class:"マークスマン/アサシン",diff:3,style:"ステルスから急襲し毒スタックで爆発ダメージを与えるネズミ"},
   {en:"Varus",jp:"ヴァルス",role:"ADC",class:"マークスマン/メイジ",diff:2,style:"チャージ長射程とスネアRでポーク特化のスナイパー"},
