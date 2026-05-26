@@ -3113,7 +3113,7 @@ const CHAMPION_DETAILS = {
     ],
     goodVs: [
       { jp: "ガングプランク", en: "Gangplank", key: "Gangplank", reason: "WのスネアでGPのバレルを設置する前に封殺" },
-      { jp: "ジャックス", en: "Jax", key: "Jax", reason: "Wで接近を阻んでJaxのRAGEを積ませない"] }
+      { jp: "ジャックス", en: "Jax", key: "Jax", reason: "Wで接近を阻んでJaxのRAGEを積ませない" }
     ],
     badVs: [
       { jp: "レネクトン", en: "Renekton", key: "Renekton", reason: "序盤の2スタンコンボでMaokaiを圧倒" },
