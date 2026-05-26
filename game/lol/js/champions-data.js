@@ -1,17 +1,22 @@
 // League of Legends Champion Data
-// 全144チャンピオン基本情報
+// 全チャンピオン基本情報
 
 const CHAMPIONS = [
-  // ===== TOP (33) =====
+  // ===== TOP =====
+  {en:"Aatrox",jp:"エイトロックス",role:"TOP",class:"ファイター",diff:2,style:"大剣を振るう3段攻撃とR復活で前線を圧倒する堕天使"},
+  {en:"Ambessa",jp:"アンベッサ",role:"TOP",class:"ファイター",diff:3,style:"ダッシュとパリィで連続攻撃するノクサスの将軍"},
   {en:"Camille",jp:"カミール",role:"TOP",class:"ファイター/アサシン",diff:4,style:"精密な刃と脚部フックで敵を翻弄するサイバネティック戦士",img:"Camille"},
   {en:"Chogath",jp:"チョーガス",role:"TOP",class:"タンク/メイジ",diff:2,style:"沈黙と切断で敵を制し食べて成長するヴォイドの怪物",img:"Chogath"},
   {en:"Darius",jp:"ダリウス",role:"TOP",class:"ファイター",diff:2,style:"出血スタックとRの処刑でキルを量産するノクサスの手"},
+  {en:"DrMundo",jp:"ドクター・ムンド",role:"TOP",class:"タンク/ファイター",diff:1,style:"HPを燃料にするクリーバーとRの再生でゾンビのように立ち続けるタンク",img:"DrMundo"},
   {en:"Fiora",jp:"フィオラ",role:"TOP",class:"ファイター/アサシン",diff:4,style:"急所を突いてHPを吸収し続ける最強デュエリスト"},
   {en:"Gangplank",jp:"ギャングプランク",role:"TOP",class:"ファイター/メイジ",diff:4,style:"樽爆発とグローバルRで試合全体を支配する海賊王"},
   {en:"Garen",jp:"ガレン",role:"TOP",class:"ファイター/タンク",diff:1,style:"自然回復と正義の裁きで初心者でも戦える騎士"},
   {en:"Gnar",jp:"グナー",role:"TOP",class:"ファイター/タンク",diff:3,style:"変身でミニとメガを使い分けるヤドカリ系フロントライン"},
   {en:"Gragas",jp:"グラガス",role:"TOP",class:"ファイター/タンク",diff:3,style:"樽と体当たりで前線を制圧する酔拳の巨漢"},
   {en:"Illaoi",jp:"イラオイ",role:"TOP",class:"ファイター",diff:2,style:"触手と霊魂でゾーンを支配する海神の巫女"},
+  {en:"Kayle",jp:"ケイル",role:"TOP",class:"ファイター/メイジ",diff:2,style:"レベルで変身して後半は無敵の剣士から魔法剣士へと進化する"},
+  {en:"KSante",jp:"K'サンテ",role:"TOP",class:"タンク/ファイター",diff:4,style:"防御と攻撃を切り替えるオール・ナイトマーのタンク",img:"KSante"},
   {en:"Irelia",jp:"イレリア",role:"TOP",class:"ファイター/アサシン",diff:4,style:"刃のダッシュとリセットで連続斬撃するイオニアの剣士"},
   {en:"Jax",jp:"ジャックス",role:"TOP",class:"ファイター/アサシン",diff:2,style:"1vs1最強クラスのランプポール使いの戦士"},
   {en:"Jayce",jp:"ジェイス",role:"TOP",class:"ファイター/メイジ",diff:4,style:"ハンマーと大砲を切り替えて近中距離を制する未来の守護者"},
@@ -19,10 +24,14 @@ const CHAMPIONS = [
   {en:"Malphite",jp:"マルファイト",role:"TOP",class:"タンク",diff:1,style:"岩のような耐久とRのノックアップで集団戦を制する"},
   {en:"Mordekaiser",jp:"モルデカイザー",role:"TOP",class:"ファイター/メイジ",diff:2,style:"死の領域に引き込む1v1特化の鉄の支配者"},
   {en:"Nasus",jp:"ナサス",role:"TOP",class:"ファイター/タンク",diff:2,style:"Qスタックを溜め続けて後半無限に成長するジャッカル神"},
+  {en:"Olaf",jp:"オラフ",role:"TOP",class:"ファイター",diff:2,style:"斧投げと激怒RのCC無効で突進し続けるバーサーカー"},
   {en:"Ornn",jp:"オルン",role:"TOP",class:"ファイター/タンク",diff:2,style:"フィールドでアイテムを作成し味方のアイテムを強化する鍛冶神"},
+  {en:"Pantheon",jp:"パンテオン",role:"TOP",class:"ファイター/アサシン",diff:2,style:"スタンとスペルシールドでレーンを支配しRで戦場全体に降下"},
+  {en:"Poppy",jp:"ポッピー",role:"TOP",class:"タンク/ファイター",diff:2,style:"シールドのノックバックとRで敵のダッシュを封じるヨードルの騎士"},
   {en:"Quinn",jp:"クイン",role:"TOP",class:"マークスマン/アサシン",diff:3,style:"鷹ヴァローを使ったブラインドと高機動で翻弄する"},
   {en:"Renekton",jp:"レネクトン",role:"TOP",class:"ファイター/タンク",diff:2,style:"怒りゲージとダッシュで序盤を制圧するワニの神"},
   {en:"Riven",jp:"リヴェン",role:"TOP",class:"ファイター/アサシン",diff:4,style:"QQQコンボと武器の解放で圧倒的なバーストを叩き込む剣士"},
+  {en:"Rumble",jp:"ランブル",role:"TOP",class:"ファイター/メイジ",diff:3,style:"過熱ゲージを管理しながら火炎放射とRの火炎弾で敵を焼く"},
   {en:"Sett",jp:"セット",role:"TOP",class:"ファイター",diff:2,style:"体力を力に変えてW一撃でど真ん中に叩き込むボス"},
   {en:"Shen",jp:"シェン",role:"TOP",class:"タンク",diff:2,style:"グローバルRで味方を守るシールドを持つニンジャタンク"},
   {en:"Singed",jp:"シンジド",role:"TOP",class:"タンク/メイジ",diff:2,style:"毒ガスを引きながら追いかけてくる狂気の錬金術師"},
@@ -37,7 +46,7 @@ const CHAMPIONS = [
   {en:"Yorick",jp:"ヨリック",role:"TOP",class:"ファイター",diff:2,style:"亡霊を使ってスプリットプッシュする墓掘り人"},
   {en:"Yone",jp:"ヨネ",role:"TOP",class:"ファイター/アサシン",diff:3,style:"魂を抜いて突進するアザカナの刃使いの剣客"},
 
-  // ===== JUNGLE (34) =====
+  // ===== JUNGLE =====
   {en:"Amumu",jp:"アムム",role:"JG",class:"タンク/メイジ",diff:1,style:"涙とバンデージで敵をルートするアンデッドの子供"},
   {en:"Diana",jp:"ダイアナ",role:"JG",class:"アサシン/ファイター",diff:2,style:"月光スタックとRのリセットで連続突撃する月の女神"},
   {en:"Ekko",jp:"エコー",role:"JG",class:"アサシン/ファイター",diff:3,style:"時間を戻すR無敵で奇襲して逃げる時間操作の天才"},
@@ -72,8 +81,11 @@ const CHAMPIONS = [
   {en:"Belveth",jp:"ベルヴェス",role:"JG",class:"ファイター",diff:3,style:"虚空の女王として素早い突進でDPSを維持するマンタ",img:"Belveth"},
   {en:"Lillia",jp:"リリア",role:"JG",class:"ファイター/メイジ",diff:3,style:"夢の花を咲かせながらスリープCCで集団戦を制圧する鹿"},
   {en:"Brand",jp:"ブランド (JG)",role:"JG",class:"メイジ",diff:2,style:"燃焼スタック爆発とバウンスRで集団戦を焼き尽くす"},
+  {en:"Aurora",jp:"オーロラ",role:"JG",class:"メイジ/アサシン",diff:3,style:"兎の霊力を操り次元を行き来しながら敵を狩るウィッチ"},
+  {en:"Briar",jp:"ブライア",role:"JG",class:"ファイター/アサシン",diff:3,style:"血の渇望と拘束具を外したRで全てを攻撃する吸血鬼"},
+  {en:"Skarner",jp:"スカーナー",role:"JG",class:"タンク/ファイター",diff:2,style:"刺すスコーピオンとRの貫通スタブでサイドラインを制する"},
 
-  // ===== MID (31) =====
+  // ===== MID =====
   {en:"Ahri",jp:"アーリ",role:"MID",class:"メイジ/アサシン",diff:2,style:"チャームと霊火玉で翻弄するキツネの魔法使い"},
   {en:"Akali",jp:"アカリ",role:"MID",class:"アサシン",diff:3,style:"煙幕ステルスと五角形の急所を刺すアサシン"},
   {en:"Anivia",jp:"アニビア",role:"MID",class:"メイジ",diff:3,style:"蘇生卵と氷の壁で独自のゾーンを作る不死鳥"},
@@ -105,8 +117,16 @@ const CHAMPIONS = [
   {en:"Zilean",jp:"ジリアン (MID)",role:"MID",class:"メイジ/サポート",diff:3,style:"時間爆弾スタンと蘇生Rで試合全体の時を司る"},
   {en:"Viego",jp:"ヴィエゴ (MID)",role:"MID",class:"アサシン/ファイター",diff:3,style:"倒した敵の体に乗り移るキルリセットのルーインドキング"},
   {en:"Akshan",jp:"アクシャン",role:"MID",class:"マークスマン/アサシン",diff:3,style:"テザーで壁を移動し倒された味方を復活させるヒーロー"},
+  {en:"Azir",jp:"アジール",role:"MID",class:"メイジ",diff:4,style:"砂の兵士を召喚して射程外から一方的に攻撃する皇帝"},
+  {en:"Heimerdinger",jp:"ハイマーディンガー",role:"MID",class:"メイジ",diff:3,style:"タレットを3基設置し多彩なスキルで戦うロケット科学者"},
+  {en:"Hwei",jp:"フウェイ",role:"MID",class:"メイジ",diff:4,style:"10種のスキルを絵画として描き分ける高難度の芸術家メイジ"},
+  {en:"Karthus",jp:"カーサス",role:"MID",class:"メイジ",diff:2,style:"死後も数秒間動き続けグローバルRで全員を削るアンデッドメイジ"},
+  {en:"Kassadin",jp:"カサディン",role:"MID",class:"メイジ/アサシン",diff:3,style:"Rの連続瞬間移動で後半無限に飛び回る対魔法最強アサシン"},
+  {en:"Katarina",jp:"カタリナ",role:"MID",class:"アサシン",diff:4,style:"キルのたびにリセットしてDaggerを使いこなす連続暗殺者"},
+  {en:"Mel",jp:"メル",role:"MID",class:"メイジ",diff:3,style:"スキルを反射するパッシブと光の魔法でレーンを制圧する新星"},
+  {en:"Naafiri",jp:"ナーフィリ",role:"MID",class:"アサシン",diff:2,style:"猟犬の群れを操り集団で敵を狩る初心者向けアサシン"},
 
-  // ===== ADC (20) =====
+  // ===== ADC =====
   {en:"Aphelios",jp:"アフェリオス",role:"ADC",class:"マークスマン",diff:5,style:"5種の武器を切り替える極限の高スキルキャップADC"},
   {en:"Ashe",jp:"アッシュ",role:"ADC",class:"マークスマン",diff:1,style:"スロウとグローバルスタンRで味方を支援する弓の女王"},
   {en:"Caitlyn",jp:"ケイトリン",role:"ADC",class:"マークスマン",diff:2,style:"長射程とトラップでゾーンを支配する狙撃の名手"},
@@ -122,6 +142,7 @@ const CHAMPIONS = [
   {en:"Senna",jp:"セナ",role:"ADC",class:"マークスマン/サポート",diff:3,style:"魂を集めて無限成長するADC/サポート兼用チャンピオン"},
   {en:"Sivir",jp:"シヴィア",role:"ADC",class:"マークスマン",diff:2,style:"ブーメランとリコシェとスペルシールドを持つ万能ADC"},
   {en:"Smolder",jp:"スモルダー",role:"ADC",class:"マークスマン/メイジ",diff:3,style:"竜の成長とともに強化されるドラゴンブレスで戦うベビードラゴンADC"},
+  {en:"Nilah",jp:"ニラー",role:"ADC",class:"ファイター/マークスマン",diff:3,style:"喜びの水の精霊を操り近接特化で戦うユニークなADC"},
   {en:"Tristana",jp:"トリスターナ",role:"ADC",class:"マークスマン",diff:2,style:"レベルで射程が伸び続けるW爆弾ADC"},
   {en:"Twitch",jp:"トウィッチ",role:"ADC",class:"マークスマン/アサシン",diff:3,style:"ステルスから急襲し毒スタックで爆発ダメージを与えるネズミ"},
   {en:"Varus",jp:"ヴァルス",role:"ADC",class:"マークスマン/メイジ",diff:2,style:"チャージ長射程とスネアRでポーク特化のスナイパー"},
@@ -129,7 +150,7 @@ const CHAMPIONS = [
   {en:"Xayah",jp:"ザヤ",role:"ADC",class:"マークスマン",diff:3,style:"羽根を置いてEで引き戻すルートCCを持つ羽根のADC"},
   {en:"Zeri",jp:"ゼリ",role:"ADC",class:"マークスマン",diff:4,style:"Qが通常攻撃代わりでEで壁を越える高機動電気ADC"},
 
-  // ===== SUPPORT (25) =====
+  // ===== SUPPORT =====
   {en:"Alistar",jp:"アリスター",role:"SUPPORT",class:"タンク/ファイター",diff:3,style:"W→Qコンボ+タワーダイブ無敵Rで捕まえて離さない牛"},
   {en:"Bard",jp:"バード",role:"SUPPORT",class:"メイジ/キャッチャー",diff:5,style:"チャイムを集めながら壁トンネルと全体フリーズRで戦局を操る"},
   {en:"Blitzcrank",jp:"ブリッツクランク",role:"SUPPORT",class:"タンク/ファイター",diff:3,style:"ロケットグラブで孤立した敵を引き込む鉄の巨人"},
@@ -139,6 +160,7 @@ const CHAMPIONS = [
   {en:"Leona",jp:"レオナ",role:"SUPPORT",class:"タンク",diff:2,style:"E突進→Qスタン+広範囲Rで確実にキルを作るタンクサポート"},
   {en:"Lulu",jp:"ルル",role:"SUPPORT",class:"エンチャンター",diff:3,style:"RノックアップとWポリモーフで味方を守り敵を変身させる妖精"},
   {en:"Maokai",jp:"マオカイ",role:"SUPPORT",class:"タンク/メイジ",diff:2,style:"Wルートと苗木ゾーンでフロントラインを維持する悲しい木"},
+  {en:"Milio",jp:"ミリオ",role:"SUPPORT",class:"エンチャンター",diff:2,style:"炎のボールでヒールとCCクレンズを行う初心者向けエンチャンター"},
   {en:"Morgana",jp:"モルガナ",role:"SUPPORT",class:"メイジ/サポート",diff:2,style:"3秒ルートとEブラックシールドで敵を完全に封じる翼の女神"},
   {en:"Nami",jp:"ナミ",role:"SUPPORT",class:"エンチャンター/キャッチャー",diff:3,style:"バブルスタンとバウンスヒールとRノックアップで攻守両立"},
   {en:"Nautilus",jp:"ノーチラス",role:"SUPPORT",class:"タンク/ファイター",diff:2,style:"フック+パッシブ+E+Rの4種CC連打で一度捕まえたら逃げられない"},

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>チャンピオン一覧 | LOL初心者ガイド</title>
-  <meta name="description" content="League of Legends全144チャンピオンを役割・難易度で検索・絞り込み。スプラッシュアートで見やすい一覧。">
+  <meta name="description" content="League of Legends全チャンピオンを役割・難易度で検索・絞り込み。スプラッシュアートで見やすい一覧。">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{
@@ -111,7 +111,7 @@
 
 <section class="hero">
   <h1>チャンピオン一覧</h1>
-  <p>全144チャンピオンをロール・難易度で絞り込めます。名前で検索も可能。</p>
+  <p id="heroDesc">全チャンピオンをロール・難易度で絞り込めます。名前で検索も可能。</p>
 </section>
 
 <div class="controls">
@@ -175,6 +175,8 @@
 
   function buildGrid() {
     const grid = document.getElementById('champGrid');
+    const heroDesc = document.getElementById('heroDesc');
+    if (heroDesc) heroDesc.textContent = `全${CHAMPIONS.length}チャンピオンをロール・難易度で絞り込めます。名前で検索も可能。`;
 
     CHAMPIONS.forEach(c => {
       const key = c.img || c.en;
