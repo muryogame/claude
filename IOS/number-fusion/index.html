@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'blob:'; frame-ancestors 'none'">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1a0038">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/main.css">
+  <title>Number Fusion</title>
+</head>
+<body>
+  <canvas id="bg"       aria-hidden="true"></canvas>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <!-- PWA Install Banner -->
+  <div class="install-banner" id="installBanner" style="display:none">
+    <div class="install-banner-text">📲 ホーム画面に追加してオフラインでも遊ぼう！</div>
+    <button class="install-btn" id="installBtn">インストール</button>
+    <button class="install-close" id="installClose" aria-label="閉じる">✕</button>
+  </div>
+
+  <div class="ui">
+    <header class="app-bar">
+      <div class="logo" aria-label="Number Fusion">
+        <span class="logo-icon" aria-hidden="true">🔮</span>
+        <span class="logo-text">Number Fusion</span>
+      </div>
+      <div class="score-row">
+        <div class="glass-box">
+          <div class="lbl">SCORE</div>
+          <div class="val" id="scoreVal">0</div>
+        </div>
+        <div class="glass-box">
+          <div class="lbl">BEST</div>
+          <div class="val" id="bestVal">0</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- Mode tabs -->
+      <div class="mode-tabs" role="tablist">
+        <button class="mode-tab active" id="tabFree" role="tab" aria-selected="true" onclick="window.NF.switchMode('free')">
+          フリー
+        </button>
+        <button class="mode-tab daily-tab" id="tabDaily" role="tab" aria-selected="false" onclick="window.NF.switchMode('daily')">
+          📅 デイリー
+          <span class="daily-streak-badge" id="dailyStreakBadge" style="display:none"></span>
+        </button>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>進捗</span>
+          <span id="progLabel">最高タイル: 2</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progFill" style="width:9%"></div>
+        </div>
+      </div>
+
+      <div class="grid-outer" id="gridOuter">
+        <div class="grid-bg"    id="gridBg"    aria-hidden="true"></div>
+        <div class="grid-tiles" id="gridTiles" role="grid" aria-label="ゲームグリッド"></div>
+      </div>
+
+      <div class="stats-bar" aria-live="polite">
+        <span id="statMoves">0手</span>
+        <span id="statMerges">0回合体</span>
+        <span id="statTime">0:00</span>
+      </div>
+    </main>
+
+    <nav class="toolbar">
+      <button class="tool-btn" id="undoBtn" disabled onclick="window.NF.undo()">
+        <span class="ico">↩</span><span class="txt">戻す</span>
+      </button>
+      <button class="tool-btn" onclick="window.NF.confirmNew()">
+        <span class="ico">↺</span><span class="txt">新ゲーム</span>
+      </button>
+      <button class="tool-btn" id="soundBtn" onclick="window.NF.toggleSound()">
+        <span class="ico" id="soundIco">🔊</span><span class="txt">サウンド</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Game Over / Win dialog -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <div class="dialog">
+      <div class="dialog-icon" id="dlgIco"></div>
+      <h2 id="dlgTitle"></h2>
+      <div class="score-final" id="dlgScore"></div>
+      <p id="dlgMsg"></p>
+      <div class="dialog-btns">
+        <button class="btn-primary"   onclick="window.NF.newGame()">もう一度プレイ</button>
+        <button class="btn-share"     id="shareBtn"   style="display:none" onclick="window.NF.shareDaily()">📤 結果をシェア</button>
+        <button class="btn-secondary" id="contBtn"    style="display:none" onclick="window.NF.closeDialog()">続ける</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Challenge info panel -->
+  <div class="daily-panel" id="dailyPanel" style="display:none">
+    <div class="daily-panel-inner">
+      <div class="daily-panel-header">
+        <span class="daily-panel-title">📅 今日のデイリー</span>
+        <button class="daily-panel-close" onclick="window.NF.closeDailyPanel()">✕</button>
+      </div>
+      <div class="daily-panel-body">
+        <div class="daily-number" id="dailyNumber">#---</div>
+        <div class="daily-desc">全プレイヤーが同じ盤面からスタート！<br>今日の最高スコアを目指そう！</div>
+        <div class="daily-result" id="dailyResult" style="display:none">
+          <div class="daily-result-score" id="dailyResultScore"></div>
+          <div class="daily-result-sub">本日のプレイ完了</div>
+          <button class="btn-share" id="dailyShareBtn" onclick="window.NF.shareDaily()">📤 結果をシェア</button>
+        </div>
+        <button class="btn-primary" id="startDailyBtn" onclick="window.NF.startDaily()">今日に挑戦！</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    // Service Worker 登録 — Play Store TWA & オフライン対応に必要
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>

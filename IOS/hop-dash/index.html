@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'blob:'; frame-ancestors 'none'">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#001D36">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/main.css">
+  <title>Hop Dash</title>
+</head>
+<body>
+  <!-- PWA Install Banner -->
+  <div class="install-banner" id="installBanner" style="display:none">
+    <div class="install-text">📲 ホーム画面に追加して毎日プレイ！</div>
+    <button class="install-btn" id="installBtn">インストール</button>
+    <button class="install-close" id="installClose">✕</button>
+  </div>
+
+  <header class="app-bar">
+    <div class="logo">🏃 Hop Dash</div>
+    <div class="hud-panel">
+      <div class="hud-box"><div class="hud-l">SCORE</div><div class="hud-v" id="scoreV">0</div></div>
+      <div class="hud-box"><div class="hud-l">BEST</div><div class="hud-v"  id="bestV">0</div></div>
+    </div>
+  </header>
+
+  <main class="game-area" id="area">
+    <canvas id="c"></canvas>
+
+    <div class="powerups-bar">
+      <div class="pu-chip pu-shield" id="shieldChip">🛡️ <span id="shieldTimer"></span></div>
+      <div class="pu-chip pu-magnet" id="magnetChip">🧲 <span id="magnetTimer"></span></div>
+    </div>
+
+    <!-- Start screen -->
+    <div class="screen on" id="startScr">
+      <div class="char-preview" id="charPreview">🏃</div>
+      <div class="screen-title">Hop Dash</div>
+      <div class="screen-sub">タップかボタンでジャンプ！<br>コインを集めてキャラを解放しよう！</div>
+      <button class="start-btn" onclick="window.HD.start()">▶ スタート</button>
+      <div class="start-actions">
+        <button class="action-btn" onclick="window.HD.openShop()">🛍️ ショップ</button>
+        <button class="action-btn" onclick="window.HD.openMissions()">📋 ミッション</button>
+      </div>
+      <div class="best-txt" id="bestTxt"></div>
+    </div>
+
+    <!-- Game over screen -->
+    <div class="screen" id="overScr">
+      <div class="screen-emoji">💥</div>
+      <div class="over-title">GAME OVER</div>
+      <div class="stats-grid" id="overStats"></div>
+      <button class="start-btn" onclick="window.HD.start()">↺ もう一度</button>
+      <div class="best-txt" id="bestTxt2"></div>
+    </div>
+  </main>
+
+  <nav class="controls">
+    <div class="lives" id="lives"></div>
+    <button class="jump-btn" id="jumpBtn" aria-label="ジャンプ">↑</button>
+    <div class="coins-display">🪙 <span id="coinsV">0</span></div>
+  </nav>
+
+  <!-- Character Shop -->
+  <div class="shop-overlay" id="shopOverlay" style="display:none">
+    <div class="shop-panel">
+      <div class="shop-header">
+        <h2>🛍️ キャラクターショップ</h2>
+        <div class="shop-coins">🪙 <span id="shopCoins">0</span></div>
+        <button class="shop-close" onclick="window.HD.closeShop()">✕</button>
+      </div>
+      <div class="char-grid" id="charGrid"></div>
+    </div>
+  </div>
+
+  <!-- Daily Missions -->
+  <div class="missions-overlay" id="missionsOverlay" style="display:none">
+    <div class="missions-panel">
+      <div class="shop-header">
+        <h2>📋 デイリーミッション</h2>
+        <button class="shop-close" onclick="window.HD.closeMissions()">✕</button>
+      </div>
+      <div class="missions-list" id="missionsList"></div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>

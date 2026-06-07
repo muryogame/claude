@@ -1,9 +1,9 @@
-name: Deploy Game Site
+name: Deploy Site
 
 on:
   push:
     branches: [ master, main ]
-    paths: [ 'game/**' ]
+    paths: [ 'game/**', 'IOS/**' ]
   workflow_dispatch:
 
 permissions:
@@ -24,12 +24,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Build dist
+        run: |
+          mkdir -p dist
+          cp -r game/. dist/
+          mkdir -p dist/IOS
+          cp -r IOS/. dist/IOS/
+          # Remove non-web files from dist
+          find dist -name 'CLAUDE.md' -delete
+          find dist -name 'PUBLISH_GUIDE.md' -delete
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './game'
+          path: './dist'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

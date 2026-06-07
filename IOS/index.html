@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apps - PWAアプリ集</title>
+  <meta name="description" content="スマホで快適に使えるPWAアプリ集。習慣トラッカー・ゲームなど。インストール不要でブラウザから直接使えます。">
+  <meta name="theme-color" content="#1C1B1F">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --md-sys-color-surface: #1C1B1F;
+      --md-sys-color-surface-container: #211F26;
+      --md-sys-color-surface-container-high: #2B2930;
+      --md-sys-color-on-surface: #E6E1E5;
+      --md-sys-color-on-surface-variant: #CAC4D0;
+      --md-sys-color-outline: #938F99;
+      --md-sys-color-outline-variant: #49454F;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+      background: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+    }
+
+    header {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    .header-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-icon {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .header-text h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .header-text p {
+      font-size: 13px;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-top: 2px;
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    .app-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .app-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--md-sys-color-surface-container);
+      border-radius: 16px;
+      padding: 16px;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid var(--md-sys-color-outline-variant);
+      transition: background 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app-card:active {
+      transform: scale(0.98);
+      background: var(--md-sys-color-surface-container-high);
+    }
+
+    .app-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .app-info { flex: 1; min-width: 0; }
+
+    .app-name {
+      font-size: 17px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .app-desc {
+      font-size: 13px;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    .app-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 100px;
+      border: 1px solid currentColor;
+      opacity: 0.75;
+    }
+
+    .app-arrow {
+      font-size: 20px;
+      color: var(--md-sys-color-outline);
+      flex-shrink: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      font-size: 12px;
+      color: var(--md-sys-color-on-surface-variant);
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+      margin-top: 16px;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-icon">📱</div>
+    <div class="header-text">
+      <h1>PWA Apps</h1>
+      <p>スマホのホーム画面に追加してアプリとして使えます</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <p class="section-label">アプリ一覧</p>
+  <div class="app-grid">
+
+    <a class="app-card" href="./habit-flow/">
+      <div class="app-icon" style="background: linear-gradient(135deg,#1B6B3A,#2E7D32);">🌱</div>
+      <div class="app-info">
+        <div class="app-name">HabitFlow</div>
+        <div class="app-desc">毎日の習慣を記録してストリークを伸ばそう。目標達成をサポートする習慣管理アプリ。</div>
+        <div class="app-tags">
+          <span class="tag" style="color:#4CAF50;">健康</span>
+          <span class="tag" style="color:#4CAF50;">生産性</span>
+          <span class="tag" style="color:#4CAF50;">無料5習慣</span>
+        </div>
+      </div>
+      <div class="app-arrow">›</div>
+    </a>
+
+    <a class="app-card" href="./hop-dash/">
+      <div class="app-icon" style="background: linear-gradient(135deg,#0061A4,#1565C0);">🏃</div>
+      <div class="app-info">
+        <div class="app-name">Hop Dash</div>
+        <div class="app-desc">タップしてジャンプ！障害物を避けてハイスコアを狙え！エンドレスランナー。</div>
+        <div class="app-tags">
+          <span class="tag" style="color:#42A5F5;">ゲーム</span>
+          <span class="tag" style="color:#42A5F5;">アクション</span>
+          <span class="tag" style="color:#42A5F5;">2段ジャンプ</span>
+        </div>
+      </div>
+      <div class="app-arrow">›</div>
+    </a>
+
+    <a class="app-card" href="./number-fusion/">
+      <div class="app-icon" style="background: linear-gradient(135deg,#6750A4,#7B1FA2);">🔮</div>
+      <div class="app-info">
+        <div class="app-name">Number Fusion</div>
+        <div class="app-desc">数字を合体させてハイスコアを狙え！2048スタイルの戦略マージパズル。</div>
+        <div class="app-tags">
+          <span class="tag" style="color:#CE93D8;">ゲーム</span>
+          <span class="tag" style="color:#CE93D8;">パズル</span>
+          <span class="tag" style="color:#CE93D8;">2048系</span>
+        </div>
+      </div>
+      <div class="app-arrow">›</div>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  <a href="../">ゲームサイトへ戻る</a>
+</footer>
+
+</body>
+</html>

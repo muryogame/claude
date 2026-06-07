@@ -1,0 +1,24 @@
+{
+  "name": "Number Fusion - Merge Puzzle",
+  "short_name": "Number Fusion",
+  "description": "数字を合体させてハイスコアを狙え！2048スタイルの戦略パズル",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#6750A4",
+  "background_color": "#FFFBFE",
+  "lang": "ja",
+  "categories": ["games", "puzzle"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%236750A4'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle' fill='white'%3E🔮%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false,
+  "share_target": null,
+  "edge_side_panel": { "preferred_width": 400 }
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Security headers -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'blob:'; frame-ancestors 'none'">
+  <meta http-equiv="Permissions-Policy"
+    content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- PWA / Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#1B6B3A">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="stylesheet" href="css/main.css">
+  <title>HabitFlow</title>
+</head>
+<body>
+  <canvas id="cf" aria-hidden="true"></canvas>
+
+  <!-- PWA Install Banner -->
+  <div class="install-banner" id="installBanner" style="display:none">
+    <div class="install-text">🌱 ホーム画面に追加して毎日の習慣を記録しよう！</div>
+    <button class="install-btn" id="installBtn">インストール</button>
+    <button class="install-close" id="installClose">✕</button>
+  </div>
+
+  <!-- App bar -->
+  <header class="app-bar" role="banner">
+    <div class="logo">
+      <span class="logo-icon" aria-hidden="true">🌱</span>
+      <span class="logo-name">HabitFlow</span>
+      <span class="logo-badge" aria-label="プロ版">Pro</span>
+    </div>
+    <div class="date-pill" id="datePill" aria-label="今日の日付"></div>
+  </header>
+
+  <!-- Pages -->
+  <div class="pages" id="pages">
+    <!-- TODAY -->
+    <section class="page on" id="pageToday" aria-label="今日の習慣">
+      <div class="summary-card" id="summaryCard">
+        <!-- Companion (Hana) -->
+        <div class="companion-row" id="companionRow">
+          <div class="companion-emoji" id="companionEmoji">🌱</div>
+          <div class="companion-info">
+            <div class="companion-name" id="companionName">たね</div>
+            <div class="companion-msg"  id="companionMsg">一緒に頑張ろう！</div>
+            <div class="companion-prog">
+              <div class="companion-bar" id="companionBar"></div>
+            </div>
+          </div>
+          <button class="share-btn" id="shareBtn" aria-label="ストリークをシェア">📤</button>
+        </div>
+        <div class="sum-top">
+          <div>
+            <div class="sum-greeting" id="greeting"></div>
+            <div class="sum-date" id="sumDate"></div>
+          </div>
+          <div class="streak-flame" id="globalStreak" role="status">🔥 0日</div>
+        </div>
+        <div class="sum-ring-row">
+          <div class="ring-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="ringWrap">
+            <svg width="86" height="86" viewBox="0 0 86 86" aria-hidden="true">
+              <circle class="ring-bg"    cx="43" cy="43" r="34"/>
+              <circle class="ring-track" id="ringTrack" cx="43" cy="43" r="34" stroke-dasharray="214" stroke-dashoffset="214"/>
+            </svg>
+            <div class="ring-inner">
+              <div class="ring-num" id="ringNum">0/0</div>
+              <div class="ring-sub">完了</div>
+            </div>
+          </div>
+          <div class="sum-msg">
+            <h3 id="sumTitle">さあ始めよう！</h3>
+            <p  id="sumSub">今日の習慣をチェックしよう</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="cat-scroll" id="catFilter" aria-label="カテゴリフィルター"></nav>
+
+      <div class="section-hd">
+        今日の習慣
+        <span class="section-count" id="habitCount" aria-label="習慣の数">0個</span>
+      </div>
+      <div id="habitList" role="list"></div>
+      <div id="emptyState" style="display:none" class="empty-state">
+        <div class="empty-ico" aria-hidden="true">🌱</div>
+        <div class="empty-title">まだ習慣がありません</div>
+        <div class="empty-sub">右下の＋ボタンから<br>最初の習慣を追加しよう！</div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="page" id="pageStats" aria-label="統計">
+      <div class="prem-banner" id="premBanner" role="button" tabindex="0" aria-label="HabitFlow Pro をお試し">
+        <div class="prem-ico" aria-hidden="true">⭐</div>
+        <div class="prem-text">
+          <h4>HabitFlow Pro をお試し</h4>
+          <p>7日間無料 → ¥300/月 • 無制限の習慣・詳細分析</p>
+        </div>
+        <div class="prem-cta" aria-hidden="true">無料体験</div>
+      </div>
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="heatmap-card" id="heatmapCard"></div>
+      <div class="chart-card"   id="chartCard"></div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section class="page" id="pageAchiev" aria-label="バッジ">
+      <div class="section-hd">バッジコレクション</div>
+      <div class="achiev-grid" id="achievGrid"></div>
+    </section>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" id="fab" aria-label="習慣を追加">+</button>
+
+  <!-- Bottom navigation -->
+  <nav class="bot-nav" aria-label="メインナビゲーション">
+    <button class="nav-btn on" id="navToday"  aria-label="今日">
+      <div class="nav-dot"  aria-hidden="true"></div>
+      <div class="nav-ico"  aria-hidden="true">🏠</div>
+      <div class="nav-lbl">今日</div>
+    </button>
+    <button class="nav-btn" id="navStats"  aria-label="統計">
+      <div class="nav-dot"  aria-hidden="true"></div>
+      <div class="nav-ico"  aria-hidden="true">📊</div>
+      <div class="nav-lbl">統計</div>
+    </button>
+    <button class="nav-btn" id="navAchiev" aria-label="バッジ">
+      <div class="nav-dot"  aria-hidden="true"></div>
+      <div class="nav-ico"  aria-hidden="true">🏅</div>
+      <div class="nav-lbl">バッジ</div>
+    </button>
+  </nav>
+
+  <!-- Sheet overlay & sheet -->
+  <div class="overlay-bg" id="overlayBg" aria-hidden="true"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="習慣を追加">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <h3>習慣を追加</h3>
+    <div class="sheet-section">テンプレートから選ぶ</div>
+    <div class="templates" id="templates" role="list" aria-label="習慣テンプレート"></div>
+    <div class="sheet-section">または自分で作る</div>
+    <div class="field">
+      <span id="curEmoji" aria-hidden="true" style="font-size:24px">🌟</span>
+      <input type="text" id="habitInput" placeholder="習慣の名前（例: 毎日運動）"
+             maxlength="30" autocomplete="off" spellcheck="false"
+             aria-label="習慣の名前">
+    </div>
+    <div class="field">
+      <span aria-hidden="true" style="font-size:18px;opacity:.5">🕐</span>
+      <select id="timeSelect" aria-label="時間帯">
+        <option value="">時間帯なし</option>
+        <option value="morning">朝</option>
+        <option value="afternoon">昼</option>
+        <option value="evening">夜</option>
+      </select>
+    </div>
+    <div class="sheet-section">カテゴリ</div>
+    <div class="cat-scroll" id="catSelect" aria-label="カテゴリ選択" style="margin-bottom:10px"></div>
+    <div class="sheet-section">アイコン</div>
+    <div class="emoji-picker" id="emojiPicker" role="group" aria-label="アイコン選択"></div>
+    <button class="submit-btn" id="submitBtn">習慣を追加する</button>
+  </div>
+
+  <!-- Snackbar -->
+  <div class="snack" id="snack" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
