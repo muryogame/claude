@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>アイテム一覧 | LOL初心者ガイド</title>
-  <meta name="description" content="League of Legendsの主要アイテム一覧。カテゴリー別に絞り込み・検索できます。">
+  <title>アイテム・オブジェクト一覧 | LOL初心者ガイド</title>
+  <meta name="description" content="League of Legendsの主要アイテム一覧とオブジェクト（ドラゴン・バロン・タワーなど）の効果解説。">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{
@@ -76,6 +76,57 @@
       .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
       .nav-links{display:none}
     }
+
+    /* ===== TAB NAV ===== */
+    .tab-nav{max-width:1300px;margin:24px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap}
+    .tab-btn{padding:10px 24px;border-radius:8px;border:2px solid rgba(200,155,60,.3);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;font-weight:700;transition:all .2s}
+    .tab-btn:hover{border-color:var(--gold);color:var(--gold-light)}
+    .tab-btn.active{background:rgba(200,155,60,.2);border-color:var(--gold);color:var(--gold)}
+
+    /* ===== OBJECTIVES SECTION ===== */
+    #objectivesSection{max-width:1300px;margin:0 auto;padding:24px 20px 60px}
+
+    .obj-chapter{margin-bottom:40px}
+    .obj-chapter-title{font-size:1.1rem;font-weight:900;color:var(--gold);border-left:4px solid var(--gold);padding-left:12px;margin-bottom:16px}
+
+    .obj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+
+    .obj-card{background:var(--blue-card);border-radius:12px;border:1px solid rgba(200,155,60,.2);overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
+    .obj-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(200,155,60,.2);border-color:rgba(200,155,60,.5)}
+
+    .obj-header{display:flex;align-items:center;gap:14px;padding:16px 16px 12px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(200,155,60,.1)}
+    .obj-icon{width:56px;height:56px;border-radius:10px;border:2px solid rgba(200,155,60,.35);background:#0A1428;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
+    .obj-icon img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+    .obj-title{flex:1;min-width:0}
+    .obj-jp{font-size:1rem;font-weight:800;color:var(--white);line-height:1.3}
+    .obj-en{font-size:0.72rem;color:var(--text);margin-top:2px}
+    .obj-spawn{display:inline-flex;align-items:center;gap:4px;font-size:0.7rem;font-weight:700;color:#0BC4E3;background:rgba(11,196,227,.1);border-radius:10px;padding:3px 10px;margin-top:6px}
+
+    .obj-body{padding:14px 16px}
+    .obj-effect-list{list-style:none;padding:0;margin:0 0 10px}
+    .obj-effect-list li{font-size:0.78rem;color:var(--text-light);line-height:1.6;padding:3px 0;padding-left:14px;position:relative}
+    .obj-effect-list li::before{content:"▸";position:absolute;left:0;color:var(--gold);font-size:0.65rem;top:5px}
+    .obj-soul{margin-top:8px;background:rgba(200,155,60,.08);border:1px solid rgba(200,155,60,.25);border-radius:8px;padding:10px 12px}
+    .obj-soul-label{font-size:0.68rem;font-weight:700;color:var(--gold);margin-bottom:4px}
+    .obj-soul-text{font-size:0.76rem;color:var(--text-light);line-height:1.5}
+    .obj-tip{margin-top:8px;font-size:0.72rem;color:#A0B4C8;font-style:italic;line-height:1.5}
+
+    .obj-type-badge{display:inline-block;font-size:0.62rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}
+    .badge-dragon{background:rgba(227,89,40,.2);color:#E3905A}
+    .badge-epic{background:rgba(160,89,227,.2);color:#C078F0}
+    .badge-map{background:rgba(89,160,89,.2);color:#7DC87D}
+    .badge-river{background:rgba(89,160,227,.2);color:#59A0E3}
+
+    /* tower table */
+    .tower-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:10px}
+    .tower-table th{background:rgba(200,155,60,.15);color:var(--gold);font-weight:700;padding:7px 10px;text-align:left;border-bottom:1px solid rgba(200,155,60,.2)}
+    .tower-table td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-light)}
+    .tower-table tr:last-child td{border-bottom:none}
+    .tower-table tr:hover td{background:rgba(255,255,255,.03)}
+
+    @media(max-width:600px){
+      .obj-grid{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
@@ -88,15 +139,449 @@
       <a href="index.html#lane">レーン</a>
       <a href="champions.html">チャンピオン一覧</a>
       <a href="items.html" class="active">アイテム一覧</a>
+      <a href="items.html#objects" onclick="event.preventDefault();switchTab('objectives')">オブジェクト一覧</a>
     </div>
   </div>
 </nav>
 
 <section class="hero">
-  <h1>アイテム一覧</h1>
-  <p>カテゴリーや名前でアイテムを検索できます。各チャンピオンのおすすめビルドはチャンピオン詳細ページで確認できます。</p>
+  <h1>アイテム &amp; オブジェクト一覧</h1>
+  <p>アイテムをカテゴリーで検索、またはドラゴン・バロン・タワーなどオブジェクトの効果を確認できます。</p>
 </section>
 
+<!-- Tab navigation -->
+<div class="tab-nav">
+  <button class="tab-btn active" id="tabItems" onclick="switchTab('items')">⚔ アイテム一覧</button>
+  <button class="tab-btn" id="tabObj" onclick="switchTab('objectives')">🐉 オブジェクト一覧</button>
+</div>
+
+<!-- ===== OBJECTIVES SECTION ===== -->
+<div id="objectivesSection" style="display:none">
+
+  <!-- エピックモンスター -->
+  <div class="obj-chapter">
+    <h2 class="obj-chapter-title">🐉 ドラゴン（エレメンタルドレイク）</h2>
+    <p style="font-size:0.82rem;color:var(--text);margin-bottom:16px;padding:0 2px">
+      5分頃に最初のドラゴンが出現し、以降は倒されるか一定時間が経過すると次のドラゴンがスポーンします。<br>
+      倒すと「龍殺し（ドラゴンスレイヤー）」バフが永続スタック。同チームで4体倒すと強力な<strong style="color:var(--gold)">ドラゴンソウル</strong>を獲得します。
+    </p>
+    <div class="obj-grid">
+
+      <!-- インファーナル -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">🔥</div>
+          <div class="obj-title">
+            <div class="obj-jp">インファーナルドレイク<span class="obj-type-badge badge-dragon">ドラゴン</span></div>
+            <div class="obj-en">Infernal Drake</div>
+            <div class="obj-spawn">⏱ 5分〜</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>龍殺し1スタックごと：AD &amp; AP＋4%</li>
+            <li>炎属性バフで攻撃力が永続強化される</li>
+          </ul>
+          <div class="obj-soul">
+            <div class="obj-soul-label">🔥 インファーナルソウル</div>
+            <div class="obj-soul-text">スキルや基本攻撃がヒットすると爆発が発生し、周囲に追加の魔法ダメージを与える</div>
+          </div>
+          <div class="obj-tip">アサシン・ADC・マジシャンなどダメージ系チャンピオンに強力</div>
+        </div>
+      </div>
+
+      <!-- マウンテン -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">🏔</div>
+          <div class="obj-title">
+            <div class="obj-jp">マウンテンドレイク<span class="obj-type-badge badge-dragon">ドラゴン</span></div>
+            <div class="obj-en">Mountain Drake</div>
+            <div class="obj-spawn">⏱ 5分〜</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>龍殺し1スタックごと：AR &amp; MR＋6%</li>
+            <li>物理・魔法両方の防御が上昇する</li>
+          </ul>
+          <div class="obj-soul">
+            <div class="obj-soul-label">🏔 マウンテンソウル</div>
+            <div class="obj-soul-text">戦闘外で最大体力の18%相当のシールドを自動的に獲得する</div>
+          </div>
+          <div class="obj-tip">タンクやサポートが多いチーム構成で特に有効</div>
+        </div>
+      </div>
+
+      <!-- クラウド -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">💨</div>
+          <div class="obj-title">
+            <div class="obj-jp">クラウドドレイク<span class="obj-type-badge badge-dragon">ドラゴン</span></div>
+            <div class="obj-en">Cloud Drake</div>
+            <div class="obj-spawn">⏱ 5分〜</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>龍殺し1スタックごと：非戦闘時MS＋3%</li>
+            <li>スロウ耐性が上昇する</li>
+          </ul>
+          <div class="obj-soul">
+            <div class="obj-soul-label">💨 クラウドソウル</div>
+            <div class="obj-soul-text">アルティメットスキルのクールダウンが大幅短縮される</div>
+          </div>
+          <div class="obj-tip">強力なアルティメットを持つチャンピオン（アムムなど）が多いチームに有利</div>
+        </div>
+      </div>
+
+      <!-- オーシャン -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">🌊</div>
+          <div class="obj-title">
+            <div class="obj-jp">オーシャンドレイク<span class="obj-type-badge badge-dragon">ドラゴン</span></div>
+            <div class="obj-en">Ocean Drake</div>
+            <div class="obj-spawn">⏱ 5分〜</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>龍殺し1スタックごと：5秒ごとにHP継続回復</li>
+            <li>スタック数に応じて回復量が増加（最大2.5%相当）</li>
+          </ul>
+          <div class="obj-soul">
+            <div class="obj-soul-label">🌊 オーシャンソウル</div>
+            <div class="obj-soul-text">5秒ごとに最大体力の3.5%のHPとマナを回復する</div>
+          </div>
+          <div class="obj-tip">持続戦闘力が上がるため、集団戦が長引くチームに有効</div>
+        </div>
+      </div>
+
+      <!-- ヘクステック -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">⚡</div>
+          <div class="obj-title">
+            <div class="obj-jp">ヘクステックドレイク<span class="obj-type-badge badge-dragon">ドラゴン</span></div>
+            <div class="obj-en">Hextech Drake</div>
+            <div class="obj-spawn">⏱ 5分〜</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>龍殺し1スタックごと：スキルCD－5% / 攻撃速度＋5%</li>
+            <li>スキル重視型・AS重視型どちらにも恩恵</li>
+          </ul>
+          <div class="obj-soul">
+            <div class="obj-soul-label">⚡ ヘクステックソウル</div>
+            <div class="obj-soul-text">スキルまたは基本攻撃ごとに電撃の鎖が発動し、近くの敵を拘束する</div>
+          </div>
+          <div class="obj-tip">エンゲージやCC依存のチームコンプに刺さる</div>
+        </div>
+      </div>
+
+      <!-- ケミテック -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">🧪</div>
+          <div class="obj-title">
+            <div class="obj-jp">ケミテックドレイク<span class="obj-type-badge badge-dragon">ドラゴン</span></div>
+            <div class="obj-en">Chemtech Drake</div>
+            <div class="obj-spawn">⏱ 5分〜</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>龍殺し1スタックごと：行動妨害耐性＋4%</li>
+            <li>回復・シールド効果＋4%</li>
+          </ul>
+          <div class="obj-soul">
+            <div class="obj-soul-label">🧪 ケミテックソウル</div>
+            <div class="obj-soul-text">体力が低い状態（HP50%以下）ほど攻撃力と防御力が増加する</div>
+          </div>
+          <div class="obj-tip">サポートやエンチャンター、ファイターに相性が良い</div>
+        </div>
+      </div>
+
+      <!-- エルダードラゴン -->
+      <div class="obj-card" style="border-color:rgba(255,180,60,.4)">
+        <div class="obj-header" style="background:rgba(255,150,30,.06)">
+          <div class="obj-icon" style="border-color:rgba(255,180,60,.6)">🐲</div>
+          <div class="obj-title">
+            <div class="obj-jp">エルダードラゴン<span class="obj-type-badge badge-epic">エピック</span></div>
+            <div class="obj-en">Elder Dragon</div>
+            <div class="obj-spawn">⏱ ソウル獲得後に出現</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>片方のチームがドラゴンソウルを獲得すると出現</li>
+            <li>倒したチームに「エルダーバーン」付与：一定時間、敵を燃焼状態にする</li>
+            <li>ソウルバフの効果が全て大幅に強化される</li>
+            <li>バフ持続時間：2分30秒</li>
+          </ul>
+          <div class="obj-tip">エルダーを取られるとほぼ詰みレベル。ドラゴンソウル保持中に積極的に狙おう</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- その他エピックモンスター -->
+  <div class="obj-chapter">
+    <h2 class="obj-chapter-title">⚔ その他エピックモンスター</h2>
+    <div class="obj-grid">
+
+      <!-- ヴォイドグラブ -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">🕷</div>
+          <div class="obj-title">
+            <div class="obj-jp">ヴォイドグラブ<span class="obj-type-badge badge-epic">エピック</span></div>
+            <div class="obj-en">Void Grub</div>
+            <div class="obj-spawn">⏱ 8分に3体出現</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>マップ北西（バロンピット付近）に3体まとめて出現</li>
+            <li>1体倒すごとに「ヴォイドの飢え」バフ1スタック（最大6スタック）</li>
+            <li>3スタック以上：タワー攻撃時に「ヴォイドマイト」が召喚されてタワーを一緒に攻撃</li>
+            <li>6スタック：ヴォイドマイトが最大3体まで召喚</li>
+          </ul>
+          <div class="obj-tip">序盤にタワーを取りやすくなる。タワー破壊を狙うチームコンプと相性抜群</div>
+        </div>
+      </div>
+
+      <!-- リフトヘラルド -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">👁</div>
+          <div class="obj-title">
+            <div class="obj-jp">リフトヘラルド<span class="obj-type-badge badge-epic">エピック</span></div>
+            <div class="obj-en">Rift Herald</div>
+            <div class="obj-spawn">⏱ 8分〜20分</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>20分以前にバロンピット（北リバー）で出現、20分以降はバロンに変わる</li>
+            <li>倒すと「ヘラルドの瞳」がドロップする（拾って4分間所持可能）</li>
+            <li>設置するとリフトヘラルドが召喚され、タワーに突進して大ダメージ</li>
+            <li>ヘラルドが突進した後もしばらくタワーを攻撃し続ける</li>
+          </ul>
+          <div class="obj-tip">タワーを破壊するのが目的なので、ファーストタワーを崩すのに使うのがベスト</div>
+        </div>
+      </div>
+
+      <!-- バロンナッシャー -->
+      <div class="obj-card" style="border-color:rgba(160,89,227,.4)">
+        <div class="obj-header" style="background:rgba(160,89,227,.06)">
+          <div class="obj-icon" style="border-color:rgba(160,89,227,.5)">👑</div>
+          <div class="obj-title">
+            <div class="obj-jp">バロンナッシャー<span class="obj-type-badge badge-epic">エピック</span></div>
+            <div class="obj-en">Baron Nashor</div>
+            <div class="obj-spawn">⏱ 20分以降</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>20分以降に北リバーに出現（ヘラルドと入れ替わる）</li>
+            <li>「ハンドオブバロン（バロンバフ）」付与：3分間持続</li>
+            <li>バロンバフ中：近くのミニオンのADと体力が大幅増加</li>
+            <li>リコール後の帰還速度と回復量が増加</li>
+            <li>倒された場合はバフが消滅する</li>
+            <li>再出現：倒してから6分後</li>
+          </ul>
+          <div class="obj-tip">バロン後は強化ミニオンでレーンを押し込む。バロンバフ中に無理なファイトは禁物</div>
+        </div>
+      </div>
+
+      <!-- アタカン -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">🌹</div>
+          <div class="obj-title">
+            <div class="obj-jp">アタカン<span class="obj-type-badge badge-epic">エピック</span></div>
+            <div class="obj-en">Atakhan</div>
+            <div class="obj-spawn">⏱ 20分以降</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>20分以降に出現。キル数によって出現場所と種類が変わる</li>
+            <li>キルが多い試合 → <strong style="color:#E3905A">貪欲のアタカン</strong>：キル/アシスト時の獲得ゴールド＋40、致死ダメージを受けると一時的に生存</li>
+            <li>キルが少ない試合 → <strong style="color:#A059E3">災禍のアタカン</strong>：全エピックモンスターの恩恵＋25%、ブラッドローズが出現</li>
+            <li>「血の花弁」というアイテムがマップに出現し、拾うとバフが得られる</li>
+          </ul>
+          <div class="obj-tip">試合状況によって場所が変わるため、マップを常に確認しよう</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- リバーオブジェクト -->
+  <div class="obj-chapter">
+    <h2 class="obj-chapter-title">🦀 リバーオブジェクト</h2>
+    <div class="obj-grid">
+
+      <!-- スカトルクラブ -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">🦀</div>
+          <div class="obj-title">
+            <div class="obj-jp">スカトルクラブ<span class="obj-type-badge badge-river">リバー</span></div>
+            <div class="obj-en">Rift Scuttler</div>
+            <div class="obj-spawn">⏱ 3分30秒〜</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>3分30秒にリバーの2箇所（上リバー・下リバー）に出現</li>
+            <li>倒すと「安息の滝」ゾーンを設置：ゾーン内で移動速度UP</li>
+            <li>ゾーン内のバッシュ（茂み）の視界を自動スキャン</li>
+            <li>倒したチームに経験値とゴールドを付与</li>
+          </ul>
+          <div class="obj-tip">ジャングラーのパス確保と視界取りの要。序盤は必ずスカトルを争奪しよう</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- タワー・建造物 -->
+  <div class="obj-chapter">
+    <h2 class="obj-chapter-title">🏰 タワー &amp; 建造物</h2>
+    <div class="obj-grid">
+
+      <!-- タワー詳細 -->
+      <div class="obj-card" style="grid-column:1/-1">
+        <div class="obj-header">
+          <div class="obj-icon">🗼</div>
+          <div class="obj-title">
+            <div class="obj-jp">タワー（計11本）<span class="obj-type-badge badge-map">建造物</span></div>
+            <div class="obj-en">Turret / Tower</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <p style="font-size:0.78rem;color:var(--text);margin-bottom:10px">各レーン（トップ・ミッド・ボット）にそれぞれ3本＋ネクサスタワー2本の計11本。外側から順番に破壊していく。</p>
+          <table class="tower-table">
+            <thead>
+              <tr>
+                <th>種類</th>
+                <th>位置</th>
+                <th>体力</th>
+                <th>ゴールド（分配）</th>
+                <th>特徴</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>アウタータワー</strong><br><span style="font-size:0.65rem;color:var(--text)">Tier 1</span></td>
+                <td>各レーン1本目</td>
+                <td>5,000</td>
+                <td>周囲に250G＋全員50G</td>
+                <td>序盤は攻撃力低め。時間とともに強化される</td>
+              </tr>
+              <tr>
+                <td><strong>インナータワー</strong><br><span style="font-size:0.65rem;color:var(--text)">Tier 2</span></td>
+                <td>各レーン2本目</td>
+                <td>3,600</td>
+                <td>周囲に300G＋全員50G</td>
+                <td>アウターより堅い。防御力も時間で上昇</td>
+              </tr>
+              <tr>
+                <td><strong>インヒビタータワー</strong><br><span style="font-size:0.65rem;color:var(--text)">Tier 3</span></td>
+                <td>各レーン3本目</td>
+                <td>3,300（回復あり）</td>
+                <td>全員50G＋経験値100</td>
+                <td>5秒ごとに15HP自己回復。破壊するとインヒビターにアクセス可能</td>
+              </tr>
+              <tr>
+                <td><strong>ネクサスタワー</strong><br><span style="font-size:0.65rem;color:var(--text)">Nexus</span></td>
+                <td>ネクサス前2本</td>
+                <td>3,600（回復あり）</td>
+                <td>全員50G</td>
+                <td>5秒ごとに30HP自己回復。最後の砦</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="obj-tip">タワーダイブ（低体力の敵をタワー下で倒す行為）は上達のカギ。タワーのアグロは最後に攻撃したプレイヤーに向く</div>
+        </div>
+      </div>
+
+      <!-- インヒビター -->
+      <div class="obj-card">
+        <div class="obj-header">
+          <div class="obj-icon">💎</div>
+          <div class="obj-title">
+            <div class="obj-jp">インヒビター<span class="obj-type-badge badge-map">建造物</span></div>
+            <div class="obj-en">Inhibitor</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>インヒビタータワーの奥にある建造物（各レーン1つ・計3つ）</li>
+            <li>破壊すると、そのレーンのミニオンにスーパーミニオンが追加される</li>
+            <li>スーパーミニオンは非常に体力・攻撃力が高く、押し込む力が上がる</li>
+            <li>5分後に復活し、その後は自軍からスーパーミニオンが出なくなる</li>
+            <li>複数のインヒビターを同時に破壊するとスーパーミニオンが複数体出現</li>
+          </ul>
+          <div class="obj-tip">インヒビターを壊したらすぐにバロンを狙うのがセオリー</div>
+        </div>
+      </div>
+
+      <!-- ネクサス -->
+      <div class="obj-card" style="border-color:rgba(200,155,60,.5)">
+        <div class="obj-header" style="background:rgba(200,155,60,.08)">
+          <div class="obj-icon" style="border-color:rgba(200,155,60,.7)">🏆</div>
+          <div class="obj-title">
+            <div class="obj-jp">ネクサス<span class="obj-type-badge badge-map">建造物</span></div>
+            <div class="obj-en">Nexus</div>
+          </div>
+        </div>
+        <div class="obj-body">
+          <ul class="obj-effect-list">
+            <li>本陣の中心にある最終目標</li>
+            <li>ネクサスタワー2本を破壊した後にのみ攻撃可能</li>
+            <li>ネクサスを破壊したチームが<strong style="color:var(--gold)">試合に勝利</strong></li>
+            <li>ネクサスも時間で少しずつHP回復する</li>
+          </ul>
+          <div class="obj-tip">勝てると思ったら迷わずネクサスを狙う。スーパーミニオンで押し込んでいる間に積極的に攻撃しよう</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 優先順位ガイド -->
+  <div class="obj-chapter">
+    <h2 class="obj-chapter-title">📋 オブジェクト優先順位ガイド</h2>
+    <div style="background:var(--blue-card);border:1px solid rgba(200,155,60,.2);border-radius:12px;padding:20px 24px">
+      <p style="font-size:0.8rem;color:var(--text);margin-bottom:12px">状況によって変わりますが、一般的な優先順位の目安です：</p>
+      <ol style="font-size:0.82rem;color:var(--text-light);line-height:2;padding-left:20px">
+        <li><strong style="color:#E3905A">ファーストタワー</strong>：序盤のゴールドリードに直結</li>
+        <li><strong style="color:#F0E6D3">ドラゴン（序盤〜中盤）</strong>：スタックが重要。4体でソウル獲得</li>
+        <li><strong style="color:#A059E3">バロン（20分以降）</strong>：バロンバフで試合を決定づける</li>
+        <li><strong style="color:#C89B3C">エルダードラゴン</strong>：ソウル保持チームは積極的に狙う</li>
+        <li><strong style="color:#7DC87D">インヒビター→ネクサス</strong>：バロンバフ中にレーンを押し切る</li>
+      </ol>
+      <p style="font-size:0.75rem;color:var(--text);margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)">
+        参考：
+        <a href="https://lol-youseijo.com/object/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none">LOLの教科書 - オブジェクト解説</a> ／
+        <a href="https://red-ff-gamenews.com/lol-guide-epic-monsters/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none">エピックモンスター完全ガイド</a> ／
+        <a href="https://lol-times.com/archives/4901" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none">LoL Times - 2025シーズン変更点</a>
+      </p>
+    </div>
+  </div>
+
+</div>
+<!-- /objectivesSection -->
+
+<div id="itemsSection">
 <div class="controls">
   <div class="search-bar">
     <input type="text" id="searchInput" placeholder="アイテム名を検索（日本語・英語）..." oninput="applyFilters()">
@@ -107,6 +592,7 @@
 </div>
 
 <div class="grid" id="itemGrid"></div>
+</div>
 
 <footer>
   <p>
@@ -117,6 +603,28 @@
 </footer>
 
 <script src="js/items-data.js"></script>
+<script>
+function switchTab(tab){
+  const itemsSection = document.getElementById('itemsSection');
+  const objSection = document.getElementById('objectivesSection');
+  const btnItems = document.getElementById('tabItems');
+  const btnObj = document.getElementById('tabObj');
+  if(tab === 'objectives'){
+    itemsSection.style.display = 'none';
+    objSection.style.display = 'block';
+    btnItems.classList.remove('active');
+    btnObj.classList.add('active');
+  } else {
+    itemsSection.style.display = 'block';
+    objSection.style.display = 'none';
+    btnItems.classList.add('active');
+    btnObj.classList.remove('active');
+  }
+  if(window.location.hash) history.replaceState(null,'',window.location.pathname);
+}
+// URLハッシュでオブジェクトタブに直接遷移可能
+if(location.hash === '#objects') switchTab('objectives');
+</script>
 <script>
 const CATEGORIES = ["すべて","スターター","ブーツ","ファイター","タンク","マジシャン","ADC","アサシン","サポート"];
 const DDV = "14.10.1";
