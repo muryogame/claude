@@ -31,10 +31,18 @@ def get_authenticated_service():
             creds = Credentials.from_authorized_user_info(json.load(f), SCOPES)
 
     if not creds or not creds.valid:
+        needs_new_flow = True
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-            _save_token(creds)
-        else:
+            try:
+                creds.refresh(Request())
+                _save_token(creds)
+                needs_new_flow = False
+            except Exception:
+                print("  トークンの更新に失敗しました。再認証を行います...")
+                if os.path.exists(YOUTUBE_TOKEN_FILE):
+                    os.remove(YOUTUBE_TOKEN_FILE)
+
+        if needs_new_flow:
             client_secret_env = os.environ.get("YOUTUBE_CLIENT_SECRET_JSON")
             if client_secret_env and not os.path.exists(YOUTUBE_CLIENT_SECRET_FILE):
                 with open(YOUTUBE_CLIENT_SECRET_FILE, "w", encoding="utf-8") as f:
@@ -49,7 +57,8 @@ def get_authenticated_service():
                 YOUTUBE_CLIENT_SECRET_FILE, SCOPES
             )
             try:
-                creds = flow.run_local_server(port=8081)
+                # prompt='consent' でチャンネル選択画面を強制表示
+                creds = flow.run_local_server(port=8081, prompt='consent')
             except Exception:
                 creds = flow.run_console()
             _save_token(creds)
