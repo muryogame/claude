@@ -47,7 +47,6 @@ TEXT_COLOR = (240, 240, 240)       # 白
 ACCENT_COLOR = (100, 180, 255)     # 水色
 SUBTITLE_COLOR = (200, 200, 200)   # グレー
 
-# DALL-E 3 画像生成（Trueにすると画質が大幅向上するがAPIコストが増加する）
-# 1画像あたり約$0.08(standard) / $0.12(hd)
+# gpt-image-1 画像生成（Trueにすると画質が大幅向上するがAPIコストが増加する。旧dall-e-3はAPI廃止済み）
 USE_DALLE = True
-DALLE_QUALITY = "hd"  # "standard" or "hd"
+DALLE_QUALITY = "high"  # "low" / "medium" / "high"

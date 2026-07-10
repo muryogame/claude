@@ -1,17 +1,17 @@
 """
 YouTube Shorts 縦型動画を自動生成するモジュール
-解像度: 1080x1920（縦型 9:16）、目標60秒
+解像度: 1080x1920（縦型 9:16）、目標20〜32秒
 DALL-E 3 で勉強系背景画像を生成してオーバーレイ
 """
 import os
-import io
-import requests
-from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
-from moviepy import AudioFileClip, ImageClip, concatenate_videoclips
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance
+from moviepy import AudioFileClip, VideoClip, concatenate_videoclips
 from openai import OpenAI
 from config import OPENAI_API_KEY, OUTPUT_DIR, FONT_BOLD, FONT_REG, FONT_FALLBACK, STUDYFLOW_URL
 from config import VIDEO_WIDTH as SHORTS_W, VIDEO_HEIGHT as SHORTS_H
-from config import BG_COLOR_TOP, BG_COLOR_BOTTOM, TITLE_COLOR, TEXT_COLOR, ACCENT_COLOR
+from config import BG_COLOR_TOP, BG_COLOR_BOTTOM, TITLE_COLOR, TEXT_COLOR, ACCENT_COLOR, HOT_COLOR, GOLD_COLOR
+from image_utils import generate_dalle_bg, make_gradient_bg
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -27,43 +27,36 @@ def _font(size: int, bold=True):
 
 def generate_bg_image(image_prompt: str, slide_index: int) -> Image.Image | None:
     """DALL-E 3 で勉強系背景画像を生成する。"""
-    return None  # DALL-E 無効化（コスト削減）
-    try:
-        full_prompt = (
-            f"{image_prompt}. "
-            "Vertical portrait 9:16 orientation, study and learning theme, "
-            "deep indigo and purple gradient, glowing books and knowledge symbols, "
-            "inspiring motivational atmosphere, high quality digital art, "
-            "NO TEXT, no words, no letters."
-        )
-        print(f"  DALL-E 画像生成中（スライド{slide_index + 1}）...")
-        resp = client.images.generate(
-            model="dall-e-3",
-            prompt=full_prompt,
-            size="1024x1792",
-            quality="standard",
-            n=1,
-        )
-        url = resp.data[0].url
-        img_data = requests.get(url, timeout=30).content
-        img = Image.open(io.BytesIO(img_data)).convert("RGB")
-        img = img.resize((SHORTS_W, SHORTS_H), Image.LANCZOS)
-        return img
-    except Exception as e:
-        print(f"  DALL-E生成スキップ（グラデーション背景使用）: {e}")
-        return None
+    full_prompt = (
+        f"{image_prompt}. "
+        "Vertical portrait 9:16 orientation, study and learning theme, "
+        "dramatic glowing books and knowledge symbols, shocking impactful visual, "
+        "bold saturated indigo purple and gold colors, cinematic lighting, "
+        "high quality digital art."
+    )
+    print(f"  DALL-E 画像生成中（スライド{slide_index + 1}）...")
+    return generate_dalle_bg(full_prompt, SHORTS_W, SHORTS_H, brightness=0.5, blur_radius=0.4)
 
 
 def _make_gradient_bg() -> Image.Image:
-    img = Image.new("RGB", (SHORTS_W, SHORTS_H))
-    draw = ImageDraw.Draw(img)
-    for y in range(SHORTS_H):
-        ratio = y / SHORTS_H
-        r = int(BG_COLOR_TOP[0] + (BG_COLOR_BOTTOM[0] - BG_COLOR_TOP[0]) * ratio)
-        g = int(BG_COLOR_TOP[1] + (BG_COLOR_BOTTOM[1] - BG_COLOR_TOP[1]) * ratio)
-        b = int(BG_COLOR_TOP[2] + (BG_COLOR_BOTTOM[2] - BG_COLOR_TOP[2]) * ratio)
-        draw.line([(0, y), (SHORTS_W, y)], fill=(r, g, b))
-    return img
+    return make_gradient_bg(SHORTS_W, SHORTS_H, color1=BG_COLOR_TOP, color2=BG_COLOR_BOTTOM)
+
+
+def _zoom_clip(image_path: str, duration: float, zoom_amount: float = 0.12) -> VideoClip:
+    """スライド画像にゆっくりとしたズームイン効果を付けたクリップを返す（動きで視聴維持率UP）。"""
+    img = Image.open(image_path).convert("RGB").resize((SHORTS_W, SHORTS_H), Image.LANCZOS)
+    img_arr = np.array(img)
+
+    def make_frame(t):
+        progress = t / max(duration, 0.001)
+        scale = 1.0 + zoom_amount * progress
+        new_w, new_h = int(SHORTS_W * scale), int(SHORTS_H * scale)
+        resized = np.array(Image.fromarray(img_arr).resize((new_w, new_h), Image.LANCZOS))
+        x = (new_w - SHORTS_W) // 2
+        y = (new_h - SHORTS_H) // 2
+        return resized[y:y + SHORTS_H, x:x + SHORTS_W].copy()
+
+    return VideoClip(make_frame, duration=duration)
 
 
 def _draw_text_shadow(draw, pos, text, font, fill, shadow=(0, 0, 0, 200), offset=3):
@@ -122,7 +115,7 @@ def create_main_slide(script_data: dict, image_prompt: str) -> str:
     bw, bh = bbox[2] - bbox[0] + 50, bbox[3] - bbox[1] + 24
     bx = (SHORTS_W - bw) // 2
     by = 130
-    _draw_rounded_rect(draw, (bx, by, bx + bw, by + bh), 20, (99, 102, 241, 220))
+    _draw_rounded_rect(draw, (bx, by, bx + bw, by + bh), 20, (*HOT_COLOR, 230))
     draw.text((bx + 25, by + 12), genre_label, font=font_badge, fill=(255, 255, 255, 255))
 
     # タイトル
@@ -258,7 +251,7 @@ def create_outro_slide(script_data: dict, image_prompt: str) -> str:
 
 def build_shorts_video(script_data: dict, audio_path: str, output_path: str,
                        max_seconds: float = 60.0) -> str:
-    """60秒Shorts動画を生成する（メイン + アウトロの2スライド構成）。"""
+    """20〜32秒Shorts動画を生成する（メイン + アウトロの2スライド構成）。"""
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     audio = AudioFileClip(audio_path)
@@ -274,8 +267,8 @@ def build_shorts_video(script_data: dict, audio_path: str, output_path: str,
     outro_path = create_outro_slide(script_data, image_prompt)
 
     clips = [
-        ImageClip(main_path).with_duration(main_dur),
-        ImageClip(outro_path).with_duration(outro_dur),
+        _zoom_clip(main_path, main_dur, zoom_amount=0.14),
+        _zoom_clip(outro_path, outro_dur, zoom_amount=0.08),
     ]
     final = concatenate_videoclips(clips, method="compose")
 

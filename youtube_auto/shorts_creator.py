@@ -1,6 +1,6 @@
 """
-YouTube Shorts用の縦型1分動画を自動生成するモジュール
-解像度: 1080x1920（縦型）、最大60秒
+YouTube Shorts用の縦型ショート動画を自動生成するモジュール
+解像度: 1080x1920（縦型）、目標20〜35秒
 - Ken Burns効果（ズーム・パン）
 - Pexels フリー素材動画背景（APIキーがあれば優先使用）
 - テキストアニメーション（字幕オーバーレイ）
@@ -9,6 +9,7 @@ import os
 import json
 import random
 import textwrap
+from datetime import date
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from moviepy import AudioFileClip, VideoClip, VideoFileClip, concatenate_videoclips
@@ -108,6 +109,44 @@ def _split_script_to_scenes(script_data: dict, num_scenes: int) -> list[str]:
     return [hook, body[:split_pos].strip(), (body[split_pos:] + outro).strip()]
 
 
+# ── 字幕合成（ポップイン演出付き） ────────────────────────────────
+
+
+def _composite_subtitle(frame: np.ndarray, subtitle_rgba: np.ndarray, t: float, duration: float) -> np.ndarray:
+    """字幕をフェードイン/アウト + 登場時ポップ（拡大→等倍）で合成する。"""
+    fade = 0.5
+    if t < fade:
+        alpha = t / fade
+    elif t > duration - fade:
+        alpha = (duration - t) / fade
+    else:
+        alpha = 1.0
+    alpha = max(0.0, min(1.0, alpha))
+
+    overlay = subtitle_rgba.copy()
+    overlay[:, :, 3] = (overlay[:, :, 3] * alpha).astype(np.uint8)
+    ov = Image.fromarray(overlay, "RGBA")
+
+    pop_dur = 0.18
+    if t < pop_dur:
+        scale_pop = 0.7 + 0.3 * (t / pop_dur)
+        ys, xs = np.nonzero(overlay[:, :, 3])
+        if len(ys):
+            y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
+            cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
+            box = ov.crop((x0, y0, x1 + 1, y1 + 1))
+            new_w = max(1, int(box.width * scale_pop))
+            new_h = max(1, int(box.height * scale_pop))
+            box = box.resize((new_w, new_h), Image.LANCZOS)
+            popped = Image.new("RGBA", ov.size, (0, 0, 0, 0))
+            popped.paste(box, (cx - new_w // 2, cy - new_h // 2), box)
+            ov = popped
+
+    bg = Image.fromarray(frame, "RGB")
+    bg.paste(ov, (0, 0), ov)
+    return np.array(bg)
+
+
 # ── Ken Burns効果 ──────────────────────────────────────────────
 
 
@@ -127,18 +166,18 @@ def ken_burns_clip(image_path: str, duration: float, motion_type: str = None,
         progress = t / max(duration, 0.001)
 
         if motion_type == "zoom_in":
-            scale, ox, oy = 1.0 + 0.25 * progress, 0.5, 0.5
+            scale, ox, oy = 1.0 + 0.32 * progress, 0.5, 0.5
         elif motion_type == "zoom_out":
-            scale, ox, oy = 1.25 - 0.25 * progress, 0.5, 0.5
+            scale, ox, oy = 1.32 - 0.32 * progress, 0.5, 0.5
         elif motion_type == "pan_left":
-            scale, ox, oy = 1.18, 0.3 + 0.7 * progress, 0.5
+            scale, ox, oy = 1.22, 0.3 + 0.7 * progress, 0.5
         elif motion_type == "pan_right":
-            scale, ox, oy = 1.18, 1.0 - 0.7 * progress, 0.5
+            scale, ox, oy = 1.22, 1.0 - 0.7 * progress, 0.5
         elif motion_type == "diagonal_in":
-            scale = 1.0 + 0.20 * progress
+            scale = 1.0 + 0.26 * progress
             ox, oy = 0.25 + 0.25 * progress, 0.25 + 0.25 * progress
         else:  # diagonal_out
-            scale = 1.20 - 0.20 * progress
+            scale = 1.26 - 0.26 * progress
             ox, oy = 0.75 - 0.25 * progress, 0.75 - 0.25 * progress
 
         new_w = int(SHORTS_W * scale)
@@ -148,24 +187,9 @@ def ken_burns_clip(image_path: str, duration: float, motion_type: str = None,
         y = max(0, min(int((new_h - SHORTS_H) * oy), new_h - SHORTS_H))
         frame = resized[y:y + SHORTS_H, x:x + SHORTS_W].copy()
 
-        # テキストオーバーレイ（フェードイン0.5秒 → 表示 → フェードアウト0.5秒）
+        # テキストオーバーレイ（フェードイン0.5秒 → 表示 → フェードアウト0.5秒、登場時ポップ演出付き）
         if subtitle_rgba is not None:
-            fade = 0.5
-            if t < fade:
-                alpha = t / fade
-            elif t > duration - fade:
-                alpha = (duration - t) / fade
-            else:
-                alpha = 1.0
-            alpha = max(0.0, min(1.0, alpha))
-
-            overlay = subtitle_rgba.copy()
-            overlay[:, :, 3] = (overlay[:, :, 3] * alpha).astype(np.uint8)
-
-            bg = Image.fromarray(frame, "RGB")
-            ov = Image.fromarray(overlay, "RGBA")
-            bg.paste(ov, (0, 0), ov)
-            frame = np.array(bg)
+            frame = _composite_subtitle(frame, subtitle_rgba, t, duration)
 
         return frame
 
@@ -202,21 +226,7 @@ def _pexels_bg_clip(stock_path: str, duration: float, subtitle_text: str = "") -
 
     def add_subtitle(get_frame, t):
         frame = get_frame(t).copy()
-        fade = 0.5
-        if t < fade:
-            alpha = t / fade
-        elif t > duration - fade:
-            alpha = (duration - t) / fade
-        else:
-            alpha = 1.0
-        alpha = max(0.0, min(1.0, alpha))
-
-        overlay = subtitle_rgba.copy()
-        overlay[:, :, 3] = (overlay[:, :, 3] * alpha).astype(np.uint8)
-        bg = Image.fromarray(frame, "RGB")
-        ov = Image.fromarray(overlay, "RGBA")
-        bg.paste(ov, (0, 0), ov)
-        return np.array(bg)
+        return _composite_subtitle(frame, subtitle_rgba, t, duration)
 
     return raw.transform(add_subtitle, apply_to="video")
 
@@ -293,27 +303,16 @@ PROVEN_GENRES = [
     },
 ]
 
-GENRE_ROTATION_FILE = os.path.join(
-    os.path.dirname(__file__), "data", "shorts_genre_rotation.json"
-)
-
 # 使用済みトピック追跡ファイル
 USED_TOPICS_FILE = os.path.join(
     os.path.dirname(__file__), "data", "used_short_topics.json"
 )
 
-
-def _load_genre_index() -> int:
-    if os.path.exists(GENRE_ROTATION_FILE):
-        with open(GENRE_ROTATION_FILE, "r") as f:
-            return json.load(f).get("index", 0)
-    return 0
-
-
-def _save_genre_index(index: int):
-    os.makedirs(os.path.dirname(GENRE_ROTATION_FILE), exist_ok=True)
-    with open(GENRE_ROTATION_FILE, "w") as f:
-        json.dump({"index": index}, f)
+# ジャンルごとの直近タイトル追跡ファイル（同じジャンルが連続した際の切り口重複を防ぐ）
+USED_TITLES_BY_GENRE_FILE = os.path.join(
+    os.path.dirname(__file__), "data", "used_titles_by_genre.json"
+)
+TITLES_PER_GENRE_KEPT = 8
 
 
 def _load_used_topics() -> set:
@@ -333,13 +332,34 @@ def _save_used_topic(topic: str):
         json.dump(used_list, f, ensure_ascii=False)
 
 
-def generate_shorts_script(topics: list[str]) -> dict:
-    """60秒ショート用スクリプトを生成する。バズ実績ジャンルを強制ローテーション。"""
-    # ジャンルをローテーション
-    genre_idx = _load_genre_index()
-    genre_cfg = PROVEN_GENRES[genre_idx % len(PROVEN_GENRES)]
-    next_idx = (genre_idx + 1) % len(PROVEN_GENRES)
-    _save_genre_index(next_idx)
+def _load_genre_titles() -> dict:
+    if os.path.exists(USED_TITLES_BY_GENRE_FILE):
+        with open(USED_TITLES_BY_GENRE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+def _save_genre_title(genre: str, title: str):
+    data = _load_genre_titles()
+    lst = data.get(genre, [])
+    lst.append(title)
+    data[genre] = lst[-TITLES_PER_GENRE_KEPT:]
+    os.makedirs(os.path.dirname(USED_TITLES_BY_GENRE_FILE), exist_ok=True)
+    with open(USED_TITLES_BY_GENRE_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+
+
+def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
+    """20〜35秒ショート用スクリプトを生成する。バズ実績ジャンルを強制ローテーション。
+
+    ジャンルは「日付 + スロット番号」から決定論的に算出する（ファイルに保存した
+    ローテーション状態には依存しない）。GitHub Actions は毎回まっさらな環境で実行され、
+    data/ 以下は .gitignore 対象で実行間で引き継がれないため、状態ファイル方式だと
+    毎回インデックス0＝同じジャンルに固定されてしまう不具合があった。
+    """
+    day_offset = date.today().toordinal() % len(PROVEN_GENRES)
+    genre_idx = (day_offset + (slot - 1)) % len(PROVEN_GENRES)
+    genre_cfg = PROVEN_GENRES[genre_idx]
 
     # 使用済みトピックを除外してユニークな題材を確保
     used = _load_used_topics()
@@ -373,6 +393,15 @@ def generate_shorts_script(topics: list[str]) -> dict:
     ]
     hook_starter = random.choice(hook_starters)
 
+    # 同じジャンルの直近タイトルを除外リストとして提示（連日同ジャンルが続いた場合の量産防止）
+    recent_titles = _load_genre_titles().get(genre_cfg["genre"], [])
+    avoid_titles_hint = ""
+    if recent_titles:
+        avoid_titles_hint = (
+            "\n【このジャンルで直近使用済みのタイトル（同じ切り口・似た言い回しは絶対に避けること）】\n"
+            + "\n".join(f"- {t}" for t in recent_titles)
+        )
+
     prompt = f"""あなたはTikTok・YouTube Shortsで毎回100万再生を出すトップバズクリエイターです。
 
 【今回のジャンル】{genre_cfg['theme']}
@@ -380,23 +409,25 @@ def generate_shorts_script(topics: list[str]) -> dict:
 【参考トピック（1つ選ぶか、より面白いアイデアに昇華してよい）】
 {topic_list}
 {strategy_hint}
+{avoid_titles_hint}
 
 【冒頭フックの書き出し（必ずこの言葉から始める）】「{hook_starter}」
 
-【絶対に守るバズShortsの法則】
-1. フック（hook）: 「{hook_starter}」から始め、50文字以内で視聴者を0秒で止める。「〇〇が実は〇〇だった」「え？これ常識じゃなかったの？」「知らないと一生損する」などの強烈な反転を使う
-2. 本文（body）: 220文字以上。「事実の提示 → 驚きの深掘り → "つまりこういうことなんです" → コメント誘導」の流れを守る。コメント誘導は「これ知ってた人はコメントで"知ってた"って教えて！」で締める
-3. 締め（outro）: 50文字以上。「こういう衝撃の話が毎日届くのでチャンネル登録してね！次もヤバいから絶対見てよ！」
-4. タイトル: 「{genre_cfg['title_prefix']}」を活かしつつ、クリックせずにはいられない具体的なタイトル（25文字以内・#Shorts含む）
+【絶対に守るバズShortsの法則（2026年のShortsアルゴリズムは20〜35秒・完視聴率80%超の動画を最優先で拡散する）】
+1. フック（hook）: 「{hook_starter}」から始め、40文字以内で視聴者を最初の3秒で止める。「〇〇が実は〇〇だった」「え？これ常識じゃなかったの？」「知らないと一生損する」など数字や断言を使った強烈な反転を使う
+2. 本文（body）: 90〜130文字。要点を1つだけに絞り、ダラダラ説明しない。「事実の提示 → 驚きの深掘り」で完結させる。本文の中盤あたりに「え、実はここからが本題で」のような二段目のミニフックを1つ挟んで離脱を防ぐ
+3. 締め（outro）: 35文字以内。「保存して後で見返してね！」「友達にもシェアして教えてあげて！」など"保存・シェア"を促す一言を必ず入れる（コメントより保存・シェアの方がアルゴリズム評価が高い）。可能なら冒頭フックに軽く触れてループ再生を誘発する終わり方にする
+4. タイトル: 「{genre_cfg['title_prefix']}」を活かしつつ、クリックせずにはいられない具体的なタイトル（25文字以内・#Shorts含む）。直近使用済みタイトルと似た表現・似たテーマの使い回しは禁止
 5. 汎用的・抽象的なテーマ（「宇宙の謎」「動物の秘密」など）は禁止。必ず具体的な1つの事実を深掘りする
+6. 動画全体は20〜35秒でテンポよく完結させる設計にすること。長々と話さず、要点を凝縮する
 
 以下のJSON形式で出力:
 {{
   "title": "タイトル（25文字以内、#Shorts含む、具体的で強烈）",
-  "hook": "冒頭フック（「{hook_starter}」から始める・50文字以内）",
-  "body": "本文（220文字以上・コメント誘導まで全文書く）",
-  "outro": "締め（50文字以上・チャンネル登録誘導）",
-  "full_text": "hook＋body＋outroを全部まとめた全文（330文字以上・省略禁止）",
+  "hook": "冒頭フック（「{hook_starter}」から始める・40文字以内）",
+  "body": "本文（90〜130文字・中盤に二段目のミニフックを含める）",
+  "outro": "締め（35文字以内・保存＋シェア訴求＋ループ誘発）",
+  "full_text": "hook＋body＋outroを全部まとめた全文（160〜220文字程度・省略禁止）",
   "main_topic": "このShortsのメインテーマ（20文字以内・重複防止用）",
   "image_prompts": [
     "Scene 1 DALL-E prompt: dramatic vertical 9:16, vivid cinematic colors, no text (40 words)",
@@ -416,7 +447,7 @@ def generate_shorts_script(topics: list[str]) -> dict:
         data = json.loads(response.choices[0].message.content)
 
         full_text = data.get("full_text", "")
-        if len(full_text) < 300:
+        if len(full_text) < 140:
             full_text = "\n\n".join(filter(None, [
                 data.get("hook", ""),
                 data.get("body", ""),
@@ -424,15 +455,17 @@ def generate_shorts_script(topics: list[str]) -> dict:
             ]))
             data["full_text"] = full_text
 
-        if len(full_text) >= 250:
+        if 140 <= len(full_text) <= 260:
             break
         if attempt < 2:
-            print(f"  ⚠️  台本が短すぎます（{len(full_text)}文字）。再生成中（{attempt + 2}/3）...")
+            print(f"  ⚠️  台本の尺が目標範囲外です（{len(full_text)}文字）。再生成中（{attempt + 2}/3）...")
 
     # 使用トピックを記録（重複防止）
     main_topic = data.get("main_topic", data.get("title", ""))
     if main_topic:
         _save_used_topic(main_topic)
+    if data.get("title"):
+        _save_genre_title(genre_cfg["genre"], data["title"])
 
     print(f"  Shortsスクリプト生成完了 [{genre_cfg['theme']}]: 「{data['title']}」({len(data.get('full_text', ''))}文字)")
     return data
@@ -457,7 +490,7 @@ def build_shorts_video(script_data: dict, audio_path: str, output_path: str) -> 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     audio = AudioFileClip(audio_path)
-    total_duration = max(audio.duration, 60.0)
+    total_duration = max(audio.duration, 20.0)
 
     image_prompts = script_data.get("image_prompts")
     if not image_prompts:

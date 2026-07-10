@@ -1,6 +1,6 @@
 """
 AI背景画像生成の共通ユーティリティ（gpt-image-1使用）
-video_creator / shorts_creator / thumbnail_creator から共有される
+shorts_creator / thumbnail_creator から共有される
 """
 import io
 import base64
@@ -18,7 +18,7 @@ def generate_dalle_bg(
     width: int,
     height: int,
     brightness: float = 0.45,
-    blur_radius: float = 1.5,
+    blur_radius: float = 1.0,
 ) -> Image.Image | None:
     """
     gpt-image-1 で背景画像を生成し、指定サイズにリサイズして返す（旧dall-e-3はAPIから廃止済み）。
@@ -38,8 +38,8 @@ def generate_dalle_bg(
     try:
         full_prompt = (
             f"{prompt}. "
-            "Vivid dramatic colors, cinematic lighting, highly detailed digital art, "
-            "no text, no letters, no watermark."
+            "Extremely vivid dramatic colors, glowing neon accents, cinematic lighting, "
+            "high contrast, highly detailed digital art, no text, no letters, no watermark."
         )
         resp = client.images.generate(
             model="gpt-image-1",
@@ -51,6 +51,7 @@ def generate_dalle_bg(
         img_data = base64.b64decode(resp.data[0].b64_json)
         img = Image.open(io.BytesIO(img_data)).convert("RGB")
         img = img.resize((width, height), Image.LANCZOS)
+        img = ImageEnhance.Color(img).enhance(1.25)
         img = ImageEnhance.Brightness(img).enhance(brightness)
         if blur_radius > 0:
             img = img.filter(ImageFilter.GaussianBlur(radius=blur_radius))
@@ -60,7 +61,7 @@ def generate_dalle_bg(
         return None
 
 
-def _make_vignette(width: int, height: int, strength: float = 0.45) -> Image.Image:
+def _make_vignette(width: int, height: int, strength: float = 0.4) -> Image.Image:
     """ビネット（周辺減光）オーバーレイを生成する。"""
     cx, cy = width / 2, height / 2
     y_arr, x_arr = np.ogrid[:height, :width]
@@ -74,11 +75,10 @@ def _make_vignette(width: int, height: int, strength: float = 0.45) -> Image.Ima
 def make_gradient_bg(
     width: int,
     height: int,
-    color1=(10, 10, 40),
-    color2=(40, 10, 80),
+    color1=(8, 13, 26),
+    color2=(30, 20, 60),
 ) -> Image.Image:
-    """グラデーション背景を生成する（グロー・フィルムグレイン・ビネット付き）。"""
-    # ── 1. 3ストップグラデーション ──────────────────────────────
+    """グラデーション背景を生成する（ネオングロー・フィルムグレイン・ビネット付き）。"""
     mid_color = (
         min(255, max(0, (color1[0] + color2[0]) // 2 + random.randint(-15, 15))),
         min(255, max(0, (color1[1] + color2[1]) // 2 + random.randint(5, 40))),
@@ -95,19 +95,18 @@ def make_gradient_bg(
 
     img = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
 
-    # ── 2. ラジアルグロー（ボケた光源）──────────────────────────
+    # ラジアルグロー（インディゴ×パープル×ゴールドのネオン光源）
     glow_layer = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     gd = ImageDraw.Draw(glow_layer)
 
     glow_palettes = [
-        (60, 30, 140),   # 紫
-        (20, 60, 180),   # 青
-        (140, 20, 100),  # マゼンタ
-        (20, 100, 140),  # シアン
-        (160, 60, 20),   # オレンジ
-        (80, 20, 160),   # インディゴ
+        (99, 102, 241),   # インディゴ
+        (140, 20, 220),   # パープル
+        (255, 210, 60),   # ゴールド
+        (20, 160, 220),   # シアン
+        (255, 90, 60),    # ホットレッド
     ]
-    for _ in range(random.randint(2, 4)):
+    for _ in range(random.randint(3, 5)):
         cx = random.randint(width // 5, 4 * width // 5)
         cy = random.randint(height // 8, height // 2)
         radius = random.randint(width // 4, 2 * width // 3)
@@ -115,19 +114,19 @@ def make_gradient_bg(
         step = max(1, radius // 50)
         for r in range(radius, 0, -step):
             ratio = r / radius
-            alpha = int(55 * (1 - ratio) ** 2)
+            alpha = int(65 * (1 - ratio) ** 2)
             gd.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(*hue, alpha))
 
     glow_layer = glow_layer.filter(ImageFilter.GaussianBlur(radius=max(width // 20, 8)))
     img = Image.alpha_composite(img, glow_layer)
 
-    # ── 3. フィルムグレイン（テクスチャ感）────────────────────────
+    # フィルムグレイン
     base = np.array(img)[:, :, :3].astype(np.int16)
     grain = np.random.normal(0, 7, (height, width, 3)).astype(np.int16)
     base = np.clip(base + grain, 0, 255).astype(np.uint8)
     img = Image.fromarray(base, "RGB").convert("RGBA")
 
-    # ── 4. ビネット ───────────────────────────────────────────────
+    # ビネット
     vignette = _make_vignette(width, height, strength=0.4)
     img = Image.alpha_composite(img, vignette)
 

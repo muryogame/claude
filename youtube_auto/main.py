@@ -3,7 +3,7 @@
 YouTube雑学チャンネル自動運営システム
 - 動画投稿時間（23:00）以外は情報収集
 - 毎日23:00に通常動画（10分）を自動生成・投稿
-- 毎日21:00/22:00/23:00/00:00/01:00にShorts（最低60秒）を自動生成・投稿（1日5回）
+- 毎日21:00/22:00/23:00/00:00/01:00にShorts（20〜35秒・完視聴率重視）を自動生成・投稿（1日5回）
 """
 import sys
 import os
@@ -94,7 +94,7 @@ def create_and_upload_shorts(slot: int = 1):
         topic_titles = [t.get("title", "") for t in random.sample(topics, min(3, len(topics)))] if topics else ["雑学"]
 
         print("\n[1/4] Shortsスクリプト生成中...")
-        script = generate_shorts_script(topic_titles)
+        script = generate_shorts_script(topic_titles, slot=slot)
 
         print("\n[2/4] 音声生成中...")
         generate_audio(script["full_text"], audio_path)

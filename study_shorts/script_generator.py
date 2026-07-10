@@ -1,18 +1,41 @@
 """
-OpenAI API を使って学習Tips系60秒ショート動画スクリプトを自動生成する
+OpenAI API を使って学習Tips系20〜32秒ショート動画スクリプトを自動生成する
 ジャンル: 勉強法 / 記憶術 / 学習科学 / 集中力 / 試験対策
 """
 import json
+import os
 import random
 from openai import OpenAI
-from config import OPENAI_API_KEY, CONTENT_GENRES, SHORTS_TARGET_SECONDS, STUDYFLOW_URL
+from config import OPENAI_API_KEY, CONTENT_GENRES, SHORTS_TARGET_SECONDS, STUDYFLOW_URL, BASE_DIR
 from collector import load_topics_by_genre, _get_sample_topics
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-TARGET_CHARS = 300  # 約60秒 (日本語TTS: 約4.5文字/秒)
+TARGET_CHARS = 150  # 約32秒 (日本語TTS: 約4.5文字/秒) — 2026年のShorts最適尺(20〜35秒)に合わせて短尺化
+MIN_CHARS = 100
 
 PROMO_TEXT = f"学習時間を記録したい方は、無料アプリ StudyFlow をチェック！{STUDYFLOW_URL}"
+
+# ジャンルごとの直近使用タイトル追跡ファイル（同じ切り口の量産を防ぐ）
+USED_TITLES_FILE = os.path.join(BASE_DIR, "data", "used_short_titles.json")
+TITLES_PER_GENRE_KEPT = 8
+
+
+def _load_used_titles() -> dict:
+    if os.path.exists(USED_TITLES_FILE):
+        with open(USED_TITLES_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+def _save_used_title(genre: str, title: str):
+    used = _load_used_titles()
+    lst = used.get(genre, [])
+    lst.append(title)
+    used[genre] = lst[-TITLES_PER_GENRE_KEPT:]
+    os.makedirs(os.path.dirname(USED_TITLES_FILE), exist_ok=True)
+    with open(USED_TITLES_FILE, "w", encoding="utf-8") as f:
+        json.dump(used, f, ensure_ascii=False)
 
 
 def _load_strategy_hints() -> dict:
@@ -28,6 +51,47 @@ def _load_strategy_hints() -> dict:
     except Exception:
         return {}
 
+# ジャンルごとの冒頭フック例（複数持たせて毎回ランダムに1つだけ提示する。
+# 単一の固定フレーズだとGPTがほぼ同じ文言を毎回生成してしまい、投稿が量産型の
+# 「99%の人が知らない○○法」ばかりになる問題があったため）
+HOOK_TEMPLATES = {
+    "study_tips": [
+        "実は〇〇するだけで勉強効率が上がる！",
+        "その勉強法、実は逆効果かも！？",
+        "○分の習慣を変えるだけで成績が変わる",
+        "多くの人がハマる勉強の落とし穴とは",
+        "この順番を変えるだけで効率が倍に",
+    ],
+    "memory_hacks": [
+        "この方法で記憶力が○倍になる！",
+        "覚えられないのは才能じゃなく○○のせい",
+        "たった○秒で記憶に定着する裏技",
+        "脳が勝手に覚えてしまう暗記法",
+        "テスト前日にやってはいけない暗記NG行動",
+    ],
+    "study_science": [
+        "研究で判明！〇〇すると記憶力が○%アップ！",
+        "科学が証明した、勉強の常識のウソ",
+        "○○の研究でわかった衝撃の事実",
+        "脳科学的に正しい休憩の取り方とは",
+        "睡眠と記憶力の知られざる関係",
+    ],
+    "concentration": [
+        "集中できない人必見！〇〇するだけで2時間集中できる！",
+        "集中力が続かないのは意志の弱さじゃない",
+        "○分作業→○分休憩が最強な科学的理由",
+        "スマホを見てしまう本当の原因とは",
+        "集中力が切れる前兆、気づいてる？",
+    ],
+    "exam_strategy": [
+        "合格者だけが知っている○○試験の攻略法！",
+        "不合格者に共通するNG勉強法とは",
+        "本番○日前からやるべきこと",
+        "○○点台から一気に伸びた勉強法",
+        "過去問だけで受かるは本当か？",
+    ],
+}
+
 GENRE_PROMPTS = {
     "study_tips": {
         "label": "勉強法・学習Tips",
@@ -37,11 +101,11 @@ GENRE_PROMPTS = {
             "視聴者がすぐに試したくなる具体的なTipsを提供します。"
         ),
         "instruction": (
-            "以下のテーマから1つ選び、最低60秒（約300文字）の学習Tipsショート動画台本を作成してください。\n"
+            "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する学習Tipsショート動画台本を作成してください。\n"
             "要件:\n"
-            "- 冒頭: 「実は〇〇するだけで勉強効率が上がる！」形式でつかみ（20文字以内）\n"
-            "- 本文: 具体的なTipsを3ステップで説明（220文字以内）\n"
-            "- 締め: 「チャンネル登録でもっと学習法を学ぼう！」（30文字以内）\n"
+            "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（20文字以内）\n"
+            "- 本文: 具体的なTipsを1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
         ),
         "image_style": "focused student studying at clean modern desk, soft blue and purple lighting, books and laptop, motivational atmosphere, anime illustration style, bright and inspiring",
         "thumbnail_prompt": "determined student with glowing eyes studying hard, clean modern workspace, indigo and purple gradient background, motivational energy, high quality digital art",
@@ -53,11 +117,11 @@ GENRE_PROMPTS = {
             "科学的に証明された暗記テクニックを、誰でもすぐ実践できる形で紹介します。"
         ),
         "instruction": (
-            "以下のテーマから1つ選び、最低60秒（約300文字）の記憶術ショート動画台本を作成してください。\n"
+            "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する記憶術ショート動画台本を作成してください。\n"
             "要件:\n"
-            "- 冒頭: 「この方法で記憶力が○倍になる！」形式でつかみ（20文字以内）\n"
-            "- 本文: 記憶術の具体的な手順を実践的に説明（220文字以内）\n"
-            "- 締め: 「今すぐ試して、成績アップを目指そう！」（30文字以内）\n"
+            "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（20文字以内）\n"
+            "- 本文: 記憶術の具体的な手順を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
         ),
         "image_style": "brain with glowing neural connections, knowledge symbols floating, indigo and purple color scheme, futuristic science illustration, anime style",
         "thumbnail_prompt": "glowing brain with memory connections, books and knowledge symbols, deep indigo and purple gradient, futuristic educational theme, anime digital art style",
@@ -70,11 +134,11 @@ GENRE_PROMPTS = {
             "「なるほど！」と思わせる驚きの研究データを提供します。"
         ),
         "instruction": (
-            "以下のテーマから1つ選び、最低60秒（約300文字）の学習科学ショート動画台本を作成してください。\n"
+            "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する学習科学ショート動画台本を作成してください。\n"
             "要件:\n"
-            "- 冒頭: 「研究で判明！〇〇すると記憶力が○%アップ！」形式でつかみ（25文字以内）\n"
-            "- 本文: 研究の内容と実践的な応用方法を説明（210文字以内）\n"
-            "- 締め: 「科学的な学習法でライバルに差をつけよう！」（30文字以内）\n"
+            "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
+            "- 本文: 研究の内容を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
         ),
         "image_style": "scientist studying brain activity, data charts and graphs, modern laboratory, indigo purple glow, anime style educational illustration",
         "thumbnail_prompt": "scientific study visualization, brain scan with glowing data, research charts, deep blue and purple atmosphere, modern educational anime art style",
@@ -86,11 +150,11 @@ GENRE_PROMPTS = {
             "深い集中状態（フロー）に入るための具体的な方法を紹介します。"
         ),
         "instruction": (
-            "以下のテーマから1つ選び、最低60秒（約300文字）の集中力アップショート動画台本を作成してください。\n"
+            "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する集中力アップショート動画台本を作成してください。\n"
             "要件:\n"
-            "- 冒頭: 「集中できない人必見！〇〇するだけで2時間集中できる！」形式でつかみ（25文字以内）\n"
-            "- 本文: 集中力アップの具体的なテクニック（210文字以内）\n"
-            "- 締め: 「今日からデキる人の集中習慣を手に入れよう！」（30文字以内）\n"
+            "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
+            "- 本文: 集中力アップのテクニックを1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
         ),
         "image_style": "person in deep focus zone, clock and productivity symbols, calm blue purple atmosphere, zen study environment, anime illustration style",
         "thumbnail_prompt": "focused person in flow state, time symbols and productivity aura, indigo purple glowing background, zen concentration theme, anime art style",
@@ -102,11 +166,11 @@ GENRE_PROMPTS = {
             "合格者が実践している勉強法を具体的に紹介し、視聴者の合格をサポートします。"
         ),
         "instruction": (
-            "以下のテーマから1つ選び、最低60秒（約300文字）の試験対策ショート動画台本を作成してください。\n"
+            "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する試験対策ショート動画台本を作成してください。\n"
             "要件:\n"
-            "- 冒頭: 「合格者だけが知っている○○試験の攻略法！」形式でつかみ（25文字以内）\n"
-            "- 本文: 試験対策の具体的な戦略とテクニック（210文字以内）\n"
-            "- 締め: 「一緒に合格を目指そう！チャンネル登録お願いします！」（30文字以内）\n"
+            "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
+            "- 本文: 試験対策の戦略を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
         ),
         "image_style": "student celebrating exam success, certificate and trophy, bright motivational colors, indigo and gold, achievement atmosphere, anime art style",
         "thumbnail_prompt": "triumphant student passing exam, diploma and achievement symbols, gold and indigo gradient, success and motivation theme, anime digital illustration",
@@ -141,10 +205,24 @@ def generate_shorts_script(genre: str = "study_tips") -> dict:
     if hints.get("patterns"):
         hint_text += f"\nバズるタイトルパターン例: {hints['patterns'][0]}"
 
+    # フック例は毎回ランダムに1つだけ提示（固定文言の量産を防ぐ）
+    hook_example = random.choice(HOOK_TEMPLATES.get(genre, [""]))
+
+    # 直近使用したタイトルを除外リストとして提示（同じ切り口の重複投稿を防ぐ）
+    used_titles = _load_used_titles().get(genre, [])
+    avoid_text = ""
+    if used_titles:
+        avoid_text = (
+            "\n直近このジャンルで使用済みのタイトル（同じ切り口・似た言い回しは絶対に避けること）:\n"
+            + "\n".join(f"- {t}" for t in used_titles)
+        )
+
     user_prompt = (
         f"{prompt_cfg['instruction']}\n\n"
+        f"フック例（あくまで型の一例。この通りに書かず自分の言葉で作る）: {hook_example}\n"
         f"参考トピック（このまま使わず参考にするだけ）:\n{topic_text}\n"
-        f"{hint_text}\n\n"
+        f"{hint_text}"
+        f"{avoid_text}\n\n"
         f"台本をJSON形式で返してください:\n"
         '{"title": "タイトル(40文字以内)", "hook": "つかみ文", "body": "本文", '
         '"cta": "CTA文", "full_text": "hook+body+cta を繋げた完全台本", '
@@ -163,9 +241,11 @@ def generate_shorts_script(genre: str = "study_tips") -> dict:
 
     script = json.loads(resp.choices[0].message.content)
 
-    # 60秒確保
-    while len(script.get("full_text", "")) < TARGET_CHARS:
-        script["full_text"] = script.get("full_text", "") + "　ぜひチャンネル登録して、毎日の学習に役立てください！"
+    # 短すぎる場合のみ一度だけ補う（同じ文言の繰り返しループはテンポを崩すため避ける）
+    if len(script.get("full_text", "")) < MIN_CHARS:
+        script["full_text"] = "\n\n".join(filter(None, [
+            script.get("hook", ""), script.get("body", ""), script.get("cta", ""),
+        ]))
 
     # StudyFlow 宣伝文を full_text 末尾に追加
     script["full_text"] = script["full_text"].rstrip("！。") + f"。{PROMO_TEXT}"
@@ -175,5 +255,8 @@ def generate_shorts_script(genre: str = "study_tips") -> dict:
     script["image_style"]        = prompt_cfg["image_style"]
     script["thumbnail_prompt"]   = prompt_cfg["thumbnail_prompt"]
     script["studyflow_url"]      = STUDYFLOW_URL
+
+    if script.get("title"):
+        _save_used_title(genre, script["title"])
 
     return script

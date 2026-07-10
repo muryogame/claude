@@ -23,8 +23,8 @@ YOUTUBE_TOKEN_FILE         = os.path.join(os.path.dirname(__file__), "token.json
 # 宣伝URL
 STUDYFLOW_URL = "https://study-tracker-2znl.onrender.com/"
 
-# ショート動画設定
-SHORTS_TARGET_SECONDS = 60
+# ショート動画設定（2026年のShortsアルゴリズムは20〜35秒・完視聴率重視のため短尺化）
+SHORTS_TARGET_SECONDS = 32
 DAILY_POST_COUNT      = 5
 
 # コンテンツジャンル
@@ -57,3 +57,10 @@ BG_COLOR_BOTTOM = (30, 20,  60)     # 深い紫
 TITLE_COLOR     = (180, 185, 255)   # 薄いインディゴ
 ACCENT_COLOR    = (99,  102, 241)   # インディゴ
 TEXT_COLOR      = (240, 242, 255)   # ほぼ白
+HOT_COLOR       = (255, 90, 60)     # 衝撃バッジ用ホットレッド
+GOLD_COLOR      = (255, 210, 60)    # 強調テキスト用ゴールド
+
+# gpt-image-1 画像生成（Trueにすると画質が大幅向上するがAPIコストが増加する。旧dall-e-3はAPI廃止済み）
+# 1本のShortsで2枚生成
+USE_DALLE = True
+DALLE_QUALITY = "medium"

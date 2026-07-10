@@ -3,10 +3,13 @@
 DALL-E 3 背景 + 高コントラストテキストオーバーレイ（1280x720）
 """
 import os
+import random
 import textwrap
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFont
 from config import OUTPUT_DIR
 from image_utils import generate_dalle_bg, make_gradient_bg
+
+CORNER_LABELS = ["🔥バズり中", "登録者急増中", "保存必須"]
 
 THUMB_W = 1280
 THUMB_H = 720
@@ -54,6 +57,8 @@ def create_thumbnail(title: str, subtitle: str = "知らないと損する！",
     if bg is None:
         bg = make_gradient_bg(THUMB_W, THUMB_H,
                               color1=(20, 0, 0), color2=(100, 10, 10))
+    bg = ImageEnhance.Color(bg).enhance(1.3)
+    bg = ImageEnhance.Contrast(bg).enhance(1.1)
 
     draw = ImageDraw.Draw(bg, "RGBA")
 
@@ -63,6 +68,15 @@ def create_thumbnail(title: str, subtitle: str = "知らないと損する！",
     draw.rectangle([18, 14, 258, 70], fill=(0, 0, 0, 0))   # アウトライン
     draw.rounded_rectangle([18, 14, 262, 72], radius=8, fill=(220, 20, 20))
     draw.text((32, 22), "衝撃の真実", font=f_label, fill=(255, 255, 255))
+
+    # ── 右上：追加バッジ（黄）でダブルインパクト ──
+    corner_label = random.choice(CORNER_LABELS)
+    f_corner = _font(36)
+    cbbox = draw.textbbox((0, 0), corner_label, font=f_corner)
+    cw, ch = cbbox[2] - cbbox[0] + 40, cbbox[3] - cbbox[1] + 22
+    draw.rounded_rectangle([THUMB_W - cw - 18, 14, THUMB_W - 18, 14 + ch],
+                           radius=8, fill=(255, 210, 0))
+    draw.text((THUMB_W - cw - 18 + 20, 14 + 9), corner_label, font=f_corner, fill=(20, 20, 20))
 
     # ── 中央タイトルエリア ──
     draw.rectangle([0, 90, THUMB_W, THUMB_H - 90], fill=(0, 0, 0, 130))
