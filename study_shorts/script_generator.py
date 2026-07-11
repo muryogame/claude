@@ -106,6 +106,7 @@ GENRE_PROMPTS = {
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（20文字以内）\n"
             "- 本文: 具体的なTipsを1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
+            "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
         "image_style": "focused student studying at clean modern desk, soft blue and purple lighting, books and laptop, motivational atmosphere, anime illustration style, bright and inspiring",
         "thumbnail_prompt": "determined student with glowing eyes studying hard, clean modern workspace, indigo and purple gradient background, motivational energy, high quality digital art",
@@ -122,6 +123,7 @@ GENRE_PROMPTS = {
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（20文字以内）\n"
             "- 本文: 記憶術の具体的な手順を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
+            "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
         "image_style": "brain with glowing neural connections, knowledge symbols floating, indigo and purple color scheme, futuristic science illustration, anime style",
         "thumbnail_prompt": "glowing brain with memory connections, books and knowledge symbols, deep indigo and purple gradient, futuristic educational theme, anime digital art style",
@@ -139,6 +141,7 @@ GENRE_PROMPTS = {
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
             "- 本文: 研究の内容を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
+            "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
         "image_style": "scientist studying brain activity, data charts and graphs, modern laboratory, indigo purple glow, anime style educational illustration",
         "thumbnail_prompt": "scientific study visualization, brain scan with glowing data, research charts, deep blue and purple atmosphere, modern educational anime art style",
@@ -155,6 +158,7 @@ GENRE_PROMPTS = {
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
             "- 本文: 集中力アップのテクニックを1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
+            "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
         "image_style": "person in deep focus zone, clock and productivity symbols, calm blue purple atmosphere, zen study environment, anime illustration style",
         "thumbnail_prompt": "focused person in flow state, time symbols and productivity aura, indigo purple glowing background, zen concentration theme, anime art style",
@@ -171,6 +175,7 @@ GENRE_PROMPTS = {
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
             "- 本文: 試験対策の戦略を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
+            "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
         "image_style": "student celebrating exam success, certificate and trophy, bright motivational colors, indigo and gold, achievement atmosphere, anime art style",
         "thumbnail_prompt": "triumphant student passing exam, diploma and achievement symbols, gold and indigo gradient, success and motivation theme, anime digital illustration",

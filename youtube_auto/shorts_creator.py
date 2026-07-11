@@ -244,6 +244,10 @@ def _load_strategy() -> dict:
 
 
 # バズ実績に基づいたジャンルローテーション（視聴数順）
+# relevance_hint: 視聴者自身の人生・日常に引きつける一言。実績データを見ると、
+# 恋愛心理学など「自分ごと化」しやすいジャンルは平均視聴数が高く（1000〜2000再生台が多発）、
+# 純粋な雑学・歴史ネタは同じ「衝撃」演出でも視聴数のばらつきが大きく低迷しがちだったため、
+# personal relevance を明示的にプロンプトへ足す
 PROVEN_GENRES = [
     {
         "genre": "love_psychology",
@@ -258,6 +262,7 @@ PROVEN_GENRES = [
         "desc": "教科書に載らない日本史・世界史の驚愕事実。戦国時代・江戸時代・歴史上の偉人の意外な一面",
         "title_prefix": "【衝撃】歴史の",
         "pexels": "ancient history samurai",
+        "relevance_hint": "遠い昔の話で終わらせず、「実は今の私たちの常識・習慣にも繋がっている」と一言で結びつける",
     },
     {
         "genre": "animal",
@@ -265,6 +270,7 @@ PROVEN_GENRES = [
         "desc": "コアラの驚く事実・深海生物の能力・動物の信じられない行動など、知られざる生物の秘密",
         "title_prefix": "え？マジで？",
         "pexels": "wildlife nature animal",
+        "relevance_hint": "単なる豆知識で終わらせず、「これを知ると人間である自分の見方がどう変わるか」に一言触れる",
     },
     {
         "genre": "human_body",
@@ -279,6 +285,7 @@ PROVEN_GENRES = [
         "desc": "学校・教科書では絶対教えてくれなかった日本・世界の常識を覆す衝撃事実",
         "title_prefix": "【衝撃】学校で",
         "pexels": "knowledge truth shocking",
+        "relevance_hint": "「なぜ学校教育では教えられなかったのか」に触れ、視聴者自身が損してきたと感じさせる",
     },
     {
         "genre": "space",
@@ -286,6 +293,7 @@ PROVEN_GENRES = [
         "desc": "ブラックホール・宇宙の終わり・宇宙人の可能性など、具体的な天体・宇宙の驚愕事実（汎用的な「宇宙の謎」は禁止）",
         "title_prefix": "知ってた？宇宙の",
         "pexels": "space galaxy cosmos",
+        "relevance_hint": "壮大な話で終わらせず、「この事実を知った今日から夜空の見方がどう変わるか」など視聴者自身の体験に引きつける",
     },
     {
         "genre": "psychology",
@@ -300,7 +308,24 @@ PROVEN_GENRES = [
         "desc": "日本にしかない文化・制度・習慣の意外な理由。日本人でも知らない日本の常識",
         "title_prefix": "日本人なのに知らない！",
         "pexels": "japan tokyo traditional",
+        "relevance_hint": "視聴者自身が普段何気なく接しているものだと気づかせ、「あなたも今日から見え方が変わる」と結ぶ",
     },
+]
+
+# 実績データに基づく重み付け（平均視聴数が高いジャンルほど出現頻度を上げる）。
+# ただし0にはせず全ジャンルが一定頻度で出るようにし、内容の偏りは avoid_titles で別途防ぐ
+GENRE_WEIGHTS = {
+    "love_psychology": 3,
+    "psychology": 2,
+    "human_body": 2,
+    "history": 1,
+    "animal": 1,
+    "space": 1,
+    "school_truth": 1,
+    "japan_mystery": 1,
+}
+WEIGHTED_GENRE_SEQUENCE = [
+    cfg for cfg in PROVEN_GENRES for _ in range(GENRE_WEIGHTS.get(cfg["genre"], 1))
 ]
 
 # 使用済みトピック追跡ファイル
@@ -357,9 +382,9 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
     data/ 以下は .gitignore 対象で実行間で引き継がれないため、状態ファイル方式だと
     毎回インデックス0＝同じジャンルに固定されてしまう不具合があった。
     """
-    day_offset = date.today().toordinal() % len(PROVEN_GENRES)
-    genre_idx = (day_offset + (slot - 1)) % len(PROVEN_GENRES)
-    genre_cfg = PROVEN_GENRES[genre_idx]
+    day_offset = date.today().toordinal() % len(WEIGHTED_GENRE_SEQUENCE)
+    genre_idx = (day_offset + (slot - 1)) % len(WEIGHTED_GENRE_SEQUENCE)
+    genre_cfg = WEIGHTED_GENRE_SEQUENCE[genre_idx]
 
     # 使用済みトピックを除外してユニークな題材を確保
     used = _load_used_topics()
@@ -379,6 +404,10 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
     if avoid_patterns:
         strategy_hint += "\n【NGパターン（絶対に使わない）】\n"
         strategy_hint += "\n".join(f"- {p}" for p in avoid_patterns[:3])
+
+    relevance_hint = genre_cfg.get("relevance_hint", "")
+    if relevance_hint:
+        strategy_hint += f"\n【自分ごと化のコツ（視聴維持率に直結・必ず入れる）】\n- {relevance_hint}"
 
     # フック書き出しバリエーション（"知ってた？"と"え？"の独占を防ぐ）
     hook_starters = [
