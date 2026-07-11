@@ -37,6 +37,35 @@ def _get_font(size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.load_default()
 
 
+def _flash_intro_clip(text: str, duration: float = 0.35) -> VideoClip:
+    """冒頭0.3秒、白フラッシュ+黒文字で「オチ・衝撃ワード」を先出しする。
+    バズるトリビア系Shortsは冒頭1〜2秒に視覚的なクライマックスを置く傾向が強く、
+    通常のKen Burns開始より前にこのフラッシュを挟むことでスクロール停止率を上げる狙い。
+    """
+    text = (text or "").strip()
+    if not text:
+        return None
+    font = _get_font(110 if len(text) <= 8 else 84)
+    img = Image.new("RGB", (SHORTS_W, SHORTS_H), (250, 250, 250))
+    draw = ImageDraw.Draw(img)
+    wrapped = textwrap.fill(text, width=7)
+    lines = wrapped.split("\n")[:3]
+    line_h = font.size + 20
+    total_h = line_h * len(lines)
+    y = (SHORTS_H - total_h) // 2
+    for line in lines:
+        bbox = draw.textbbox((0, 0), line, font=font)
+        x = (SHORTS_W - (bbox[2] - bbox[0])) // 2
+        draw.text((x, y), line, font=font, fill=(15, 15, 15))
+        y += line_h
+    arr = np.array(img)
+
+    def make_frame(t):
+        return arr
+
+    return VideoClip(make_frame, duration=duration)
+
+
 def _render_subtitle_frame(text: str, alpha: float, w: int = SHORTS_W, h: int = SHORTS_H) -> np.ndarray:
     """字幕テキストをRGBA numpy配列として描画する（アウトライン + グラデーション背景付き）。"""
     font_main = _get_font(66)
@@ -449,6 +478,7 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
 4. タイトル: 「{genre_cfg['title_prefix']}」を活かしつつ、クリックせずにはいられない具体的なタイトル（25文字以内・#Shorts含む）。直近使用済みタイトルと似た表現・似たテーマの使い回しは禁止
 5. 汎用的・抽象的なテーマ（「宇宙の謎」「動物の秘密」など）は禁止。必ず具体的な1つの事実を深掘りする
 6. 動画全体は20〜35秒でテンポよく完結させる設計にすること。長々と話さず、要点を凝縮する
+7. flash_text: この動画で一番衝撃的な「オチ」を6〜8文字程度の超短フレーズで先出しする（例:「脳が9割嘘」「記憶は毎回捏造」）。動画冒頭0.3秒に白フラッシュで一瞬だけ表示し、視聴者の指を止めるために使う
 
 以下のJSON形式で出力:
 {{
@@ -458,6 +488,7 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
   "outro": "締め（35文字以内・保存＋シェア訴求＋ループ誘発）",
   "full_text": "hook＋body＋outroを全部まとめた全文（160〜220文字程度・省略禁止）",
   "main_topic": "このShortsのメインテーマ（20文字以内・重複防止用）",
+  "flash_text": "冒頭フラッシュ用の超短い衝撃ワード（6〜8文字程度）",
   "image_prompts": [
     "Scene 1 DALL-E prompt: dramatic vertical 9:16, vivid cinematic colors, no text (40 words)",
     "Scene 2 DALL-E prompt: intense close-up, vertical 9:16, high contrast, no text (40 words)",
@@ -564,15 +595,21 @@ def build_shorts_video(script_data: dict, audio_path: str, output_path: str) -> 
 
         clips.append(clip)
 
-    final = concatenate_videoclips(clips, method="compose")
+    # 冒頭の衝撃フラッシュ（あれば先頭に挿入。音声はその分だけ無音を前に足して同期させる）
+    flash_clip = _flash_intro_clip(script_data.get("flash_text", ""))
+    flash_dur = flash_clip.duration if flash_clip else 0.0
+    all_clips = ([flash_clip] if flash_clip else []) + clips
 
+    final = concatenate_videoclips(all_clips, method="compose")
+
+    from moviepy import concatenate_audioclips, AudioClip
+    audio_parts = []
+    if flash_dur > 0:
+        audio_parts.append(AudioClip(lambda t: [0, 0], duration=flash_dur, fps=44100))
+    audio_parts.append(audio if audio.duration <= total_duration else audio.subclipped(0, total_duration))
     if audio.duration < total_duration:
-        from moviepy import concatenate_audioclips, AudioClip
-        silence = AudioClip(lambda t: [0, 0], duration=total_duration - audio.duration, fps=44100)
-        audio_padded = concatenate_audioclips([audio, silence])
-        final = final.with_audio(audio_padded)
-    else:
-        final = final.with_audio(audio.subclipped(0, total_duration))
+        audio_parts.append(AudioClip(lambda t: [0, 0], duration=total_duration - audio.duration, fps=44100))
+    final = final.with_audio(concatenate_audioclips(audio_parts))
 
     final = final.with_fps(30)
     final.write_videofile(

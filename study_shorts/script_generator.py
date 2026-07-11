@@ -228,9 +228,11 @@ def generate_shorts_script(genre: str = "study_tips") -> dict:
         f"参考トピック（このまま使わず参考にするだけ）:\n{topic_text}\n"
         f"{hint_text}"
         f"{avoid_text}\n\n"
+        f"flash_text: この動画の一番の「オチ・結論」を6〜8文字程度の超短フレーズで（動画冒頭0.3秒の白フラッシュに一瞬だけ表示し、指を止めるために使う）\n\n"
         f"台本をJSON形式で返してください:\n"
         '{"title": "タイトル(40文字以内)", "hook": "つかみ文", "body": "本文", '
         '"cta": "CTA文", "full_text": "hook+body+cta を繋げた完全台本", '
+        '"flash_text": "冒頭フラッシュ用の超短い衝撃ワード（6〜8文字程度）", '
         '"tags": ["タグ1", "タグ2", "タグ3", "タグ4", "タグ5"]}'
     )
 

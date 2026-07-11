@@ -4,9 +4,10 @@ YouTube Shorts 縦型動画を自動生成するモジュール
 DALL-E 3 で勉強系背景画像を生成してオーバーレイ
 """
 import os
+import textwrap
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
-from moviepy import AudioFileClip, VideoClip, concatenate_videoclips
+from moviepy import AudioFileClip, VideoClip, concatenate_videoclips, concatenate_audioclips, AudioClip
 from openai import OpenAI
 from config import OPENAI_API_KEY, OUTPUT_DIR, FONT_BOLD, FONT_REG, FONT_FALLBACK, STUDYFLOW_URL
 from config import VIDEO_WIDTH as SHORTS_W, VIDEO_HEIGHT as SHORTS_H
@@ -23,6 +24,32 @@ def _font(size: int, bold=True):
     if not os.path.exists(path):
         path = FONT_FALLBACK
     return ImageFont.truetype(path, size)
+
+
+def _flash_intro_clip(text: str, duration: float = 0.35) -> VideoClip | None:
+    """冒頭0.3秒、白フラッシュ+黒文字で「オチ・衝撃ワード」を先出しする（スクロール停止率UP狙い）。"""
+    text = (text or "").strip()
+    if not text:
+        return None
+    font = _font(110 if len(text) <= 8 else 84)
+    img = Image.new("RGB", (SHORTS_W, SHORTS_H), (250, 250, 250))
+    draw = ImageDraw.Draw(img)
+    wrapped = textwrap.fill(text, width=7)
+    lines = wrapped.split("\n")[:3]
+    line_h = font.size + 20
+    total_h = line_h * len(lines)
+    y = (SHORTS_H - total_h) // 2
+    for line in lines:
+        bbox = draw.textbbox((0, 0), line, font=font)
+        x = (SHORTS_W - (bbox[2] - bbox[0])) // 2
+        draw.text((x, y), line, font=font, fill=(15, 15, 15))
+        y += line_h
+    arr = np.array(img)
+
+    def make_frame(t):
+        return arr
+
+    return VideoClip(make_frame, duration=duration)
 
 
 def generate_bg_image(image_prompt: str, slide_index: int) -> Image.Image | None:
@@ -270,15 +297,20 @@ def build_shorts_video(script_data: dict, audio_path: str, output_path: str,
         _zoom_clip(main_path, main_dur, zoom_amount=0.14),
         _zoom_clip(outro_path, outro_dur, zoom_amount=0.08),
     ]
-    final = concatenate_videoclips(clips, method="compose")
 
+    # 冒頭の衝撃フラッシュ（あれば先頭に挿入。音声はその分だけ無音を前に足して同期させる）
+    flash_clip = _flash_intro_clip(script_data.get("flash_text", ""))
+    flash_dur = flash_clip.duration if flash_clip else 0.0
+    all_clips = ([flash_clip] if flash_clip else []) + clips
+    final = concatenate_videoclips(all_clips, method="compose")
+
+    audio_parts = []
+    if flash_dur > 0:
+        audio_parts.append(AudioClip(lambda t: [0, 0], duration=flash_dur, fps=44100))
+    audio_parts.append(audio if audio.duration <= total_duration else audio.subclipped(0, total_duration))
     if audio.duration < total_duration:
-        from moviepy import concatenate_audioclips, AudioClip
-        silence = AudioClip(lambda t: [0, 0], duration=total_duration - audio.duration, fps=44100)
-        audio_padded = concatenate_audioclips([audio, silence])
-        final = final.with_audio(audio_padded)
-    else:
-        final = final.with_audio(audio.subclipped(0, total_duration))
+        audio_parts.append(AudioClip(lambda t: [0, 0], duration=total_duration - audio.duration, fps=44100))
+    final = final.with_audio(concatenate_audioclips(audio_parts))
 
     final = final.with_fps(30)
     final.write_videofile(output_path, codec="libx264", audio_codec="aac", logger=None)
