@@ -149,7 +149,7 @@ def upload_video(video_path: str, thumbnail_path: str, script_data: dict) -> str
     return video_url, video_id
 
 
-def upload_shorts(video_path: str, script_data: dict) -> str:
+def upload_shorts(video_path: str, script_data: dict, thumbnail_path: str = None) -> str:
     """Shorts動画をYouTubeにアップロードする。"""
     from googleapiclient.http import MediaFileUpload
 
@@ -199,6 +199,18 @@ def upload_shorts(video_path: str, script_data: dict) -> str:
             print(f"  Shortsアップロード進捗: {int(status.progress() * 100)}%")
 
     video_id = response["id"]
+
+    # サムネイルをアップロード（チャンネル電話番号認証済みの場合のみ可能。未認証でも投稿自体は継続する）
+    if thumbnail_path and os.path.exists(thumbnail_path):
+        try:
+            youtube.thumbnails().set(
+                videoId=video_id,
+                media_body=MediaFileUpload(thumbnail_path)
+            ).execute()
+            print("  サムネイルをアップロードしました。")
+        except Exception as e:
+            print(f"  ⚠️  サムネイル設定スキップ（チャンネルの電話番号認証が必要）: {e}")
+
     url = f"https://www.youtube.com/shorts/{video_id}"
     print(f"  Shorts完了: {url}")
     return url, video_id

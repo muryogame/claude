@@ -86,6 +86,7 @@ def create_and_upload_shorts(slot: int = 1):
     date_str = datetime.now().strftime("%Y%m%d")
     audio_path = os.path.join(OUTPUT_DIR, f"shorts_audio_{date_str}_{slot}.mp3")
     video_path = os.path.join(OUTPUT_DIR, f"shorts_{date_str}_{slot}.mp4")
+    thumb_path = os.path.join(OUTPUT_DIR, f"shorts_thumb_{date_str}_{slot}.jpg")
 
     try:
         from collector import load_collected_topics
@@ -93,18 +94,21 @@ def create_and_upload_shorts(slot: int = 1):
         topics = load_collected_topics()
         topic_titles = [t.get("title", "") for t in random.sample(topics, min(3, len(topics)))] if topics else ["雑学"]
 
-        print("\n[1/4] Shortsスクリプト生成中...")
+        print("\n[1/5] Shortsスクリプト生成中...")
         script = generate_shorts_script(topic_titles, slot=slot)
 
-        print("\n[2/4] 音声生成中...")
+        print("\n[2/5] 音声生成中...")
         generate_audio(script["full_text"], audio_path)
 
-        print("\n[3/4] Shorts動画生成中...")
+        print("\n[3/5] Shorts動画生成中...")
         build_shorts_video(script, audio_path, video_path)
 
-        print("\n[4/4] YouTubeにアップロード中...")
+        print("\n[4/5] サムネイル生成中...")
+        create_thumbnail(script.get("title", "今日の雑学"), script.get("hook", "知らないと損する！"), thumb_path)
+
+        print("\n[5/5] YouTubeにアップロード中...")
         if check_credentials_ready():
-            url, video_id = upload_shorts(video_path, script)
+            url, video_id = upload_shorts(video_path, script, thumbnail_path=thumb_path)
             print(f"\n  ✅ Shorts 投稿完了: {url}")
             record_video(video_id, script, video_type="shorts")
         else:
@@ -112,6 +116,8 @@ def create_and_upload_shorts(slot: int = 1):
 
         if os.path.exists(audio_path):
             os.remove(audio_path)
+        if os.path.exists(thumb_path):
+            os.remove(thumb_path)
 
     except Exception as e:
         print(f"\n  ❌ Shortsエラー: {e}")

@@ -128,35 +128,46 @@ def generate_script(topics: list[str] | None = None) -> dict:
 - テンポよく、口語で、途中で「ちょっと待って、これ本当にヤバいんですよ」などの盛り上げフレーズを入れる
 - 締め（30秒）：「次の動画もヤバいので絶対見てください！チャンネル登録もお願いします！」
 
+動画は約10分（{TARGET_WORDS}文字前後）必要です。必ず**6〜8個のセクション**に分け、**各セクション300〜400文字以上**書いてください。セクション数や文字数が足りないと動画が短くなりすぎて失敗します。
+
 以下のJSON形式で出力してください：
 {{
   "title": "動画タイトル（32文字以内、強烈な好奇心を刺激する表現）",
   "description": "YouTube概要欄（200文字程度、最初の1文で「え、何これ？」と思わせる）",
   "tags": ["タグ1", "タグ2", "タグ3", "タグ4", "タグ5", "タグ6", "タグ7"],
   "sections": [
-    {{"heading": "セクション名（短くインパクトのある見出し）", "content": "セクションの台本内容（各400文字以上）"}},
+    {{"heading": "セクション名（短くインパクトのある見出し）", "content": "セクションの台本内容（各300〜400文字以上、6〜8セクション）"}},
     ...
   ]
 }}"""
 
-    print("  スクリプトを生成中...")
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        response_format={"type": "json_object"},
-        max_tokens=4000,
-    )
+    min_chars = int(TARGET_WORDS * 0.7)
+    data = None
+    for attempt in range(3):
+        print(f"  スクリプトを生成中...（{attempt + 1}/3）")
+        messages = [{"role": "user", "content": prompt}]
+        if attempt > 0:
+            messages.append({
+                "role": "user",
+                "content": f"前回の出力は短すぎました（目安{TARGET_WORDS}文字に対し不足）。セクション数を6〜8個に増やし、各セクションを300〜400文字以上にして、合計{min_chars}文字以上になるよう書き直してください。",
+            })
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=messages,
+            response_format={"type": "json_object"},
+            max_tokens=4000,
+        )
+        data = json.loads(response.choices[0].message.content)
+        full_text = "\n\n".join(
+            f"【{s['heading']}】\n{s['content']}"
+            for s in data.get("sections", [])
+        )
+        data["full_text"] = full_text
+        if len(full_text) >= min_chars:
+            break
+        print(f"  ⚠️  台本が短すぎます（{len(full_text)}文字 / 目標{min_chars}文字以上）。再生成します...")
 
-    raw = response.choices[0].message.content
-    data = json.loads(raw)
-
-    # full_text を結合
-    full_text = "\n\n".join(
-        f"【{s['heading']}】\n{s['content']}"
-        for s in data.get("sections", [])
-    )
-    data["full_text"] = full_text
     data["topics_used"] = topics
 
-    print(f"  スクリプト生成完了: 「{data['title']}」({len(full_text)}文字)")
+    print(f"  スクリプト生成完了: 「{data['title']}」({len(data['full_text'])}文字)")
     return data
