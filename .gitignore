@@ -18,7 +18,9 @@ token.json
 
 # 出力ファイル
 youtube_auto/output/
-youtube_auto/data/
+youtube_auto/data/*
+# ただし月間予算トラッカーはGitHub Actionsの実行間で引き継ぐため例外的に追跡する
+!youtube_auto/data/spend_tracker.json
 
 # ポートフォリオ（個人データ）
 stock_trader/portfolio.json

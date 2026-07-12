@@ -2,11 +2,9 @@ name: YouTube Shorts 自動投稿
 
 on:
   schedule:
-    # JST = UTC+9 なので各時刻から9時間引く
+    # JST = UTC+9 なので各時刻から9時間引く（1日3回に削減）
     - cron: '0 12 * * *'  # 21:00 JST
-    - cron: '0 13 * * *'  # 22:00 JST
     - cron: '0 14 * * *'  # 23:00 JST
-    - cron: '0 15 * * *'  # 00:00 JST (翌日)
     - cron: '0 16 * * *'  # 01:00 JST (翌日)
   workflow_dispatch:  # 手動実行も可能
 
@@ -54,10 +52,8 @@ jobs:
           HOUR=$(date -u +%H)
           case "$HOUR" in
             12) SLOT=1 ;;   # 21:00 JST
-            13) SLOT=2 ;;   # 22:00 JST
-            14) SLOT=3 ;;   # 23:00 JST
-            15) SLOT=4 ;;   # 00:00 JST
-            16) SLOT=5 ;;   # 01:00 JST
+            14) SLOT=2 ;;   # 23:00 JST
+            16) SLOT=3 ;;   # 01:00 JST
              *) SLOT=1 ;;
           esac
           echo "slot=$SLOT" >> $GITHUB_OUTPUT
@@ -80,4 +76,18 @@ jobs:
             TOKEN=$(cat youtube_auto/token.json)
             echo "$TOKEN" | gh secret set YOUTUBE_TOKEN_JSON --repo ${{ github.repository }}
             echo "トークンを更新しました"
+          fi
+
+      # data/ 以下はgitignore対象で実行間で引き継がれないため、予算トラッカーだけは
+      # 明示的にコミットして永続化する（GitHub Actionsは毎回まっさらな環境のため）
+      - name: 予算トラッカーを永続化
+        if: always()
+        run: |
+          if [ -f youtube_auto/data/spend_tracker.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git pull --rebase origin ${{ github.ref_name }} || true
+            git add -f youtube_auto/data/spend_tracker.json
+            git diff --cached --quiet || git commit -m "chore: 予算トラッカー更新 [skip ci]"
+            git push || echo "push失敗（権限不足の可能性）"
           fi

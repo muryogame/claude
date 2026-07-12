@@ -9,6 +9,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 from openai import OpenAI
 from config import OPENAI_API_KEY, USE_DALLE, DALLE_QUALITY
+import budget
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -57,6 +58,7 @@ def generate_dalle_bg(
         img = ImageEnhance.Brightness(img).enhance(brightness)
         if blur_radius > 0:
             img = img.filter(ImageFilter.GaussianBlur(radius=blur_radius))
+        budget.add_cost(budget.COST_IMAGE_HIGH)
         return img
     except Exception as e:
         print(f"  ⚠️  DALL-E 生成スキップ: {e}")

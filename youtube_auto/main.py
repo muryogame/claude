@@ -3,7 +3,8 @@
 YouTube雑学チャンネル自動運営システム
 - 動画投稿時間（23:00）以外は情報収集
 - 毎日23:00に通常動画（10分）を自動生成・投稿
-- 毎日21:00/22:00/23:00/00:00/01:00にShorts（20〜35秒・完視聴率重視）を自動生成・投稿（1日5回）
+- 毎日21:00/23:00/01:00にShorts（20〜35秒・完視聴率重視）を自動生成・投稿（1日3回）
+- 月間の概算API費用が予算（budget.py）を超えたら自動的に投稿をスキップする
 """
 import sys
 import os
@@ -22,14 +23,13 @@ from thumbnail_creator import create_thumbnail
 from uploader import upload_video, upload_shorts, check_credentials_ready
 from analytics import record_video, fetch_and_update_stats, print_analytics_report
 from strategy import generate_daily_strategy
+import budget
 
-# Shorts投稿スケジュール（1日5回・深夜帯）
+# Shorts投稿スケジュール（1日3回・深夜帯）
 SHORTS_SCHEDULE = [
     (21,  0),  # 第1回: 21:00
-    (22,  0),  # 第2回: 22:00
-    (23,  0),  # 第3回: 23:00
-    ( 0,  0),  # 第4回: 00:00
-    ( 1,  0),  # 第5回: 01:00
+    (23,  0),  # 第2回: 23:00
+    ( 1,  0),  # 第3回: 01:00
 ]
 
 
@@ -38,6 +38,11 @@ def create_and_upload_video():
     print("\n" + "=" * 60)
     print(f"  【通常動画 生成開始】{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
+
+    if budget.is_budget_exceeded():
+        spent, cap = budget.get_status_jpy()
+        print(f"  🛑 今月の概算API費用が予算を超過（約{spent:.0f}円 / {cap:.0f}円）のため投稿をスキップします")
+        return
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     date_str = datetime.now().strftime("%Y%m%d")
@@ -81,6 +86,11 @@ def create_and_upload_shorts(slot: int = 1):
     print("\n" + "=" * 60)
     print(f"  【Shorts 生成開始 第{slot}回】{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
+
+    if budget.is_budget_exceeded():
+        spent, cap = budget.get_status_jpy()
+        print(f"  🛑 今月の概算API費用が予算を超過（約{spent:.0f}円 / {cap:.0f}円）のため投稿をスキップします")
+        return
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     date_str = datetime.now().strftime("%Y%m%d")
@@ -144,7 +154,7 @@ def run_scheduler():
     print("=" * 60)
     print("  YouTube雑学チャンネル自動運営システム 起動")
     print(f"  通常動画投稿: 毎日 {POST_HOUR:02d}:{POST_MINUTE:02d}")
-    print(f"  Shorts投稿  : 毎日 {shorts_times}（1日2回）")
+    print(f"  Shorts投稿  : 毎日 {shorts_times}（1日{len(SHORTS_SCHEDULE)}回）")
     print("  情報収集    : 投稿時間以外は30分ごとに実行")
     print("=" * 60)
 

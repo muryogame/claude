@@ -17,6 +17,7 @@ from moviepy import vfx
 from openai import OpenAI
 from config import OPENAI_API_KEY, OUTPUT_DIR, USE_SORA, SORA_MODEL, SORA_SECONDS
 from image_utils import generate_dalle_bg, make_gradient_bg
+import budget
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -312,6 +313,7 @@ def _generate_sora_video(prompt: str) -> str | None:
         content = client.videos.download_content(video.id, variant="video")
         path = os.path.join(OUTPUT_DIR, f"sora_clip_{video.id}.mp4")
         content.write_to_file(path)
+        budget.add_cost(budget.COST_SORA_4S)
         return path
     except Exception as e:
         print(f"  ⚠️  Sora生成スキップ: {e}")
