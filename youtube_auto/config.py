@@ -50,3 +50,9 @@ SUBTITLE_COLOR = (200, 200, 200)   # グレー
 # gpt-image-1 画像生成（Trueにすると画質が大幅向上するがAPIコストが増加する。旧dall-e-3はAPI廃止済み）
 USE_DALLE = True
 DALLE_QUALITY = "high"  # "low" / "medium" / "high"
+
+# Sora 2 動画生成（Shorts冒頭シーンのみ、実際に動く映像にする。画像生成より大幅にコスト・生成時間が
+# かかるため、費用が気になる場合は False にすると自動でKen Burns（静止画+ズーム）にフォールバックする）
+USE_SORA = True
+SORA_MODEL = "sora-2"        # "sora-2" が安価。"sora-2-pro" は高品質だがさらに高コスト
+SORA_SECONDS = "4"           # "4" / "8" / "12" 。コスト重視で最短の4秒のみ使用

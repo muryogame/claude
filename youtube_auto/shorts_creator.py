@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 from moviepy import AudioFileClip, VideoClip, VideoFileClip, concatenate_videoclips
 from moviepy import vfx
 from openai import OpenAI
-from config import OPENAI_API_KEY, OUTPUT_DIR
+from config import OPENAI_API_KEY, OUTPUT_DIR, USE_SORA, SORA_MODEL, SORA_SECONDS
 from image_utils import generate_dalle_bg, make_gradient_bg
 
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -285,6 +285,60 @@ def ken_burns_clip(image_path: str, duration: float, motion_type: str = None,
         return frame
 
     return VideoClip(make_frame, duration=duration)
+
+
+# ── Sora動画クリップ（冒頭シーンのみ・コスト重視でトライ→失敗時は静止画にフォールバック）──
+
+
+def _generate_sora_video(prompt: str) -> str | None:
+    """Sora 2 で短い動画クリップを生成し、ローカルmp4のパスを返す（失敗時はNone）。"""
+    if not USE_SORA:
+        return None
+    try:
+        full_prompt = (
+            f"{prompt}. Photorealistic cinematic video, natural human motion, "
+            "subtle handheld camera movement, realistic lighting, vertical 9:16 framing, "
+            "no text, no captions, no watermark."
+        )
+        video = client.videos.create_and_poll(
+            model=SORA_MODEL,
+            prompt=full_prompt,
+            seconds=SORA_SECONDS,
+            size="720x1280",
+        )
+        if getattr(video, "status", None) != "completed":
+            print(f"  ⚠️  Sora生成が完了しませんでした（status={getattr(video, 'status', None)}）")
+            return None
+        content = client.videos.download_content(video.id, variant="video")
+        path = os.path.join(OUTPUT_DIR, f"sora_clip_{video.id}.mp4")
+        content.write_to_file(path)
+        return path
+    except Exception as e:
+        print(f"  ⚠️  Sora生成スキップ: {e}")
+        return None
+
+
+def _sora_bg_clip(sora_path: str, duration: float, subtitle_text: str = "") -> VideoClip:
+    """Sora動画クリップを目標尺に合わせてループ/トリムし、字幕を合成したクリップを返す。"""
+    raw = VideoFileClip(sora_path).resized((SHORTS_W, SHORTS_H))
+
+    if raw.duration < duration:
+        loops = int(duration / raw.duration) + 1
+        from moviepy import concatenate_videoclips as cv
+        raw = cv([raw] * loops).subclipped(0, duration)
+    else:
+        raw = raw.subclipped(0, duration)
+
+    if not subtitle_text:
+        return raw
+
+    chunk_cache = _render_chunk_cache(subtitle_text, duration)
+
+    def add_subtitle(get_frame, t):
+        frame = get_frame(t).copy()
+        return _apply_chunk_subtitles(frame, chunk_cache, t)
+
+    return raw.transform(add_subtitle, apply_to="video")
 
 
 # ── Pexels背景動画 ─────────────────────────────────────────────
@@ -652,12 +706,21 @@ def build_shorts_video(script_data: dict, audio_path: str, output_path: str) -> 
     for i in range(num_scenes):
         sub_text = subtitles[i] if i < len(subtitles) else ""
         motion = motions[i % len(motions)]
+        clip = None
 
-        if stock_path:
+        # 冒頭シーンのみSora 2で実際に動く映像を試みる（コスト重視で1シーンだけ・失敗時は下にフォールバック）
+        if i == 0 and USE_SORA:
+            print("  Sora動画クリップを生成中（冒頭シーン、数分かかることがあります）...")
+            sora_path = _generate_sora_video(image_prompts[i])
+            if sora_path:
+                print(f"  Sora背景 + 字幕生成中（シーン{i + 1}）...")
+                clip = _sora_bg_clip(sora_path, section_duration, subtitle_text=sub_text)
+
+        if clip is None and stock_path:
             # Pexels素材を等分してシーンごとに使う
             print(f"  Pexels背景 + 字幕生成中（シーン{i + 1}）...")
             clip = _pexels_bg_clip(stock_path, section_duration, subtitle_text=sub_text)
-        else:
+        elif clip is None:
             # DALL-E + Ken Burns
             img_path = create_shorts_slide(i, image_prompt=image_prompts[i])
             print(f"  Ken Burns効果 + 字幕適用中（シーン{i + 1}: {motion}）...")
@@ -695,6 +758,8 @@ def build_shorts_video(script_data: dict, audio_path: str, output_path: str) -> 
 
     import glob
     for f in glob.glob(os.path.join(OUTPUT_DIR, "shorts_slide_*.png")):
+        os.remove(f)
+    for f in glob.glob(os.path.join(OUTPUT_DIR, "sora_clip_*.mp4")):
         os.remove(f)
 
     mode = "Pexels背景" if stock_path else "Ken Burns"
