@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>🔨 もぐら叩き - ゲームランド</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#1a1a2e;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    .top-bar{background:#16213e;padding:12px 20px;display:flex;align-items:center;gap:16px;border-bottom:2px solid #6c63ff}
+    .top-bar a{color:#6c63ff;text-decoration:none;font-size:.9rem}
+    .top-bar h1{font-size:1.1rem;flex:1}
+    main{flex:1;display:flex;flex-direction:column;align-items:center;padding:20px}
+    .stats{display:flex;gap:16px;margin-bottom:20px}
+    .stat{background:#16213e;border-radius:12px;padding:10px 20px;text-align:center;border:1px solid #2a3060}
+    .stat-label{font-size:.7rem;color:#888;text-transform:uppercase}
+    .stat-value{font-size:1.6rem;font-weight:900;color:#6c63ff}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:340px;width:100%}
+    .hole{background:#16213e;border-radius:50%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:3rem;cursor:pointer;border:3px solid #2a3060;transition:transform .1s;user-select:none;position:relative;overflow:hidden}
+    .hole:active{transform:scale(.92)}
+    .hole.active{border-color:#43e97b;background:#1e3a2e}
+    .hole.hit{border-color:#ff6584;background:#3a1e2e}
+    .mole{transition:transform .15s;display:inline-block}
+    .hole:not(.active) .mole{transform:translateY(120%)}
+    .hole.active .mole{transform:translateY(0)}
+    .btn{margin-top:20px;padding:12px 32px;border:none;border-radius:24px;background:linear-gradient(135deg,#6c63ff,#8b63ff);color:#fff;font-size:1rem;font-weight:700;cursor:pointer}
+    .msg{margin-top:12px;color:#888;font-size:.9rem}
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2914182646758959" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="top-bar"><a href="../">← ゲーム一覧</a><h1>🔨 もぐら叩き</h1></div>
+<main>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">スコア</div><div class="stat-value" id="sc">0</div></div>
+    <div class="stat"><div class="stat-label">ベスト</div><div class="stat-value" id="hs">0</div></div>
+    <div class="stat"><div class="stat-label">残り</div><div class="stat-value" id="tm">30</div></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <button class="btn" id="startBtn" onclick="startGame()">スタート！</button>
+  <p class="msg" id="msg">もぐらが出たら叩け！</p>
+</main>
+<script>
+let sc=0,hs=parseInt(localStorage.getItem('mole_hs')||'0'),tm=30,running=false,timI,moleI,active=new Set();
+document.getElementById('hs').textContent=hs;
+const grid=document.getElementById('grid');
+for(let i=0;i<9;i++){const h=document.createElement('div');h.className='hole';h.innerHTML='<span class="mole">🐹</span>';h.addEventListener('click',()=>whack(i));h.addEventListener('touchstart',e=>{e.preventDefault();whack(i)},{passive:false});grid.appendChild(h)}
+const holes=[...grid.querySelectorAll('.hole')];
+function whack(i){if(!running||!active.has(i))return;active.delete(i);holes[i].classList.remove('active');holes[i].classList.add('hit');setTimeout(()=>holes[i].classList.remove('hit'),300);sc++;if(sc>hs){hs=sc;localStorage.setItem('mole_hs',hs)}document.getElementById('sc').textContent=sc;document.getElementById('hs').textContent=hs}
+function showMole(){const avail=[...Array(9).keys()].filter(i=>!active.has(i));if(avail.length===0)return;const i=avail[Math.floor(Math.random()*avail.length)];active.add(i);holes[i].classList.add('active');const dur=Math.max(600,1200-sc*15);setTimeout(()=>{if(active.has(i)){active.delete(i);holes[i].classList.remove('active')}},dur)}
+function startGame(){sc=0;tm=30;running=true;active.clear();holes.forEach(h=>h.classList.remove('active','hit'));document.getElementById('sc').textContent=0;document.getElementById('msg').textContent='叩け！';document.getElementById('startBtn').style.display='none';clearInterval(timI);clearInterval(moleI);timI=setInterval(()=>{tm--;document.getElementById('tm').textContent=tm;if(tm<=0){endGame()}},1000);moleI=setInterval(showMole,700)}
+function endGame(){running=false;clearInterval(timI);clearInterval(moleI);active.clear();holes.forEach(h=>h.classList.remove('active'));document.getElementById('msg').textContent=`ゲームオーバー！ スコア: ${sc}`;document.getElementById('startBtn').style.display='inline-block';document.getElementById('startBtn').textContent='もう一度！'}
+</script>
+</body>
+</html>

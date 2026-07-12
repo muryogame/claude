@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>⌨️ タイピングゲーム - ゲームランド</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#1a1a2e;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    .top-bar{background:#16213e;padding:12px 20px;display:flex;align-items:center;gap:16px;border-bottom:2px solid #6c63ff}
+    .top-bar a{color:#6c63ff;text-decoration:none;font-size:.9rem}
+    .top-bar h1{font-size:1.1rem;flex:1}
+    main{flex:1;display:flex;flex-direction:column;align-items:center;padding:24px 16px}
+    .stats{display:flex;gap:16px;margin-bottom:20px}
+    .stat{background:#16213e;border-radius:12px;padding:10px 20px;text-align:center;border:1px solid #2a3060}
+    .stat-label{font-size:.7rem;color:#888;text-transform:uppercase}
+    .stat-value{font-size:1.6rem;font-weight:900;color:#6c63ff}
+    .word-display{font-size:2rem;font-weight:700;letter-spacing:4px;margin:20px 0;min-height:56px;text-align:center;color:#fff;padding:12px 24px;background:#16213e;border-radius:12px;min-width:300px}
+    .char.correct{color:#43e97b}
+    .char.wrong{color:#ff6584;background:rgba(255,101,132,.2)}
+    .char.current{border-bottom:2px solid #6c63ff}
+    input{font-size:1.2rem;padding:12px 20px;border-radius:12px;border:2px solid #2a3060;background:#0d0d1a;color:#e0e0e0;width:320px;text-align:center;outline:none;transition:border .2s}
+    input:focus{border-color:#6c63ff}
+    .btn{margin-top:16px;padding:12px 32px;border:none;border-radius:24px;background:linear-gradient(135deg,#6c63ff,#8b63ff);color:#fff;font-size:1rem;font-weight:700;cursor:pointer}
+    .progress{width:320px;height:8px;background:#16213e;border-radius:4px;margin-top:16px}
+    .progress-bar{height:100%;background:linear-gradient(135deg,#6c63ff,#43e97b);border-radius:4px;transition:width .1s}
+    .msg{margin-top:12px;font-size:.9rem;color:#888}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+    .overlay h2{font-size:2rem}
+    .overlay p{color:#888}
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2914182646758959" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="top-bar"><a href="../">← ゲーム一覧</a><h1>⌨️ タイピングゲーム</h1></div>
+<main>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">WPM</div><div class="stat-value" id="wpm">0</div></div>
+    <div class="stat"><div class="stat-label">正確率</div><div class="stat-value" id="acc">100%</div></div>
+    <div class="stat"><div class="stat-label">残り</div><div class="stat-value" id="timer">30</div></div>
+  </div>
+  <div class="word-display" id="wordDisplay"></div>
+  <input type="text" id="inp" placeholder="ここに入力..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled>
+  <div class="progress"><div class="progress-bar" id="prog" style="width:100%"></div></div>
+  <p class="msg" id="msg">スタートを押してゲーム開始</p>
+  <button class="btn" id="startBtn" onclick="startGame()">スタート！</button>
+</main>
+<div class="overlay" id="overlay" style="display:none">
+  <h2 id="ov-title">結果</h2>
+  <p id="ov-wpm"></p>
+  <p id="ov-acc"></p>
+  <button class="btn" onclick="startGame()">もう一度！</button>
+  <a class="btn" href="../" style="background:#16213e;border:2px solid #6c63ff;text-decoration:none">ゲーム一覧へ</a>
+</div>
+<script>
+const WORDS=['apple','green','happy','light','cloud','music','river','sweet','brave','dream','stone','flame','heart','magic','night','plant','quick','smile','table','water','world','young','zebra','dance','eagle','fancy','giant','honey','ivory','jelly','knife','lemon','mango','never','olive','peace','queen','rainy','sunny','tiger','ultra','vivid','waves','xenon','yacht','zesty','beach','candy','denim','excel','frost'];
+let words=[],cur=0,typed=0,errors=0,startT,timerI,running=false,timeLeft=30;
+const inp=document.getElementById('inp'),wpm=document.getElementById('wpm'),acc=document.getElementById('acc'),timerEl=document.getElementById('timer'),prog=document.getElementById('prog'),msg=document.getElementById('msg'),overlay=document.getElementById('overlay');
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function startGame(){overlay.style.display='none';words=shuffle([...WORDS]).slice(0,30);cur=0;typed=0;errors=0;timeLeft=30;running=true;inp.disabled=false;inp.value='';inp.focus();renderWord();prog.style.width='100%';timerEl.textContent=30;wpm.textContent=0;acc.textContent='100%';msg.textContent='タイプしてね！';clearInterval(timerI);timerI=setInterval(tick,1000);startT=Date.now()}
+function renderWord(){const w=words[cur]||'';let h='';for(let i=0;i<w.length;i++)h+=`<span class="char" id="c${i}">${w[i]}</span>`;document.getElementById('wordDisplay').innerHTML=h;highlightChar(0)}
+function highlightChar(i){document.querySelectorAll('.char').forEach((c,j)=>{c.className='char'+(j<i?inp.value[j]===words[cur][j]?' correct':' wrong':j===i?' current':'')});};
+inp.addEventListener('input',()=>{if(!running)return;const v=inp.value,w=words[cur];highlightChar(v.length);if(v===w){typed++;cur++;inp.value='';if(cur<words.length)renderWord();else{endGame();return}const e=inp.value.split('').filter((c,i)=>c!==w[i]).length;errors+=e;updateStats()}else{const e=v.split('').filter((c,i)=>c!==w[i]).length;errors=e;updateStats()}});
+function updateStats(){const sec=(Date.now()-startT)/60000;const w=Math.round(typed/Math.max(sec,.01));wpm.textContent=w;const tot=typed*5+inp.value.length;const a=tot>0?Math.max(0,Math.round((1-errors/Math.max(tot,1))*100)):100;acc.textContent=a+'%'}
+function tick(){timeLeft--;timerEl.textContent=timeLeft;prog.style.width=(timeLeft/30*100)+'%';if(timeLeft<=0)endGame()}
+function endGame(){running=false;clearInterval(timerI);inp.disabled=true;const sec=(Date.now()-startT)/60000;const w=Math.round(typed/Math.max(sec,.01));const tot=typed*5;const a=tot>0?Math.max(0,Math.round((1-errors/Math.max(tot,1))*100)):100;overlay.style.display='flex';document.getElementById('ov-title').textContent='🎉 結果発表！';document.getElementById('ov-wpm').innerHTML=`WPM: <strong style="color:#6c63ff;font-size:1.5rem">${w}</strong>`;document.getElementById('ov-acc').innerHTML=`正確率: <strong style="color:#43e97b">${a}%</strong> / ${typed}ワード完了`}
+</script>
+</body>
+</html>

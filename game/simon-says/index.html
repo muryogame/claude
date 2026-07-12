@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>🔴 サイモンゲーム - ゲームランド</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#1a1a2e;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    .top-bar{background:#16213e;padding:12px 20px;display:flex;align-items:center;gap:16px;border-bottom:2px solid #6c63ff}
+    .top-bar a{color:#6c63ff;text-decoration:none;font-size:.9rem}
+    .top-bar h1{font-size:1.1rem;flex:1}
+    main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
+    .info{text-align:center}
+    .level{font-size:1.4rem;font-weight:700;color:#6c63ff}
+    .msg{color:#888;font-size:.9rem;margin-top:4px}
+    .pad{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:260px}
+    .btn{aspect-ratio:1;border:none;border-radius:16px;cursor:pointer;font-size:2.5rem;transition:filter .1s,transform .1s;opacity:.6}
+    .btn.active,.btn:active{opacity:1;transform:scale(.95);filter:brightness(1.4)}
+    .btn[data-c="0"]{background:#cc2b5e}
+    .btn[data-c="1"]{background:#2196F3}
+    .btn[data-c="2"]{background:#4CAF50}
+    .btn[data-c="3"]{background:#FF9800}
+    .start-btn{padding:12px 32px;border:none;border-radius:24px;background:linear-gradient(135deg,#6c63ff,#8b63ff);color:#fff;font-size:1rem;font-weight:700;cursor:pointer}
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2914182646758959" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="top-bar"><a href="../">← ゲーム一覧</a><h1>🔴 サイモンゲーム</h1></div>
+<main>
+  <div class="info">
+    <div class="level">レベル <span id="lv">0</span></div>
+    <div class="msg" id="msg">スタートを押してください</div>
+  </div>
+  <div class="pad">
+    <button class="btn" data-c="0" onclick="input(0)">🔴</button>
+    <button class="btn" data-c="1" onclick="input(1)">🔵</button>
+    <button class="btn" data-c="2" onclick="input(2)">🟢</button>
+    <button class="btn" data-c="3" onclick="input(3)">🟠</button>
+  </div>
+  <button class="start-btn" id="sb" onclick="startGame()">スタート！</button>
+</main>
+<script>
+const btns=document.querySelectorAll('.btn');
+let seq=[],step=0,showing=false,playing=false;
+function flash(i,ms=400){return new Promise(r=>{btns[i].classList.add('active');setTimeout(()=>{btns[i].classList.remove('active');setTimeout(r,100)},ms)})}
+async function showSeq(){showing=true;playing=false;document.getElementById('msg').textContent='よく見て！';for(const c of seq){await flash(c,500);await new Promise(r=>setTimeout(r,150))}showing=false;playing=true;step=0;document.getElementById('msg').textContent='あなたの番！'}
+async function input(i){if(!playing||showing)return;flash(i,200);if(i===seq[step]){step++;if(step===seq.length){playing=false;document.getElementById('msg').textContent='正解！次のレベルへ...';await new Promise(r=>setTimeout(r,800));nextRound()}}else{playing=false;document.getElementById('msg').textContent=`❌ 失敗！レベル${seq.length}まで到達！`;document.getElementById('sb').style.display='inline-block';document.getElementById('sb').textContent='もう一度！'}}
+function nextRound(){seq.push(Math.floor(Math.random()*4));document.getElementById('lv').textContent=seq.length;showSeq()}
+function startGame(){seq=[];document.getElementById('sb').style.display='none';nextRound()}
+</script>
+</body>
+</html>

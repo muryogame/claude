@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>🐦 フラッピーバード - ゲームランド</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#1a1a2e;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    .top-bar{background:#16213e;padding:12px 20px;display:flex;align-items:center;gap:16px;border-bottom:2px solid #6c63ff}
+    .top-bar a{color:#6c63ff;text-decoration:none;font-size:.9rem}
+    .top-bar h1{font-size:1.1rem;flex:1}
+    main{flex:1;display:flex;flex-direction:column;align-items:center;padding:20px}
+    canvas{border:3px solid #6c63ff;border-radius:8px;display:block;box-shadow:0 0 30px rgba(108,99,255,.3);cursor:pointer}
+    .score-box{background:#16213e;border-radius:12px;padding:10px 24px;text-align:center;margin-bottom:16px;border:1px solid #2a3060}
+    .score-label{font-size:.7rem;color:#888}
+    .score-value{font-size:1.8rem;font-weight:900;color:#6c63ff}
+    .hint{color:#888;font-size:.85rem;margin-top:12px}
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2914182646758959" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="top-bar"><a href="../">← ゲーム一覧</a><h1>🐦 フラッピーバード</h1></div>
+<main>
+  <div class="score-box"><div class="score-label">スコア / ベスト</div><div class="score-value"><span id="sc">0</span> / <span id="hs">0</span></div></div>
+  <canvas id="c" width="320" height="480"></canvas>
+  <p class="hint">クリック / タップ / スペースで羽ばたく！</p>
+</main>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const W=320,H=480,GRAV=.5,JUMP=-9,GAP=130,PIPE_W=52,PIPE_SPEED=2.5;
+let bird,pipes,sc,hs=parseInt(localStorage.getItem('flappy_hs')||'0'),state,frameId;
+function reset(){bird={x:80,y:200,v:0,r:0};pipes=[];sc=0;state='idle';document.getElementById('sc').textContent=0;document.getElementById('hs').textContent=hs;draw()}
+function jump(){if(state==='idle'){state='play';addPipe()}if(state==='play'){bird.v=JUMP}if(state==='dead'){reset()}}
+function addPipe(){const top=60+Math.random()*(H-GAP-120);pipes.push({x:W,top,scored:false})}
+function update(){if(state!=='play')return;bird.v+=GRAV;bird.y+=bird.v;bird.r=Math.min(Math.max(bird.v*3,-25),45);if(bird.y+16>H||bird.y-16<0){die();return}
+if(pipes.length===0||pipes[pipes.length-1].x<W-180)addPipe();
+pipes.forEach(p=>{p.x-=PIPE_SPEED;if(!p.scored&&p.x+PIPE_W<bird.x){p.scored=true;sc++;if(sc>hs){hs=sc;localStorage.setItem('flappy_hs',hs)}document.getElementById('sc').textContent=sc;document.getElementById('hs').textContent=hs}
+if(bird.x+14>p.x&&bird.x-14<p.x+PIPE_W&&(bird.y-14<p.top||bird.y+14>p.top+GAP))die()});
+pipes=pipes.filter(p=>p.x>-PIPE_W)}
+function die(){state='dead';cancelAnimationFrame(frameId)}
+function draw(){ctx.clearRect(0,0,W,H);
+// Sky gradient
+const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#1a1a2e');sky.addColorStop(1,'#16213e');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+// Pipes
+pipes.forEach(p=>{const pg=ctx.createLinearGradient(p.x,0,p.x+PIPE_W,0);pg.addColorStop(0,'#2d8a4e');pg.addColorStop(1,'#43b065');ctx.fillStyle=pg;ctx.fillRect(p.x,0,PIPE_W,p.top);ctx.fillRect(p.x,p.top+GAP,PIPE_W,H);ctx.fillStyle='#56d477';ctx.fillRect(p.x-4,p.top-16,PIPE_W+8,16);ctx.fillRect(p.x-4,p.top+GAP,PIPE_W+8,16)});
+// Bird
+ctx.save();ctx.translate(bird.x,bird.y);ctx.rotate(bird.r*Math.PI/180);ctx.font='32px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🐦',0,0);ctx.restore();
+// Overlay
+if(state==='idle'||state==='dead'){ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.font='bold 28px Segoe UI';ctx.textAlign='center';ctx.fillText(state==='idle'?'🐦 フラッピーバード':'💀 ゲームオーバー',W/2,H/2-40);ctx.font='18px Segoe UI';ctx.fillStyle='#aaa';ctx.fillText(state==='dead'?`スコア: ${sc}`:'',W/2,H/2);ctx.fillText('タップしてスタート',W/2,H/2+36)}}
+function loop(){update();draw();frameId=requestAnimationFrame(loop)}
+cv.addEventListener('click',jump);document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();jump()}});
+cv.addEventListener('touchstart',e=>{e.preventDefault();jump()},{passive:false});
+function resize(){const s=Math.min(360,window.innerWidth-32);cv.style.width=s+'px';cv.style.height=(s*H/W)+'px'}
+resize();window.addEventListener('resize',resize);
+reset();loop();
+</script>
+</body>
+</html>
