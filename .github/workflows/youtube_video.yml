@@ -9,6 +9,10 @@ jobs:
   post-video:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # リポジトリのデフォルトはread権限のため、予算トラッカーをコミットし戻すために
+    # このワークフロー単体でcontents:writeを明示的に要求する
+    permissions:
+      contents: write
 
     steps:
       - name: リポジトリをチェックアウト
