@@ -38,7 +38,10 @@ def generate_dalle_bg(
     try:
         full_prompt = (
             f"{prompt}. "
-            "Vivid dramatic colors, cinematic lighting, highly detailed digital art, "
+            "Photorealistic photograph, shot on a full-frame DSLR with an 85mm f/1.8 lens, "
+            "shallow depth of field, natural cinematic lighting with soft realistic shadows, "
+            "subtle film grain, real-world textures and natural imperfections, "
+            "avoid airbrushed or plastic-looking surfaces, avoid illustration or digital-art look, "
             "no text, no letters, no watermark."
         )
         resp = client.images.generate(

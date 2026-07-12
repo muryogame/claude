@@ -138,27 +138,64 @@ def _split_script_to_scenes(script_data: dict, num_scenes: int) -> list[str]:
     return [hook, body[:split_pos].strip(), (body[split_pos:] + outro).strip()]
 
 
-# ── 字幕合成（ポップイン演出付き） ────────────────────────────────
+# ── 字幕合成（カラオケ風・チャンク単位でテンポよく切り替え） ────────────
+
+
+def _chunk_text(text: str, target_len: int = 9) -> list[str]:
+    """字幕を読みやすい短いチャンク（目安9文字前後）に分割する。
+    日本語は単語間にスペースがないため、句読点優先で区切り、無ければ固定長で分割する。
+    プロ品質の字幕は「1〜2行の短いフレーズが高速に切り替わる」形式が主流のため、
+    従来の段落ベタ表示から変更した。
+    """
+    text = (text or "").strip()
+    if not text:
+        return []
+    chunks = []
+    current = ""
+    for ch in text:
+        if ch == "\n":
+            if current.strip():
+                chunks.append(current.strip())
+            current = ""
+            continue
+        current += ch
+        if ch in "、。！？":
+            if current.strip():
+                chunks.append(current.strip())
+            current = ""
+        elif len(current) >= target_len:
+            chunks.append(current.strip())
+            current = ""
+    if current.strip():
+        chunks.append(current.strip())
+    return chunks
+
+
+def _chunk_windows(chunks: list[str], total_duration: float) -> list[tuple[str, float, float]]:
+    """各チャンクの表示文字数に比例して表示時間を配分する（発話速度にほぼ比例）。"""
+    total_chars = sum(len(c) for c in chunks) or 1
+    windows = []
+    t = 0.0
+    for c in chunks:
+        dur = max(0.25, total_duration * (len(c) / total_chars))
+        windows.append((c, t, t + dur))
+        t += dur
+    return windows
 
 
 def _composite_subtitle(frame: np.ndarray, subtitle_rgba: np.ndarray, t: float, duration: float) -> np.ndarray:
-    """字幕をフェードイン/アウト + 登場時ポップ（拡大→等倍）で合成する。"""
-    fade = 0.5
-    if t < fade:
-        alpha = t / fade
-    elif t > duration - fade:
-        alpha = (duration - t) / fade
-    else:
-        alpha = 1.0
-    alpha = max(0.0, min(1.0, alpha))
-
+    """字幕チャンクを登場時ポップ（拡大→等倍）で合成する。
+    以前はチャンクごとにアルファのフェードイン/アウトも行っていたが、チャンクが短い
+    （0.3〜1.5秒程度）ため境界のたびに一瞬透明になり「チカチカ消える」不具合になっていた。
+    シーン自体のフェードは呼び出し側のKen Burnsクリップに既にかかっているため、
+    チャンク単位では不透明のまま切り替え、ポップだけで登場感を出す。
+    """
     overlay = subtitle_rgba.copy()
-    overlay[:, :, 3] = (overlay[:, :, 3] * alpha).astype(np.uint8)
     ov = Image.fromarray(overlay, "RGBA")
 
-    pop_dur = 0.18
-    if t < pop_dur:
-        scale_pop = 0.7 + 0.3 * (t / pop_dur)
+    pop_dur = min(0.1, duration * 0.3)
+    if pop_dur > 0 and t < pop_dur:
+        scale_pop = 0.75 + 0.25 * (t / pop_dur)
         ys, xs = np.nonzero(overlay[:, :, 3])
         if len(ys):
             y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
@@ -176,6 +213,32 @@ def _composite_subtitle(frame: np.ndarray, subtitle_rgba: np.ndarray, t: float, 
     return np.array(bg)
 
 
+def _render_chunk_cache(subtitle_text: str, duration: float) -> list[tuple[np.ndarray, float, float]]:
+    """字幕テキストをチャンク分割し、各チャンクのRGBA画像と表示区間をまとめて返す。"""
+    chunks = _chunk_text(subtitle_text)
+    if not chunks:
+        return []
+    windows = _chunk_windows(chunks, duration)
+    return [(_render_subtitle_frame(c, 1.0), start, end) for c, start, end in windows]
+
+
+def _apply_chunk_subtitles(frame: np.ndarray, chunk_cache: list, t: float) -> np.ndarray:
+    """現在時刻tに該当する字幕チャンクを合成する。"""
+    if not chunk_cache:
+        return frame
+    for rgba, start, end in chunk_cache:
+        is_last = (start, end) == (chunk_cache[-1][1], chunk_cache[-1][2])
+        if start <= t < end or (is_last and t >= end):
+            return _composite_subtitle(frame, rgba, t - start, end - start)
+    return frame
+
+
+def _ease_in_out(p: float) -> float:
+    """滑らかな加減速カーブ（線形移動だと機械的で安っぽく見えるため）。"""
+    p = max(0.0, min(1.0, p))
+    return p * p * (3 - 2 * p)
+
+
 # ── Ken Burns効果 ──────────────────────────────────────────────
 
 
@@ -188,11 +251,11 @@ def ken_burns_clip(image_path: str, duration: float, motion_type: str = None,
     img = Image.open(image_path).convert("RGB").resize((SHORTS_W, SHORTS_H), Image.LANCZOS)
     img_arr = np.array(img)
 
-    # 字幕フレームをキャッシュ（alpha=1.0固定で準備）
-    subtitle_rgba = _render_subtitle_frame(subtitle_text, 1.0) if subtitle_text else None
+    # 字幕をチャンク単位（カラオケ風）でキャッシュ
+    chunk_cache = _render_chunk_cache(subtitle_text, duration)
 
     def make_frame(t):
-        progress = t / max(duration, 0.001)
+        progress = _ease_in_out(t / max(duration, 0.001))
 
         if motion_type == "zoom_in":
             scale, ox, oy = 1.0 + 0.32 * progress, 0.5, 0.5
@@ -216,9 +279,8 @@ def ken_burns_clip(image_path: str, duration: float, motion_type: str = None,
         y = max(0, min(int((new_h - SHORTS_H) * oy), new_h - SHORTS_H))
         frame = resized[y:y + SHORTS_H, x:x + SHORTS_W].copy()
 
-        # テキストオーバーレイ（フェードイン0.5秒 → 表示 → フェードアウト0.5秒、登場時ポップ演出付き）
-        if subtitle_rgba is not None:
-            frame = _composite_subtitle(frame, subtitle_rgba, t, duration)
+        # カラオケ風チャンク字幕（短いフレーズがテンポよく切り替わる）
+        frame = _apply_chunk_subtitles(frame, chunk_cache, t)
 
         return frame
 
@@ -251,11 +313,11 @@ def _pexels_bg_clip(stock_path: str, duration: float, subtitle_text: str = "") -
     if not subtitle_text:
         return raw
 
-    subtitle_rgba = _render_subtitle_frame(subtitle_text, 1.0)
+    chunk_cache = _render_chunk_cache(subtitle_text, duration)
 
     def add_subtitle(get_frame, t):
         frame = get_frame(t).copy()
-        return _composite_subtitle(frame, subtitle_rgba, t, duration)
+        return _apply_chunk_subtitles(frame, chunk_cache, t)
 
     return raw.transform(add_subtitle, apply_to="video")
 
@@ -451,6 +513,16 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
     ]
     hook_starter = random.choice(hook_starters)
 
+    # 本文中盤の「二段目フック」例（単一の固定フレーズだとGPTが毎回同じ文言をコピーしてしまうため複数用意）
+    mini_hook_examples = [
+        "え、実はここからが本題で",
+        "ここだけの話、本当にヤバいのは",
+        "でも実際に効くのはここから",
+        "多くの人が見落とすのがここで",
+        "ここでようやく核心なんですが",
+    ]
+    mini_hook_example = random.choice(mini_hook_examples)
+
     # 同じジャンルの直近タイトルを除外リストとして提示（連日同ジャンルが続いた場合の量産防止）
     recent_titles = _load_genre_titles().get(genre_cfg["genre"], [])
     avoid_titles_hint = ""
@@ -473,7 +545,7 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
 
 【絶対に守るバズShortsの法則（2026年のShortsアルゴリズムは20〜35秒・完視聴率80%超の動画を最優先で拡散する）】
 1. フック（hook）: 「{hook_starter}」から始め、40文字以内で視聴者を最初の3秒で止める。「〇〇が実は〇〇だった」「え？これ常識じゃなかったの？」「知らないと一生損する」など数字や断言を使った強烈な反転を使う
-2. 本文（body）: 90〜130文字。要点を1つだけに絞り、ダラダラ説明しない。「事実の提示 → 驚きの深掘り」で完結させる。本文の中盤あたりに「え、実はここからが本題で」のような二段目のミニフックを1つ挟んで離脱を防ぐ
+2. 本文（body）: 90〜130文字。要点を1つだけに絞り、ダラダラ説明しない。「事実の提示 → 驚きの深掘り」で完結させる。本文の中盤あたりに「{mini_hook_example}」のような（丸写しではなく自分の言葉で作った）二段目のミニフックを1つ挟んで離脱を防ぐ
 3. 締め（outro）: 35文字以内。「保存して後で見返してね！」「友達にもシェアして教えてあげて！」など"保存・シェア"を促す一言を必ず入れる（コメントより保存・シェアの方がアルゴリズム評価が高い）。可能なら冒頭フックに軽く触れてループ再生を誘発する終わり方にする
 4. タイトル: 「{genre_cfg['title_prefix']}」を活かしつつ、クリックせずにはいられない具体的なタイトル（25文字以内・#Shorts含む）。直近使用済みタイトルと似た表現・似たテーマの使い回しは禁止
 5. 汎用的・抽象的なテーマ（「宇宙の謎」「動物の秘密」など）は禁止。必ず具体的な1つの事実を深掘りする
@@ -490,9 +562,9 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
   "main_topic": "このShortsのメインテーマ（20文字以内・重複防止用）",
   "flash_text": "冒頭フラッシュ用の超短い衝撃ワード（6〜8文字程度）",
   "image_prompts": [
-    "Scene 1 DALL-E prompt: dramatic vertical 9:16, vivid cinematic colors, no text (40 words)",
-    "Scene 2 DALL-E prompt: intense close-up, vertical 9:16, high contrast, no text (40 words)",
-    "Scene 3 DALL-E prompt: emotional reveal, vertical 9:16, dramatic atmosphere, no text (40 words)"
+    "Scene 1 photo prompt: photorealistic photograph, dramatic real-world scene, vertical 9:16, natural lighting, no text (40 words)",
+    "Scene 2 photo prompt: photorealistic close-up photograph, vertical 9:16, shallow depth of field, no text (40 words)",
+    "Scene 3 photo prompt: photorealistic photograph, emotional reveal, vertical 9:16, natural atmosphere, no text (40 words)"
   ],
   "pexels_keywords": "{genre_cfg['pexels']}"
 }}"""

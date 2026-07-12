@@ -92,6 +92,16 @@ HOOK_TEMPLATES = {
     ],
 }
 
+# 本文中盤の「二段目フック」例。単一の固定フレーズだとGPTがほぼ毎回同じ文言
+# （「え、実はここからが本題で」）をコピーしてしまい、AI量産感が出るため複数用意する
+MINI_HOOK_EXAMPLES = [
+    "え、実はここからが本題で",
+    "ここだけの話、本当にヤバいのは",
+    "でも実際に効くのはここから",
+    "多くの人が見落とすのがここで",
+    "ここでようやく核心なんですが",
+]
+
 GENRE_PROMPTS = {
     "study_tips": {
         "label": "勉強法・学習Tips",
@@ -104,12 +114,12 @@ GENRE_PROMPTS = {
             "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する学習Tipsショート動画台本を作成してください。\n"
             "要件:\n"
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（20文字以内）\n"
-            "- 本文: 具体的なTipsを1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 本文: 具体的なTipsを1つだけに絞って説明。中盤に下記の「中盤フック例」のような（丸写しではなく自分の言葉で作った）二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
             "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
-        "image_style": "focused student studying at clean modern desk, soft blue and purple lighting, books and laptop, motivational atmosphere, anime illustration style, bright and inspiring",
-        "thumbnail_prompt": "determined student with glowing eyes studying hard, clean modern workspace, indigo and purple gradient background, motivational energy, high quality digital art",
+        "image_style": "photorealistic photograph of a focused student studying at a clean modern desk, soft blue and purple ambient lighting, books and laptop, natural cinematic lighting, shallow depth of field, motivational atmosphere",
+        "thumbnail_prompt": "photorealistic photograph of a determined student studying hard, clean modern workspace, indigo and purple ambient lighting, natural cinematic lighting, shallow depth of field, motivational energy",
     },
     "memory_hacks": {
         "label": "記憶術・暗記法",
@@ -121,12 +131,12 @@ GENRE_PROMPTS = {
             "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する記憶術ショート動画台本を作成してください。\n"
             "要件:\n"
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（20文字以内）\n"
-            "- 本文: 記憶術の具体的な手順を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 本文: 記憶術の具体的な手順を1つだけに絞って説明。中盤に下記の「中盤フック例」のような（丸写しではなく自分の言葉で作った）二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
             "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
-        "image_style": "brain with glowing neural connections, knowledge symbols floating, indigo and purple color scheme, futuristic science illustration, anime style",
-        "thumbnail_prompt": "glowing brain with memory connections, books and knowledge symbols, deep indigo and purple gradient, futuristic educational theme, anime digital art style",
+        "image_style": "photorealistic macro photograph evoking a brain with glowing neural connections, indigo and purple ambient lighting, natural cinematic lighting, shallow depth of field, scientific atmosphere",
+        "thumbnail_prompt": "photorealistic photograph evoking glowing brain connections, books and knowledge symbols, deep indigo and purple ambient lighting, natural cinematic lighting, shallow depth of field",
     },
     "study_science": {
         "label": "学習科学・研究データ",
@@ -139,12 +149,12 @@ GENRE_PROMPTS = {
             "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する学習科学ショート動画台本を作成してください。\n"
             "要件:\n"
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
-            "- 本文: 研究の内容を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 本文: 研究の内容を1つだけに絞って説明。中盤に下記の「中盤フック例」のような（丸写しではなく自分の言葉で作った）二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
             "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
-        "image_style": "scientist studying brain activity, data charts and graphs, modern laboratory, indigo purple glow, anime style educational illustration",
-        "thumbnail_prompt": "scientific study visualization, brain scan with glowing data, research charts, deep blue and purple atmosphere, modern educational anime art style",
+        "image_style": "photorealistic photograph of a scientist studying brain activity data on screens, modern laboratory, indigo purple ambient lighting, natural cinematic lighting, shallow depth of field",
+        "thumbnail_prompt": "photorealistic photograph of a scientific brain scan display, research charts, deep blue and purple ambient lighting, natural cinematic lighting, shallow depth of field",
     },
     "concentration": {
         "label": "集中力・作業効率UP",
@@ -156,12 +166,12 @@ GENRE_PROMPTS = {
             "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する集中力アップショート動画台本を作成してください。\n"
             "要件:\n"
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
-            "- 本文: 集中力アップのテクニックを1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 本文: 集中力アップのテクニックを1つだけに絞って説明。中盤に下記の「中盤フック例」のような（丸写しではなく自分の言葉で作った）二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
             "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
-        "image_style": "person in deep focus zone, clock and productivity symbols, calm blue purple atmosphere, zen study environment, anime illustration style",
-        "thumbnail_prompt": "focused person in flow state, time symbols and productivity aura, indigo purple glowing background, zen concentration theme, anime art style",
+        "image_style": "photorealistic photograph of a person in deep focus at a desk, clock nearby, calm blue purple ambient lighting, natural cinematic lighting, shallow depth of field, zen study environment",
+        "thumbnail_prompt": "photorealistic photograph of a focused person in a flow state, indigo purple ambient lighting, natural cinematic lighting, shallow depth of field, zen concentration theme",
     },
     "exam_strategy": {
         "label": "試験対策・資格勉強法",
@@ -173,12 +183,12 @@ GENRE_PROMPTS = {
             "以下のテーマから1つ選び、20〜32秒程度（約100〜150文字）でテンポよく完結する試験対策ショート動画台本を作成してください。\n"
             "要件:\n"
             "- 冒頭: 下記の「フック例」はあくまで1つの型。同じ言い回しの丸写しはせず、具体的な数字や意外性を変えて最初の3秒でつかむ（25文字以内）\n"
-            "- 本文: 試験対策の戦略を1つだけに絞って説明。中盤に「え、実はここからが本題で」のような二段目のミニフックを入れる（60〜90文字）\n"
+            "- 本文: 試験対策の戦略を1つだけに絞って説明。中盤に下記の「中盤フック例」のような（丸写しではなく自分の言葉で作った）二段目のミニフックを入れる（60〜90文字）\n"
             "- 締め: 「保存して後で見返してね！」など保存・シェアを促す一言を優先し、冒頭に軽く触れてループを誘発する（25文字以内）\n"
             "- タイトル: 具体的な数字・固有名詞（試験名・手法名など）を必ず1つ入れる。「集中力アップ法」のような抽象的なタイトルの丸写しは禁止（過去の実績データでは、抽象的なタイトルほど再生数が伸び悩む傾向が出ている）\n"
         ),
-        "image_style": "student celebrating exam success, certificate and trophy, bright motivational colors, indigo and gold, achievement atmosphere, anime art style",
-        "thumbnail_prompt": "triumphant student passing exam, diploma and achievement symbols, gold and indigo gradient, success and motivation theme, anime digital illustration",
+        "image_style": "photorealistic photograph of a student celebrating exam success, certificate nearby, bright motivational indigo and gold ambient lighting, natural cinematic lighting, shallow depth of field",
+        "thumbnail_prompt": "photorealistic photograph of a triumphant student holding a diploma, gold and indigo ambient lighting, natural cinematic lighting, shallow depth of field, success and motivation theme",
     },
 }
 
@@ -212,6 +222,7 @@ def generate_shorts_script(genre: str = "study_tips") -> dict:
 
     # フック例は毎回ランダムに1つだけ提示（固定文言の量産を防ぐ）
     hook_example = random.choice(HOOK_TEMPLATES.get(genre, [""]))
+    mini_hook_example = random.choice(MINI_HOOK_EXAMPLES)
 
     # 直近使用したタイトルを除外リストとして提示（同じ切り口の重複投稿を防ぐ）
     used_titles = _load_used_titles().get(genre, [])
@@ -225,6 +236,7 @@ def generate_shorts_script(genre: str = "study_tips") -> dict:
     user_prompt = (
         f"{prompt_cfg['instruction']}\n\n"
         f"フック例（あくまで型の一例。この通りに書かず自分の言葉で作る）: {hook_example}\n"
+        f"中盤フック例（あくまで型の一例。この通りに書かず自分の言葉で作る）: {mini_hook_example}\n"
         f"参考トピック（このまま使わず参考にするだけ）:\n{topic_text}\n"
         f"{hint_text}"
         f"{avoid_text}\n\n"
