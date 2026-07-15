@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from openai import OpenAI
 from config import OPENAI_API_KEY, OUTPUT_DIR
+import budget
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -53,6 +54,7 @@ def generate_audio(text: str, output_path: str) -> str:
             speed=1.05,
         )
         response.stream_to_file(output_path)
+        budget.add_cost(budget.COST_TTS_PER_CALL)
         print(f"  音声生成完了: {output_path}")
         return output_path
 
@@ -87,5 +89,6 @@ def generate_audio(text: str, output_path: str) -> str:
         os.remove(cf)
     os.remove(list_file)
 
+    budget.add_cost(budget.COST_TTS_PER_CALL * len(chunks))
     print(f"  音声生成完了: {output_path} ({len(chunks)}チャンク結合)")
     return output_path

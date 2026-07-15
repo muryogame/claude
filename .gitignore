@@ -22,5 +22,9 @@ youtube_auto/data/*
 # ただし月間予算トラッカーはGitHub Actionsの実行間で引き継ぐため例外的に追跡する
 !youtube_auto/data/spend_tracker.json
 
+study_shorts/output/
+study_shorts/data/*
+!study_shorts/data/spend_tracker.json
+
 # ポートフォリオ（個人データ）
 stock_trader/portfolio.json

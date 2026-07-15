@@ -6,6 +6,10 @@
 - 投稿スケジュール: 21:00 / 22:00 / 23:00 / 00:00 / 01:00
 - ジャンルローテーション: 勉強法 / 記憶術 / 学習科学 / 集中力 / 試験対策
 - 投稿時間以外は30分ごとに情報収集
+- 本番はGitHub Actions（study_shorts.yml / study_bgm.yml）から実行される想定。
+  以前はローカルPCのcronも並行稼働しており、二重投稿・二重課金が発生していたため
+  ローカルcronは削除済み（run_scheduler()はローカルで手動運用したい場合のみ使う）
+- 月間の概算API費用が予算（budget.py）を超えたら自動的に投稿をスキップする
 """
 import sys
 import os
@@ -24,6 +28,7 @@ from uploader import upload_shorts, upload_bgm, check_credentials_ready
 from bgm_creator import create_bgm_video
 from analytics import fetch_and_update_stats, run_competitor_research, record_video, print_analytics_report
 from strategy import generate_daily_strategy
+import budget
 
 # 1日5本の Shorts 投稿スケジュール（時, 分, スロット番号）
 SHORTS_SCHEDULE = [
@@ -46,6 +51,11 @@ def create_and_upload_shorts(slot: int = 1):
     print("\n" + "=" * 60)
     print(f"  【Shorts 生成開始 第{slot}回】{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
+
+    if budget.is_budget_exceeded():
+        spent, cap = budget.get_status_jpy()
+        print(f"  🛑 今月の概算API費用が予算を超過（約{spent:.0f}円 / {cap:.0f}円）のため投稿をスキップします")
+        return
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     date_str = datetime.now().strftime("%Y%m%d")
@@ -98,6 +108,11 @@ def create_and_upload_bgm():
     print("\n" + "=" * 60)
     print(f"  【BGM動画 生成開始】{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
+
+    if budget.is_budget_exceeded():
+        spent, cap = budget.get_status_jpy()
+        print(f"  🛑 今月の概算API費用が予算を超過（約{spent:.0f}円 / {cap:.0f}円）のため投稿をスキップします")
+        return
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     date_str  = datetime.now().strftime("%Y%m%d")
