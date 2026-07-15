@@ -16,7 +16,7 @@ MONTHLY_BUDGET_JPY = 5000
 USD_TO_JPY = 155  # 概算レート。実勢と多少ずれる可能性がある
 
 # 既知のAPI呼び出し単価の概算（USD、2026年7月時点の公開料金表ベース）
-COST_SORA_4S = 0.40          # Sora 2, 720x1280, 4秒
+COST_SORA_PER_SEC = 0.10     # Sora 2, 720x1280, 1秒あたり（sora-2、standardティア）
 COST_IMAGE_HIGH = 0.25       # gpt-image-1, high quality
 COST_TTS_PER_CALL = 0.01     # gpt-4o-mini-tts, 30秒前後のナレーション1本あたり
 

@@ -3,7 +3,8 @@
 YouTube雑学チャンネル自動運営システム
 - 動画投稿時間（23:00）以外は情報収集
 - 毎日23:00に通常動画（10分）を自動生成・投稿
-- 毎日21:00/23:00/01:00にShorts（20〜35秒・完視聴率重視）を自動生成・投稿（1日3回）
+- 毎日21:00にShorts（20〜35秒・完視聴率重視）を自動生成・投稿（1日1本。コスト重視で
+  頻度を絞る代わりに、そのぶん冒頭シーンのSora動画クリップを長めにして質を上げている）
 - 月間の概算API費用が予算（budget.py）を超えたら自動的に投稿をスキップする
 """
 import sys
@@ -25,11 +26,9 @@ from analytics import record_video, fetch_and_update_stats, print_analytics_repo
 from strategy import generate_daily_strategy
 import budget
 
-# Shorts投稿スケジュール（1日3回・深夜帯）
+# Shorts投稿スケジュール（1日1本・コスト重視）
 SHORTS_SCHEDULE = [
-    (21,  0),  # 第1回: 21:00
-    (23,  0),  # 第2回: 23:00
-    ( 1,  0),  # 第3回: 01:00
+    (21,  0),  # 第1回: 21:00（プライムタイム）
 ]
 
 

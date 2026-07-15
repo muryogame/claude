@@ -313,7 +313,7 @@ def _generate_sora_video(prompt: str) -> str | None:
         content = client.videos.download_content(video.id, variant="video")
         path = os.path.join(OUTPUT_DIR, f"sora_clip_{video.id}.mp4")
         content.write_to_file(path)
-        budget.add_cost(budget.COST_SORA_4S)
+        budget.add_cost(budget.COST_SORA_PER_SEC * float(SORA_SECONDS))
         return path
     except Exception as e:
         print(f"  ⚠️  Sora生成スキップ: {e}")
@@ -457,22 +457,62 @@ PROVEN_GENRES = [
         "pexels": "japan tokyo traditional",
         "relevance_hint": "視聴者自身が普段何気なく接しているものだと気づかせ、「あなたも今日から見え方が変わる」と結ぶ",
     },
+    {
+        "genre": "food_trivia",
+        "theme": "食べ物・グルメの衝撃雑学",
+        "desc": "身近な食べ物・飲み物・コンビニ商品に隠された知られざる歴史や科学的な事実",
+        "title_prefix": "え？マジで？食べ物の",
+        "pexels": "food cooking delicious",
+        "relevance_hint": "「次にそれを食べる/飲む時に見え方がどう変わるか」に触れて自分ごと化する",
+    },
+    {
+        "genre": "money_trivia",
+        "theme": "お金・経済の衝撃雑学",
+        "desc": "お金の歴史・経済の仕組み・億万長者の意外な習慣など、知らないと損するお金にまつわる衝撃事実",
+        "title_prefix": "知らなきゃ損！お金の",
+        "pexels": "money finance wealth",
+    },
+    {
+        "genre": "mystery_legend",
+        "theme": "都市伝説・世界のミステリー",
+        "desc": "世界各地の都市伝説・未解明現象・古代の謎に隠された衝撃的な事実（実在の事件の被害者・関係者を扱う扇情的な内容は禁止）",
+        "title_prefix": "【衝撃】世界のミステリー、",
+        "pexels": "mystery fog night",
+    },
+    {
+        "genre": "tech_trivia",
+        "theme": "テクノロジー・AIの衝撃雑学",
+        "desc": "AI・スマホ・インターネットの裏側にある知られざる事実。身近なテクノロジーの意外な起源や仕組み",
+        "title_prefix": "知ってた？テクノロジーの",
+        "pexels": "technology computer digital",
+        "relevance_hint": "普段使っているスマホやAIが実は今日の話とどう繋がるかに触れる",
+    },
+    {
+        "genre": "world_geography",
+        "theme": "世界の国々の意外な事実",
+        "desc": "世界各国の変わった法律・文化・地理にまつわる驚きの事実。日本人が知らない世界の常識",
+        "title_prefix": "世界には、",
+        "pexels": "world travel countries",
+        "relevance_hint": "日本の当たり前と比較し、視聴者自身の常識がどう覆るかに触れる",
+    },
 ]
 
 # 実績データに基づく重み付け（平均視聴数が高いジャンルほど出現頻度を上げる）。
-# ただし0にはせず全ジャンルが一定頻度で出るようにし、内容の偏りは avoid_titles で別途防ぐ
+# ジャンル数を増やした分、上位ジャンルの比重は以前より抑えて偏りすぎないようにしている。
+# 0にはせず全ジャンルが一定頻度で出るようにし、内容の偏りは avoid_titles で別途防ぐ
 GENRE_WEIGHTS = {
-    "love_psychology": 3,
+    "love_psychology": 2,
     "psychology": 2,
     "human_body": 2,
-    "history": 1,
-    "animal": 1,
-    "space": 1,
-    "school_truth": 1,
-    "japan_mystery": 1,
 }
+# ラウンドロビンで並べる（同じジャンルをまとめて並べると、1日1本投稿の場合に
+# 2日連続で同じジャンルになりやすいため、重複分はできるだけ間隔を空けて配置する）
+_max_weight = max(GENRE_WEIGHTS.get(cfg["genre"], 1) for cfg in PROVEN_GENRES)
 WEIGHTED_GENRE_SEQUENCE = [
-    cfg for cfg in PROVEN_GENRES for _ in range(GENRE_WEIGHTS.get(cfg["genre"], 1))
+    cfg
+    for round_i in range(_max_weight)
+    for cfg in PROVEN_GENRES
+    if round_i < GENRE_WEIGHTS.get(cfg["genre"], 1)
 ]
 
 # 使用済みトピック追跡ファイル

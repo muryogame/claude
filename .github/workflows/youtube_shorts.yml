@@ -2,10 +2,8 @@ name: YouTube Shorts 自動投稿
 
 on:
   schedule:
-    # JST = UTC+9 なので各時刻から9時間引く（1日3回に削減）
+    # JST = UTC+9 なので9時間引く（コスト重視で1日1本に削減）
     - cron: '0 12 * * *'  # 21:00 JST
-    - cron: '0 14 * * *'  # 23:00 JST
-    - cron: '0 16 * * *'  # 01:00 JST (翌日)
   workflow_dispatch:  # 手動実行も可能
 
 jobs:
@@ -50,18 +48,6 @@ jobs:
           echo "$YOUTUBE_TOKEN_JSON" > token.json
           echo "$YOUTUBE_CLIENT_SECRET_JSON" > client_secret.json
 
-      - name: スロット番号を決定
-        id: slot
-        run: |
-          HOUR=$(date -u +%H)
-          case "$HOUR" in
-            12) SLOT=1 ;;   # 21:00 JST
-            14) SLOT=2 ;;   # 23:00 JST
-            16) SLOT=3 ;;   # 01:00 JST
-             *) SLOT=1 ;;
-          esac
-          echo "slot=$SLOT" >> $GITHUB_OUTPUT
-
       - name: Shorts 動画を生成・投稿
         working-directory: youtube_auto
         env:
@@ -69,7 +55,7 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
           YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON }}
-        run: python3 main.py --shorts --slot ${{ steps.slot.outputs.slot }}
+        run: python3 main.py --shorts --slot 1
 
       - name: 更新されたトークンを GitHub Secret に書き戻す
         if: always()
