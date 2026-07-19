@@ -9,6 +9,8 @@
 - 本番はGitHub Actions（study_shorts.yml / study_bgm.yml）から実行される想定。
   以前はローカルPCのcronも並行稼働しており、二重投稿・二重課金が発生していたため
   ローカルcronは削除済み（run_scheduler()はローカルで手動運用したい場合のみ使う）
+- Shorts投稿はコスト抑制のためPAUSE_SHORTS_UNTIL（config.py）まで一時停止中。
+  BGM動画は対象外（そのまま稼働）
 - 月間の概算API費用が予算（budget.py）を超えたら自動的に投稿をスキップする
 """
 import sys
@@ -17,8 +19,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 import time
 import threading
-from datetime import datetime
-from config import OUTPUT_DIR, SHORTS_TARGET_SECONDS
+from datetime import datetime, date
+from config import OUTPUT_DIR, SHORTS_TARGET_SECONDS, PAUSE_SHORTS_UNTIL
 from collector import collect_continuously, collect_once
 from script_generator import generate_shorts_script, pick_genre
 from tts_generator import generate_audio
@@ -51,6 +53,10 @@ def create_and_upload_shorts(slot: int = 1):
     print("\n" + "=" * 60)
     print(f"  【Shorts 生成開始 第{slot}回】{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
+
+    if date.today() < PAUSE_SHORTS_UNTIL:
+        print(f"  ⏸️  Shorts投稿は{PAUSE_SHORTS_UNTIL}まで一時停止中です")
+        return
 
     if budget.is_budget_exceeded():
         spent, cap = budget.get_status_jpy()

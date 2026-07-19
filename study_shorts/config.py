@@ -27,6 +27,10 @@ STUDYFLOW_URL = "https://study-tracker-2znl.onrender.com/"
 SHORTS_TARGET_SECONDS = 32
 DAILY_POST_COUNT      = 5
 
+# Shorts投稿の一時停止（コスト抑制のため）。この日になったら自動的に再開する
+from datetime import date
+PAUSE_SHORTS_UNTIL = date(2026, 9, 1)
+
 # コンテンツジャンル
 CONTENT_GENRES = [
     "study_tips",      # 勉強法・学習Tips

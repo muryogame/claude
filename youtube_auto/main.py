@@ -5,6 +5,8 @@ YouTube雑学チャンネル自動運営システム
 - 毎日23:00に通常動画（10分）を自動生成・投稿
 - 毎日21:00にShorts（20〜35秒・完視聴率重視）を自動生成・投稿（1日1本。コスト重視で
   頻度を絞る代わりに、そのぶん冒頭シーンのSora動画クリップを長めにして質を上げている）
+- Shorts投稿はコスト抑制のためPAUSE_SHORTS_UNTIL（config.py）まで一時停止中。
+  通常動画は対象外（そのまま稼働）
 - 月間の概算API費用が予算（budget.py）を超えたら自動的に投稿をスキップする
 """
 import sys
@@ -13,8 +15,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 import time
 import threading
-from datetime import datetime
-from config import POST_HOUR, POST_MINUTE, OUTPUT_DIR
+from datetime import datetime, date
+from config import POST_HOUR, POST_MINUTE, OUTPUT_DIR, PAUSE_SHORTS_UNTIL
 from collector import collect_continuously, collect_once
 from script_generator import generate_script
 from shorts_creator import generate_shorts_script, build_shorts_video
@@ -85,6 +87,10 @@ def create_and_upload_shorts(slot: int = 1):
     print("\n" + "=" * 60)
     print(f"  【Shorts 生成開始 第{slot}回】{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
+
+    if date.today() < PAUSE_SHORTS_UNTIL:
+        print(f"  ⏸️  Shorts投稿は{PAUSE_SHORTS_UNTIL}まで一時停止中です")
+        return
 
     if budget.is_budget_exceeded():
         spent, cap = budget.get_status_jpy()

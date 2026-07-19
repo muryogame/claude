@@ -27,6 +27,10 @@ VIDEO_DURATION_MINUTES = 10  # 目標動画長
 POST_HOUR = 20               # 投稿時刻（20時・夜ゴールデンタイム）
 POST_MINUTE = 0
 
+# Shorts投稿の一時停止（コスト抑制のため）。この日になったら自動的に再開する
+from datetime import date
+PAUSE_SHORTS_UNTIL = date(2026, 9, 1)
+
 # ファイルパス
 BASE_DIR = os.path.dirname(__file__)
 DATA_DIR = os.path.join(BASE_DIR, "data")
