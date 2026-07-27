@@ -27,6 +27,17 @@ FONT_PATH = "/home/takah/.local/share/fonts/NotoSansCJKjp-Bold.otf"
 FONT_PATH_FALLBACK = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
 MOTION_TYPES = ["zoom_in", "zoom_out", "pan_left", "pan_right", "diagonal_in", "diagonal_out"]
 
+# 2026年のSora/AI動画で「バズる」定番になっている、見慣れたフォーマット風の撮影スタイル。
+# 「ドラマチックな抽象シーン」より「見覚えのある映像フォーマット＋具体的な一場面」の方が
+# 本物らしく・シェアされやすいという分析結果を反映（bodycam/found footageトレンドなど）
+FOOTAGE_STYLES = [
+    "handheld smartphone POV footage, slightly shaky",
+    "vlog-style selfie video, arm's length framing",
+    "documentary interview close-up, subject speaking directly to camera",
+    "found footage home video style, natural amateur framing",
+    "security camera footage, static wide angle, timestamp-free",
+]
+
 
 # ── テキストアニメーション ───────────────────────────────────────
 
@@ -296,10 +307,10 @@ def _generate_sora_video(prompt: str) -> str | None:
     if not USE_SORA:
         return None
     try:
+        footage_style = random.choice(FOOTAGE_STYLES)
         full_prompt = (
-            f"{prompt}. Photorealistic cinematic video, natural human motion, "
-            "subtle handheld camera movement, realistic lighting, vertical 9:16 framing, "
-            "no text, no captions, no watermark."
+            f"{prompt}. Shot as {footage_style}. Photorealistic, natural human motion, "
+            "realistic lighting, vertical 9:16 framing, no text, no captions, no watermark."
         )
         video = client.videos.create_and_poll(
             model=SORA_MODEL,
@@ -647,6 +658,7 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
 5. 汎用的・抽象的なテーマ（「宇宙の謎」「動物の秘密」など）は禁止。必ず具体的な1つの事実を深掘りする
 6. 動画全体は20〜35秒でテンポよく完結させる設計にすること。長々と話さず、要点を凝縮する
 7. flash_text: この動画で一番衝撃的な「オチ」を6〜8文字程度の超短フレーズで先出しする（例:「脳が9割嘘」「記憶は毎回捏造」）。動画冒頭0.3秒に白フラッシュで一瞬だけ表示し、視聴者の指を止めるために使う
+8. image_prompts: 「ドラマチックな雰囲気」のような曖昧な描写は禁止。誰が・何をしている「具体的な一瞬」を、感情のトーン（驚き/恐怖/興奮など）を明示して英語で書くこと。曖昧なプロンプトは陳腐な映像になる（例: NG「dramatic cinematic scene」→ OK「a woman's shocked expression as she reads a book, eyes widening, mouth slightly open, tone: stunned disbelief」）
 
 以下のJSON形式で出力:
 {{
@@ -658,9 +670,9 @@ def generate_shorts_script(topics: list[str], slot: int = 1) -> dict:
   "main_topic": "このShortsのメインテーマ（20文字以内・重複防止用）",
   "flash_text": "冒頭フラッシュ用の超短い衝撃ワード（6〜8文字程度）",
   "image_prompts": [
-    "Scene 1 photo prompt: photorealistic photograph, dramatic real-world scene, vertical 9:16, natural lighting, no text (40 words)",
-    "Scene 2 photo prompt: photorealistic close-up photograph, vertical 9:16, shallow depth of field, no text (40 words)",
-    "Scene 3 photo prompt: photorealistic photograph, emotional reveal, vertical 9:16, natural atmosphere, no text (40 words)"
+    "Scene 1: 具体的な人物の具体的な一瞬＋感情トーンを明記した英語プロンプト。vertical 9:16, no text (30〜40 words)",
+    "Scene 2: 上記の続きとなる別の具体的な瞬間（クローズアップ推奨）。vertical 9:16, no text (30〜40 words)",
+    "Scene 3: オチ・核心に対する反応の瞬間。vertical 9:16, no text (30〜40 words)"
   ],
   "pexels_keywords": "{genre_cfg['pexels']}"
 }}"""
